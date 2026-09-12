@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Details | Prizam Architectural Drains</title>
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #16a34a;
+      --danger: #ef4444;
+      --radius: 12px;
+      --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        padding: 0 1.5rem;
+      }
+    }
+
+    /* Navbar & Mobile Left-Drawer Hamburger Menu */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo-mark {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.4rem;
+      z-index: 1001;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 300px;
+      height: 100vh;
+      background: #ffffff;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      padding: 5rem 2rem 2rem;
+      gap: 1.5rem !important;
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 999;
+      display: flex;
+      border-top-right-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+      position: relative;
+      width: 100%;
+      display: block;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    @media (min-width: 900px) {
+      .mobile-menu-toggle {
+        display: none;
+      }
+      .nav-links {
+        position: static;
+        height: auto;
+        width: auto;
+        max-width: none;
+        background: transparent;
+        flex-direction: row !important;
+        align-items: center !important;
+        padding: 0;
+        box-shadow: none;
+        transform: none !important;
+        gap: 2rem !important;
+        border-radius: 0;
+      }
+      .nav-links a {
+        font-size: 0.95rem;
+        font-weight: 500;
+        width: fit-content;
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.15rem;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      padding: 0.2rem;
+      transition: transform 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .cart-badge-wrapper {
+      position: relative;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Breadcrumbs */
+    .breadcrumb-row {
+      padding: 1.5rem 0 1rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb-row a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb-row a:hover {
+      color: var(--primary);
+    }
+
+    .breadcrumb-row span.sep {
+      color: #cbd5e1;
+    }
+
+    .breadcrumb-row strong {
+      color: var(--text-main);
+    }
+
+    /* Product Details Layout */
+    .product-detail-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 3.5rem;
+      align-items: start;
+      margin: 1.5rem 0 4.5rem;
+    }
+
+    /* Gallery Layout */
+    .gallery-container {
+      display: flex;
+      gap: 1rem;
+      position: sticky;
+      top: 90px;
+      align-items: flex-start;
+    }
+
+    .thumbnails-track {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .thumbnails-track::-webkit-scrollbar {
+      width: 4px;
+    }
+    .thumbnails-track::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .thumb-item {
+      width: 72px;
+      height: 72px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      background: #f1f5f9;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .thumb-item.active,
+    .thumb-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
+    }
+
+    .thumb-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .main-image-viewport {
+      flex: 1;
+      height: 480px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+      position: relative;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .main-image-viewport {
+        cursor: crosshair;
+      }
+    }
+
+    .main-image-viewport img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform-origin: center center;
+      transition: transform 0.1s ease-out;
+    }
+
+    /* Details Column */
+    .product-info-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .badge-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .detail-badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .detail-badge.origin {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .detail-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.25;
+      color: var(--text-main);
+      margin-bottom: 0.6rem;
+    }
+
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      color: #f59e0b;
+      margin-bottom: 1.25rem;
+    }
+
+    .rating-row span {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .price-current {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .price-original {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
+    .price-discount {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--success);
+      background: #dcfce7;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .detail-desc {
+      color: #475569;
+      font-size: 0.96rem;
+      line-height: 1.7;
+      margin-bottom: 1.75rem;
+    }
+
+    .key-specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin-bottom: 2rem;
+      padding: 1.25rem;
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .key-spec-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .key-spec-item i {
+      color: var(--accent);
+      font-size: 1rem;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .qty-selector {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      background: none;
+      border: none;
+      padding: 0.75rem 1.1rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-main);
+      transition: background 0.15s;
+    }
+
+    .qty-btn:hover {
+      background: #f1f5f9;
+    }
+
+    .qty-input {
+      width: 44px;
+      text-align: center;
+      border: none;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .btn-checkout {
+      flex: 1;
+      padding: 0.95rem;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-checkout:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .delivery-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .delivery-box label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 0.6rem;
+      color: var(--text-main);
+    }
+
+    .pincode-form {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .pincode-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .pincode-input:focus {
+      border-color: var(--primary);
+    }
+
+    .pincode-btn {
+      padding: 0.75rem 1.25rem;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pincode-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .pincode-status {
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 600;
+    }
+
+    .specs-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      margin-bottom: 5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+
+    .specs-card h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 1.5rem;
+    }
+
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .specs-table tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .specs-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .specs-table td {
+      padding: 1.1rem 0;
+      font-size: 0.92rem;
+    }
+
+    .specs-table td:first-child {
+      color: var(--text-muted);
+      font-weight: 600;
+      width: 32%;
+    }
+
+    .specs-table td:last-child {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .detail-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--primary);
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .detail-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 900px) {
+      .product-detail-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .gallery-container {
+        flex-direction: column-reverse;
+        position: static;
+      }
+      .thumbnails-track {
+        flex-direction: row;
+        max-height: none;
+        overflow-x: auto;
+        width: 100%;
+      }
+      .main-image-viewport {
+        height: 360px;
+        width: 100%;
+      }
+      .detail-title {
+        font-size: 1.8rem;
+      }
+      .price-current {
+        font-size: 1.8rem;
+      }
+      .key-specs {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
+      </button>
+
+      <a href="index.html" class="logo">
+        <span class="logo-mark">●</span> Prizam
+      </a>
+
+      <nav class="nav-links" id="navLinksMenu">
+        <a href="index.html">Home</a>
+        <a href="shop.html" class="active">Products</a>
+        <a href="index.html#top-picks">Top Picks</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="shop.html" class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+        <a href="admin/index.html" class="icon-btn" title="Admin Portal"><i class="fa-solid fa-gear"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <!-- Dynamic Breadcrumb -->
+    <div class="breadcrumb-row">
+      <a href="index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="shop.html">Catalog</a>
+      <span class="sep">/</span>
+      <a href="shop.html" id="bcCategory">Bathroom Drains</a>
+      <span class="sep">/</span>
+      <strong id="bcTitle">Product Detail</strong>
+    </div>
+
+    <!-- Main Detail Presentation -->
+    <div class="product-detail-layout" id="productDetailLayout">
+      
+      <!-- Left: Gallery -->
+      <div class="gallery-container">
+        <div class="thumbnails-track" id="thumbsTrack"></div>
+        <div class="main-image-viewport" id="imageViewpoint">
+          <img id="mainImage" src="https://via.placeholder.com/600x500" alt="Prizam Drain Detail" />
+        </div>
+      </div>
+
+      <!-- Right: Product Specifications & Actions -->
+      <div class="product-info-column">
+        
+        <div class="badge-row">
+          <span class="detail-badge" id="detailBadge">Featured Product</span>
+          <span class="detail-badge origin"><i class="fa-solid fa-location-dot"></i> Rajkot Facility</span>
+        </div>
+
+        <h1 class="detail-title" id="productTitle">Linear Shower Drain</h1>
+        
+        <div class="rating-row">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star-half-stroke"></i>
+          <span>4.9 / 5 (Verified Architectural Installs)</span>
+        </div>
+
+        <div class="price-row">
+          <span class="price-current" id="productPrice">₹2,499</span>
+          <span class="price-original" id="productOldPrice">₹3,499</span>
+          <span class="price-discount" id="productDiscount">28% OFF</span>
+        </div>
+
+        <p class="detail-desc" id="productDescription">
+          Architectural drainage fixture precision engineered from grade 304 stainless steel. Provides rapid hydraulic discharge, anti-odor air seal traps, and flush-floor aesthetic integration.
+        </p>
+
+        <!-- Fast Feature Overview -->
+        <div class="key-specs">
+          <div class="key-spec-item"><i class="fa-solid fa-shield-halved"></i> <span id="specMaterialBadge">304 Stainless Steel</span></div>
+          <div class="key-spec-item"><i class="fa-solid fa-water"></i> <span id="specFlowBadge">40 L/min Flow Rate</span></div>
+          <div class="key-spec-item"><i class="fa-solid fa-shield-virus"></i> Anti-Odor Water Trap</div>
+          <div class="key-spec-item"><i class="fa-solid fa-wrench"></i> Fast Subfloor Fitting</div>
+        </div>
+
+        <!-- Quantity & Add to Cart -->
+        <div class="action-row">
+          <div class="qty-selector">
+            <button class="qty-btn" id="qtyMinus">-</button>
+            <input type="text" class="qty-input" id="qtyInput" value="1" readonly />
+            <button class="qty-btn" id="qtyPlus">+</button>
+          </div>
+          <button class="btn-checkout" id="addToCartBtn">
+            <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+          </button>
+        </div>
+
+        <!-- Pincode Availability Box -->
+        <div class="delivery-box">
+          <label for="pincodeInput"><i class="fa-solid fa-truck-fast"></i> Check Dispatch Availability & Timeline</label>
+          <div class="pincode-form">
+            <input type="text" class="pincode-input" id="pincodeInput" placeholder="Enter 6-digit postal code (e.g. 360021)" maxlength="6" />
+            <button class="pincode-btn" id="pincodeCheckBtn">Check</button>
+          </div>
+          <p class="pincode-status" id="pincodeMessage"></p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Technical Specs Table -->
+    <div class="specs-card">
+      <h2>Comprehensive Engineering Specifications</h2>
+      <table class="specs-table">
+        <tbody>
+          <tr>
+            <td>Material Grade</td>
+            <td id="tableMaterial">Grade 304 Stainless Steel (SS304)</td>
+          </tr>
+          <tr>
+            <td>Manufacturing Origin</td>
+            <td>Metoda GIDC, Rajkot, Gujarat, India</td>
+          </tr>
+          <tr>
+            <td>Dimensions (L x W x H)</td>
+            <td id="specDimensions">600mm x 70mm x 20mm</td>
+          </tr>
+          <tr>
+            <td>Hydraulic Discharge Rate</td>
+            <td id="tableFlowRate">40 L/min</td>
+          </tr>
+          <tr>
+            <td>Debris Filter Core</td>
+            <td>Removable Stainless Steel Hair/Sediment Trap Included</td>
+          </tr>
+          <tr>
+            <td>Manufacturer Warranty</td>
+            <td>5-Year Complete Prizam Warranty against rust and pitting</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="logo footer-logo"><span>●</span> Prizam</div>
+        <p class="footer-desc">Smart Drainage. Modern Living.</p>
+        <p class="copyright">&copy; 2026 Prizam Inc. Metoda GIDC, Rajkot. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop Catalog</a>
+        <a href="blog.html">Blog & Guides</a>
+        <a href="contact.html">Contact Rajkot Desk</a>
+      </div>
+      <div class="footer-links">
+        <h4>Product Range</h4>
+        <a href="shop.html?category=Bathroom+Drains">Bathroom Drains</a>
+        <a href="shop.html?category=Kitchen+Drains">Kitchen Drains</a>
+        <a href="shop.html?category=Outdoor+Drains">Outdoor Drains</a>
+        <a href="shop.html?category=Accessories">Accessories</a>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <a href="#">Technical Drawings</a>
+        <a href="#">Shipping Guidelines</a>
+        <a href="#">Warranty Claim</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="detail-toast" id="detailToast">Added to Bag</div>
+
+  <!-- Product Loader, Shared Cart & Click Tracking Handler -->
+  <script type="module">
+    import { db } from "./assets/js/firebase-config.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    import { trackProductClick } from "./assets/js/product-tracker.js";
+
+    // Mobile Hamburger Toggle Logic
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const navLinksMenu = document.getElementById("navLinksMenu");
+    const menuIcon = document.getElementById("menuIcon");
+
+    if (mobileMenuBtn && navLinksMenu) {
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinksMenu.classList.toggle("active");
+        menuIcon.className = navLinksMenu.classList.contains("active") 
+          ? "fa-solid fa-xmark" 
+          : "fa-solid fa-bars";
+      });
+    }
+
+    // 1. Get Product ID from URL parameters (?id=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get("id");
+
+    let currentProduct = {
+      id: productId || "default-linear-drain",
+      title: "Linear Shower Drain",
+      price: 2499,
+      originalPrice: 3499,
+      category: "Bathroom Drains",
+      description: "Architectural drainage fixture precision engineered from grade 304 stainless steel. Provides rapid hydraulic discharge, anti-odor air seal traps, and flush-floor aesthetic integration.",
+      imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
+      additionalImages: [
+        "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
+        "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80",
+        "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80"
+      ],
+      material: "304 Stainless Steel",
+      dimensions: "600mm x 70mm x 20mm",
+      flowRate: "40 L/min"
+    };
+
+    let selectedQuantity = 1;
+    const toast = document.getElementById("detailToast");
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    // Cart Management
+    function getCart() {
+      try {
+        const raw = localStorage.getItem("prizam_cart");
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function updateCartBadgeCount() {
+      try {
+        const raw = localStorage.getItem("prizam_cart");
+        const cart = raw ? JSON.parse(raw) : [];
+        const count = cart.reduce((tot, item) => tot + (Number(item.quantity) || 1), 0);
+        const badge = document.getElementById("cartCount");
+        if (badge) badge.textContent = count;
+      } catch (e) {}
+    }
+
+    // Quantity selectors
+    document.getElementById("qtyMinus").addEventListener("click", () => {
+      if (selectedQuantity > 1) {
+        selectedQuantity--;
+        document.getElementById("qtyInput").value = selectedQuantity;
+      }
+    });
+
+    document.getElementById("qtyPlus").addEventListener("click", () => {
+      selectedQuantity++;
+      document.getElementById("qtyInput").value = selectedQuantity;
+    });
+
+    // Pincode Verification
+    document.getElementById("pincodeCheckBtn").addEventListener("click", () => {
+      const pin = document.getElementById("pincodeInput").value.trim();
+      const msg = document.getElementById("pincodeMessage");
+
+      if (pin.length === 6 && !isNaN(pin)) {
+        if (pin.startsWith("360")) {
+          msg.style.color = "var(--success)";
+          msg.innerHTML = `<i class="fa-solid fa-bolt"></i> Local Rajkot Hub: Same-day / Next-day Express Delivery available.`;
+        } else if (pin.startsWith("38") || pin.startsWith("39")) {
+          msg.style.color = "var(--success)";
+          msg.innerHTML = `<i class="fa-solid fa-truck"></i> Gujarat Express: Dispatched from Rajkot facility within 24-48 hours.`;
+        } else {
+          msg.style.color = "var(--success)";
+          msg.innerHTML = `<i class="fa-solid fa-check"></i> Standard Delivery: In stock. Arrives within 3-5 business days.`;
+        }
+      } else {
+        msg.style.color = "var(--danger)";
+        msg.textContent = "Please enter a valid 6-digit Indian postal code.";
+      }
+    });
+
+    // 2. Fetch Product (Hybrid: Firebase Firestore + Local Admin Catalog)
+    async function loadProductDetails() {
+      if (productId) {
+        let fetched = null;
+        try {
+          const docRef = doc(db, "products", productId);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            fetched = { id: docSnap.id, ...docSnap.data() };
+          }
+        } catch (err) {
+          console.warn("Firestore offline. Checking local admin catalog.");
+        }
+
+        if (!fetched) {
+          try {
+            const localData = localStorage.getItem("prizam_local_catalog");
+            if (localData) {
+              const catalog = JSON.parse(localData);
+              fetched = catalog.find(p => p.id === productId);
+            }
+          } catch (e) {
+            console.error("Local catalog parse error:", e);
+          }
+        }
+
+        if (fetched) {
+          currentProduct = fetched;
+        }
+      }
+
+      // Track Product View / Click in Firestore for Demand Analytics
+      trackProductClick(currentProduct.id);
+
+      // Render Product Data
+      document.getElementById("productTitle").textContent = currentProduct.title;
+      document.getElementById("bcTitle").textContent = currentProduct.title;
+      document.getElementById("bcCategory").textContent = currentProduct.category || "Bathroom Drains";
+      document.getElementById("bcCategory").href = `shop.html?category=${encodeURIComponent(currentProduct.category || 'Bathroom Drains')}`;
+      document.getElementById("productPrice").textContent = `₹${Number(currentProduct.price).toLocaleString()}`;
+
+      if (currentProduct.originalPrice && Number(currentProduct.originalPrice) > Number(currentProduct.price)) {
+        document.getElementById("productOldPrice").textContent = `₹${Number(currentProduct.originalPrice).toLocaleString()}`;
+        const discountPct = Math.round(((currentProduct.originalPrice - currentProduct.price) / currentProduct.originalPrice) * 100);
+        document.getElementById("productDiscount").textContent = `${discountPct}% OFF`;
+      } else {
+        document.getElementById("productOldPrice").style.display = "none";
+        document.getElementById("productDiscount").style.display = "none";
+      }
+
+      if (currentProduct.description) {
+        document.getElementById("productDescription").textContent = currentProduct.description;
+      }
+
+      const detailBadge = document.getElementById("detailBadge");
+      if (currentProduct.isTopPick) detailBadge.textContent = "Top Pick";
+      else if (currentProduct.isTopSeller) detailBadge.textContent = "Best Seller";
+      else if (currentProduct.isUpcoming) detailBadge.textContent = "Upcoming Release";
+      else detailBadge.textContent = currentProduct.category || "Featured Hardware";
+
+      const material = currentProduct.material || "304 Stainless Steel";
+      const dimensions = currentProduct.dimensions || "600mm x 70mm x 20mm";
+      const flowRate = currentProduct.flowRate || "40 L/min";
+
+      document.getElementById("specMaterialBadge").textContent = material;
+      document.getElementById("tableMaterial").textContent = material;
+      document.getElementById("specDimensions").textContent = dimensions;
+      document.getElementById("specFlowBadge").textContent = `${flowRate} Flow`;
+      document.getElementById("tableFlowRate").textContent = flowRate;
+
+      // Image Viewport & Gallery
+      const mainImg = document.getElementById("mainImage");
+      const defaultImg = currentProduct.imageUrl || "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80";
+      mainImg.src = defaultImg;
+
+      const galleryImages = [defaultImg];
+      if (Array.isArray(currentProduct.additionalImages)) {
+        currentProduct.additionalImages.forEach(img => {
+          if (img && !galleryImages.includes(img)) galleryImages.push(img);
+        });
+      }
+
+      const thumbsTrack = document.getElementById("thumbsTrack");
+      thumbsTrack.innerHTML = galleryImages.map((src, i) => `
+        <div class="thumb-item ${i === 0 ? 'active' : ''}" onclick="switchImage('${src}', this)" onmouseenter="switchImage('${src}', this)">
+          <img src="${src}" alt="Product Thumb" />
+        </div>
+      `).join("");
+    }
+
+    // Image switcher
+    window.switchImage = function(src, thumbElement) {
+      document.getElementById("mainImage").src = src;
+      document.querySelectorAll(".thumb-item").forEach(t => t.classList.remove("active"));
+      if (thumbElement) thumbElement.classList.add("active");
+    };
+
+    // Amazon-style Mouse Hover Zoom Effect
+    const imageViewport = document.getElementById("imageViewpoint");
+    const mainImgEl = document.getElementById("mainImage");
+
+    if (imageViewport && mainImgEl) {
+      const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+      if (supportsHover) {
+        imageViewport.addEventListener("mousemove", (e) => {
+          const rect = imageViewport.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+          mainImgEl.style.transformOrigin = `${x}% ${y}%`;
+          mainImgEl.style.transform = "scale(2.2)";
+        });
+
+        imageViewport.addEventListener("mouseleave", () => {
+          mainImgEl.style.transformOrigin = "center center";
+          mainImgEl.style.transform = "scale(1)";
+        });
+      }
+    }
+
+    // Add To Cart Action
+    document.getElementById("addToCartBtn").addEventListener("click", () => {
+      let cart = getCart();
+      const existing = cart.find(i => i.id === currentProduct.id);
+
+      if (existing) {
+        existing.quantity = (Number(existing.quantity) || 1) + selectedQuantity;
+      } else {
+        cart.push({
+          id: currentProduct.id,
+          title: currentProduct.title,
+          price: Number(currentProduct.price),
+          imageUrl: currentProduct.imageUrl || "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
+          quantity: selectedQuantity
+        });
+      }
+
+      localStorage.setItem("prizam_cart", JSON.stringify(cart));
+      updateCartBadgeCount();
+      showToast(`Added ${selectedQuantity} item(s) to Cart!`);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateCartBadgeCount();
+      loadProductDetails();
+    });
+  </script>
+</body>
+</html>

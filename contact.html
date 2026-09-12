@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us & Manufacturing Plant | Prizam</title>
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #16a34a;
+      --radius: 12px;
+      --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      width: 100%;
+    }
+
+    /* Navbar & Mobile Left-Drawer */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo-mark {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.4rem;
+      z-index: 1001;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 300px;
+      height: 100vh;
+      background: #ffffff;
+      flex-direction: column;
+      padding: 5rem 2rem 2rem;
+      gap: 1.5rem;
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 999;
+      display: flex;
+      border-top-right-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+      position: relative;
+      width: fit-content;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    @media (min-width: 900px) {
+      .mobile-menu-toggle {
+        display: none;
+      }
+      .nav-links {
+        position: static;
+        height: auto;
+        width: auto;
+        max-width: none;
+        background: transparent;
+        flex-direction: row;
+        padding: 0;
+        box-shadow: none;
+        transform: none !important;
+        gap: 2rem;
+        border-radius: 0;
+      }
+      .nav-links a {
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.15rem;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      padding: 0.2rem;
+      transition: transform 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .cart-badge-wrapper {
+      position: relative;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contact-banner {
+      background: linear-gradient(rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.78)),
+                  url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      color: #fff;
+      padding: 4.5rem 1.5rem;
+      border-radius: var(--radius);
+      margin-top: 1.5rem;
+      margin-bottom: 3.5rem;
+      text-align: center;
+    }
+
+    .contact-banner h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .contact-banner p {
+      color: #e2e8f0;
+      font-size: 1.05rem;
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.2fr;
+      gap: 3.5rem;
+      align-items: start;
+      margin-bottom: 5rem;
+    }
+
+    /* Left Info Column */
+    .contact-info-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .info-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+
+    .info-icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      background: #eff6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .info-text h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--text-main);
+    }
+
+    .info-text p, .info-text a {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      text-decoration: none;
+      line-height: 1.6;
+    }
+
+    .info-text a:hover {
+      color: var(--accent);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .social-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .social-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Map Box */
+    .map-box {
+      margin-top: 0.5rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      height: 280px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+
+    .map-box iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    /* Right Form Card */
+    .contact-form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+
+    .contact-form-card h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.4rem;
+      color: var(--text-main);
+    }
+
+    .contact-form-card p.form-subtitle {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+      color: var(--text-main);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.92rem;
+      outline: none;
+      background: #ffffff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 130px;
+      font-family: inherit;
+    }
+
+    .btn-submit-msg {
+      width: 100%;
+      padding: 0.95rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit-msg:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit-msg:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Toast Notification */
+    .contact-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--primary);
+      color: #ffffff;
+      padding: 0.85rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 10000;
+      white-space: nowrap;
+    }
+
+    .contact-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    .footer {
+      background: #111;
+      color: #fff;
+      padding: 3rem 0 2rem;
+      margin-top: auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.25rem;
+    }
+
+    .footer-logo {
+      color: #fff;
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .footer-desc {
+      color: #9ca3af;
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .copyright {
+      color: #6b7280;
+      font-size: 0.78rem;
+    }
+
+    .footer-links h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links a {
+      display: block;
+      color: #9ca3af;
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-bottom: 0.6rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+    }
+
+    @media (min-width: 576px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .footer {
+        padding: 4.5rem 0 2.5rem;
+      }
+      .footer-grid {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 3rem;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar with Left-Drawer Animation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
+      </button>
+
+      <a href="index.html" class="logo">
+        <span class="logo-mark">●</span> Prizam
+      </a>
+
+      <nav class="nav-links" id="navLinksMenu">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Products</a>
+        <a href="index.html#top-picks">Top Picks</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html" class="active">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="shop.html" class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+        <a href="admin/index.html" class="icon-btn" title="Admin Portal"><i class="fa-solid fa-gear"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero Banner -->
+    <div class="contact-banner">
+      <h1>Contact Us & Manufacturing Plant</h1>
+      <p>Reach out to our Rajkot headquarters for custom architectural drainage drawings, bulk B2B project supply, or engineering inquiries.</p>
+    </div>
+
+    <!-- Contact Grid -->
+    <div class="contact-grid">
+      <!-- Left Column: Details & Exact Plant Facility -->
+      <div class="contact-info-card">
+        <div class="info-block">
+          <div class="info-icon-box"><i class="fa-solid fa-location-dot"></i></div>
+          <div class="info-text">
+            <h4>Headquarters & Sales Office</h4>
+            <p id="plantAddressText">Plot No. 48, GIDC Lodhika Industrial Area, Metoda,<br />Rajkot, Gujarat 360021, India</p>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <div class="info-icon-box"><i class="fa-solid fa-industry"></i></div>
+          <div class="info-text">
+            <h4>Manufacturing Plant & Facilities</h4>
+            <p>
+              <strong>Metoda Plant Unit 1 & 2:</strong> 42,000 sq. ft. facility equipped with high-precision fiber laser cutting, CNC sheet bending, robotic TIG/MIG welding, and automated ultrasonic passivation lines dedicated to architectural SS304 & SS316 drainage systems.
+            </p>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <div class="info-icon-box"><i class="fa-solid fa-phone"></i></div>
+          <div class="info-text">
+            <h4>Call Us</h4>
+            <p><a id="plantPhoneLink" href="tel:+919876543210"><span id="plantPhoneText">+91 98765-43210</span></a><br />Plant Desk: Mon – Sat, 9:00 AM – 6:30 PM IST</p>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <div class="info-icon-box"><i class="fa-solid fa-envelope"></i></div>
+          <div class="info-text">
+            <h4>Email Us</h4>
+            <p><a id="plantEmailLink" href="mailto:support@prizam.com"><span id="plantEmailText">support@prizam.com</span></a><br />B2B & Projects: <a href="mailto:sales@prizam.com">sales@prizam.com</a></p>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <div class="info-icon-box"><i class="fa-solid fa-share-nodes"></i></div>
+          <div class="info-text">
+            <h4>Follow Prizam</h4>
+            <div class="social-links">
+              <a href="#" class="social-btn" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="#" class="social-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+              <a href="#" class="social-btn" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+              <a href="#" class="social-btn" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Embedded Map: Red Pin on Metoda GIDC Plant -->
+        <div class="map-box">
+          <iframe 
+            src="https://maps.google.com/maps?q=Lodhika+GIDC,+Metoda,+Rajkot,+Gujarat+360021&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+            width="100%" 
+            height="100%" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Prizam Manufacturing Plant Metoda Rajkot">
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Right Column: Inquiry Form -->
+      <div class="contact-form-card">
+        <h2>Send Us a Message</h2>
+        <p class="form-subtitle">Fill out the form below and our architectural technical desk in Rajkot will get back to you shortly.</p>
+
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="contactName">Your Name</label>
+            <input type="text" id="contactName" placeholder="e.g. Datt Patel" required />
+          </div>
+
+          <div class="form-group">
+            <label for="contactEmail">Email Address</label>
+            <input type="email" id="contactEmail" placeholder="e.g. datt@example.com" required />
+          </div>
+
+          <div class="form-group">
+            <label for="contactPhone">Phone Number</label>
+            <input type="tel" id="contactPhone" placeholder="+91 98765 43210" required />
+          </div>
+
+          <div class="form-group">
+            <label for="contactSubject">Subject</label>
+            <input type="text" id="contactSubject" placeholder="Product Inquiry / Custom Plant Dimensions" required />
+          </div>
+
+          <div class="form-group">
+            <label for="contactMessage">Message</label>
+            <textarea id="contactMessage" placeholder="Describe your drainage needs, site requirements, or custom dimensions..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit-msg" id="contactSubmitBtn">
+            <span>Send Message</span>
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="logo footer-logo"><span>●</span> Prizam</div>
+        <p class="footer-desc">Smart Drainage. Modern Living.</p>
+        <p class="copyright">&copy; 2026 Prizam Inc. Metoda GIDC, Rajkot. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-links">
+        <h4>Our Products</h4>
+        <a href="shop.html?category=Bathroom+Drains">Bathroom Drains</a>
+        <a href="shop.html?category=Kitchen+Drains">Kitchen Drains</a>
+        <a href="shop.html?category=Outdoor+Drains">Outdoor Drains</a>
+        <a href="shop.html?category=Accessories">Accessories</a>
+      </div>
+      <div class="footer-links">
+        <h4>Customer Care</h4>
+        <a href="#">Shipping Policy</a>
+        <a href="#">Returns & Refunds</a>
+        <a href="#">Installation Guide</a>
+        <a href="admin/login.html">Admin Portal</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="contact-toast" id="contactToast">Notice</div>
+
+  <!-- Real-Time Cloud Firestore Sync Controller -->
+  <script type="module">
+    import { db } from "./assets/js/firebase-config.js";
+    import { updateCartBadge } from "./assets/js/cart.js";
+    import { 
+      collection, 
+      addDoc, 
+      doc, 
+      getDoc 
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+    // Mobile Hamburger Menu Toggle
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const navLinksMenu = document.getElementById("navLinksMenu");
+    const menuIcon = document.getElementById("menuIcon");
+
+    if (mobileMenuBtn && navLinksMenu) {
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinksMenu.classList.toggle("active");
+        menuIcon.className = navLinksMenu.classList.contains("active") 
+          ? "fa-solid fa-xmark" 
+          : "fa-solid fa-bars";
+      });
+    }
+
+    const toast = document.getElementById("contactToast");
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2800);
+    }
+
+    // Pull live factory metadata from Firestore "settings/system"
+    async function loadLivePlantMeta() {
+      try {
+        const snap = await getDoc(doc(db, "settings", "system"));
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data.plantAddress) {
+            document.getElementById("plantAddressText").textContent = data.plantAddress;
+          }
+          if (data.plantPhone) {
+            document.getElementById("plantPhoneText").textContent = data.plantPhone;
+            document.getElementById("plantPhoneLink").href = `tel:${data.plantPhone.replace(/\s+/g, '')}`;
+          }
+          if (data.plantEmail) {
+            document.getElementById("plantEmailText").textContent = data.plantEmail;
+            document.getElementById("plantEmailLink").href = `mailto:${data.plantEmail}`;
+          }
+        }
+      } catch (err) {
+        console.warn("Using default plant details:", err);
+      }
+    }
+
+    // Contact Form submission directly to Firestore "inquiries"
+    const contactForm = document.getElementById("contactForm");
+    const submitBtn = document.getElementById("contactSubmitBtn");
+
+    contactForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting Message...`;
+
+      const inquiryData = {
+        name: document.getElementById("contactName").value.trim(),
+        email: document.getElementById("contactEmail").value.trim(),
+        phone: document.getElementById("contactPhone").value.trim(),
+        subject: document.getElementById("contactSubject").value.trim(),
+        message: document.getElementById("contactMessage").value.trim(),
+        status: "New",
+        plantLocation: "Metoda GIDC, Rajkot",
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        // Direct write to Cloud Firestore
+        const docRef = await addDoc(collection(db, "inquiries"), inquiryData);
+
+        // Local storage mirror for admin panel offline resilience
+        try {
+          const localInquiries = JSON.parse(localStorage.getItem("prizam_local_inquiries")) || [];
+          localInquiries.unshift({ id: docRef.id, ...inquiryData });
+          localStorage.setItem("prizam_local_inquiries", JSON.stringify(localInquiries));
+        } catch (storageErr) {}
+
+        contactForm.reset();
+        submitBtn.innerHTML = `<i class="fa-solid fa-check"></i> Message Sent Successfully!`;
+        submitBtn.style.backgroundColor = "var(--success, #16a34a)";
+        showToast("Your message has been registered with our plant team!");
+
+      } catch (err) {
+        console.error("Firestore inquiry submission error:", err);
+        alert("Failed to submit inquiry: " + err.message + "\nPlease verify your internet connection or Firestore rules.");
+      } finally {
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>Send Message</span> <i class="fa-solid fa-paper-plane"></i>`;
+          submitBtn.style.backgroundColor = "var(--primary, #0f172a)";
+        }, 3500);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateCartBadge();
+      loadLivePlantMeta();
+    });
+  </script>
+  <script src="assets/js/animations.js"></script>
+</body>
+</html>

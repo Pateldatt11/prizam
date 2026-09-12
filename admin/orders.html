@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prizam Admin | Orders Dispatch & Fulfillment</title>
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    :root {
+      --sidebar-bg: #070b13;
+      --sidebar-hover: #0f172a;
+      --sidebar-border: #131b2e;
+      --sidebar-text: #94a3b8;
+      --sidebar-heading: #475569;
+      --sidebar-active-bg: #2563eb;
+      --sidebar-active-text: #ffffff;
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ================= 1. PRECISION DARK SIDEBAR ================= */
+    .admin-sidebar {
+      width: 270px;
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      border-right: 1px solid var(--sidebar-border);
+      user-select: none;
+    }
+
+    .sidebar-header {
+      padding: 1.75rem 1.5rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .sidebar-brand-dot {
+      width: 9px;
+      height: 9px;
+      background-color: #38bdf8;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand-title {
+      color: #ffffff;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+
+    .sidebar-nav-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem 1rem 1.5rem;
+    }
+
+    .sidebar-nav-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .sidebar-nav-scroll::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--sidebar-heading);
+      padding: 1.25rem 0.75rem 0.5rem;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.75rem 0.95rem;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      margin-bottom: 0.2rem;
+    }
+
+    .sidebar-link i {
+      font-size: 1rem;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-link:hover {
+      color: #ffffff;
+      background: var(--sidebar-hover);
+    }
+
+    .sidebar-link.active {
+      background: var(--sidebar-active-bg);
+      color: var(--sidebar-active-text);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    .sidebar-badge {
+      margin-left: auto;
+      background: rgba(0, 0, 0, 0.25);
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.15rem 0.55rem;
+      border-radius: 12px;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .sidebar-link.active .sidebar-badge {
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .sidebar-sublink {
+      padding-left: 1.15rem;
+    }
+
+    .sidebar-footer {
+      padding: 1.25rem 1.25rem;
+      border-top: 1px solid var(--sidebar-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #060910;
+    }
+
+    .sidebar-user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      overflow: hidden;
+    }
+
+    .sidebar-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #1e293b;
+      color: #38bdf8;
+      font-weight: 800;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-meta {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-user-name {
+      color: #ffffff;
+      font-size: 0.88rem;
+      font-weight: 700;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .sidebar-user-email {
+      color: #64748b;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .sidebar-logout-btn {
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 1.15rem;
+      cursor: pointer;
+      padding: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .sidebar-logout-btn:hover {
+      color: var(--danger);
+      transform: translateX(2px);
+    }
+
+    /* ================= 2. MAIN WORKSPACE ================= */
+    .admin-main {
+      margin-left: 270px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .top-navbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .nav-search {
+      position: relative;
+      width: 340px;
+    }
+
+    .nav-search i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .nav-search input {
+      width: 100%;
+      padding: 0.55rem 1rem 0.55rem 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      background: #f8fafc;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .nav-search input:focus {
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .btn-top-action {
+      background: #f1f5f9;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-top-action:hover {
+      background: #e2e8f0;
+    }
+
+    .admin-body {
+      padding: 2rem;
+    }
+
+    .page-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 1.75rem;
+    }
+
+    .page-title-row h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .page-title-row p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 0.2rem;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .metric-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .metric-icon-box.pending { color: var(--warning); background: #fffbeb; }
+    .metric-icon-box.processing { color: var(--accent); background: #eff6ff; }
+    .metric-icon-box.delivered { color: var(--success); background: #f0fdf4; }
+
+    .metric-data h3 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .metric-data p {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: #f1f5f9;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      background: #e2e8f0;
+    }
+
+    .tab-badge {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+      padding: 1px 7px;
+      border-radius: 12px;
+    }
+
+    /* Table */
+    .table-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafc;
+      padding: 1rem 1.25rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 800;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 1.15rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #fcfcfd;
+    }
+
+    .customer-cell strong {
+      display: block;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      margin-bottom: 0.2rem;
+    }
+
+    .customer-cell span {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .status-select {
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .status-select.Pending { background: #fef3c7; color: #b45309; border-color: #fde68a; }
+    .status-select.Processing { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .status-select.Shipped { background: #e0e7ff; color: #4338ca; border-color: #c7d2fe; }
+    .status-select.Delivered { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+    .status-select.Cancelled { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+
+    .btn-receipt {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 0.45rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+
+    .btn-receipt:hover {
+      background: #e2e8f0;
+    }
+
+    /* Modal */
+    .order-details-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      place-items: center;
+      z-index: 3000;
+      backdrop-filter: blur(4px);
+      padding: 1.5rem;
+    }
+
+    .order-details-modal.active {
+      display: grid;
+    }
+
+    .order-details-card {
+      background: #ffffff;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 620px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 2.25rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      animation: modalAppear 0.2s ease-out;
+    }
+
+    @keyframes modalAppear {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-header-row h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .btn-close-modal {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .receipt-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.75rem;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .receipt-info-grid strong {
+      color: var(--text-main);
+    }
+
+    .order-items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5rem;
+    }
+
+    .order-items-table th {
+      background: transparent;
+      padding: 0.6rem 0;
+      border-bottom: 1.5px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .order-items-table td {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.88rem;
+    }
+
+    .receipt-total-box {
+      border-top: 2px solid var(--border);
+      padding-top: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .admin-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--primary);
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s ease;
+      z-index: 2000;
+    }
+
+    .admin-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= 1. PRECISION DARK SIDEBAR ================= -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-brand-dot"></span>
+      <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
+    </div>
+
+    <div class="sidebar-nav-scroll">
+      <div class="sidebar-section-title">Storefront Catalog</div>
+      
+      <a href="index.html" class="sidebar-link">
+        <i class="fa-solid fa-boxes-stacked"></i>
+        <span>Products</span>
+        <span class="sidebar-badge" id="sideBadgeProducts">0</span>
+      </a>
+
+      <a href="index.html?filter=published" class="sidebar-link sidebar-sublink">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Publish</span>
+      </a>
+
+      <a href="index.html?filter=draft" class="sidebar-link sidebar-sublink">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>Draft</span>
+      </a>
+
+      <a href="add-product.html" class="sidebar-link">
+        <i class="fa-solid fa-circle-plus"></i>
+        <span>Add New Product</span>
+      </a>
+
+      <div class="sidebar-section-title">Management & Sales</div>
+
+      <a href="orders.html" class="sidebar-link active">
+        <i class="fa-solid fa-truck-ramp-box"></i>
+        <span>Orders</span>
+        <span class="sidebar-badge" id="sideBadgeOrders">0</span>
+      </a>
+
+      <a href="returns.html" class="sidebar-link">
+        <i class="fa-solid fa-rotate-left"></i>
+        <span>Returns</span>
+      </a>
+
+      <a href="inquiries.html" class="sidebar-link">
+        <i class="fa-solid fa-envelope-open-text"></i>
+        <span>Contact Request</span>
+      </a>
+
+      <a href="analytics.html" class="sidebar-link">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Store Analysis</span>
+      </a>
+
+      <a href="settings.html" class="sidebar-link">
+        <i class="fa-solid fa-gears"></i>
+        <span>System Maintenance</span>
+      </a>
+
+      <div class="sidebar-section-title">Live Preview</div>
+
+      <a href="../index.html" target="_blank" class="sidebar-link">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <span>Live Preview</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user-info">
+        <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
+        <div class="sidebar-meta">
+          <span class="sidebar-user-name" id="sideUserName">Administrator</span>
+          <span class="sidebar-user-email" id="sideUserEmail">admin@prizam.com</span>
+        </div>
+      </div>
+      <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ================= 2. MAIN WORKSPACE ================= -->
+  <main class="admin-main">
+
+    <!-- Top Navbar -->
+    <header class="top-navbar">
+      <div class="nav-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="orderSearch" placeholder="Search by Order ID, buyer name, phone, city..." oninput="handleSearch()" />
+      </div>
+
+      <div class="top-actions">
+        <button type="button" class="btn-top-action" onclick="loadOrders()">
+          <i class="fa-solid fa-rotate"></i> Refresh Queue
+        </button>
+        <a href="../index.html" target="_blank" class="btn-top-action">
+          <i class="fa-solid fa-eye"></i> View Store
+        </a>
+      </div>
+    </header>
+
+    <!-- Content Workspace -->
+    <div class="admin-body">
+      <div class="page-title-row">
+        <div>
+          <h1>Customer Orders & Dispatch</h1>
+          <p>Real-time order fulfillment pipeline synchronized with customer checkout submissions.</p>
+        </div>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon-box"><i class="fa-solid fa-box-archive"></i></div>
+          <div class="metric-data">
+            <h3 id="statTotalOrders">0</h3>
+            <p>Total Orders</p>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon-box pending"><i class="fa-solid fa-clock-rotate-left"></i></div>
+          <div class="metric-data">
+            <h3 id="statPendingOrders">0</h3>
+            <p>Pending</p>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon-box processing"><i class="fa-solid fa-truck-fast"></i></div>
+          <div class="metric-data">
+            <h3 id="statShippedOrders">0</h3>
+            <p>In Transit</p>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon-box delivered"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="metric-data">
+            <h3 id="statDeliveredOrders">0</h3>
+            <p>Delivered</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button class="tab-btn active" id="tabAll" onclick="setFilter('all')">
+          All Orders <span class="tab-badge" id="badgeTabAll">0</span>
+        </button>
+        <button class="tab-btn" id="tabPending" onclick="setFilter('Pending')">
+          Pending <span class="tab-badge" id="badgeTabPending">0</span>
+        </button>
+        <button class="tab-btn" id="tabProcessing" onclick="setFilter('Processing')">
+          Processing <span class="tab-badge" id="badgeTabProcessing">0</span>
+        </button>
+        <button class="tab-btn" id="tabShipped" onclick="setFilter('Shipped')">
+          Shipped <span class="tab-badge" id="badgeTabShipped">0</span>
+        </button>
+        <button class="tab-btn" id="tabDelivered" onclick="setFilter('Delivered')">
+          Delivered <span class="tab-badge" id="badgeTabDelivered">0</span>
+        </button>
+      </div>
+
+      <!-- Orders Data Table -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Placed Date</th>
+              <th>Customer Details</th>
+              <th>Destination</th>
+              <th>Payment</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <tr>
+              <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+                <i class="fa-solid fa-spinner fa-spin" style="margin-right: 0.5rem;"></i> Loading incoming dispatch pipeline...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= 3. RECEIPT MODAL ================= -->
+  <div class="order-details-modal" id="orderModal">
+    <div class="order-details-card">
+      <div class="modal-header-row">
+        <h3 id="modalOrderId">Order #ORD</h3>
+        <button type="button" class="btn-close-modal" onclick="closeOrderModal()">&times;</button>
+      </div>
+
+      <div class="receipt-info-grid">
+        <div>
+          <div><strong>Recipient:</strong> <span id="modalCustomerName">-</span></div>
+          <div><strong>Email:</strong> <span id="modalCustomerEmail">-</span></div>
+          <div><strong>Phone:</strong> <span id="modalCustomerPhone">-</span></div>
+        </div>
+        <div>
+          <div><strong>Delivery Address:</strong></div>
+          <div id="modalCustomerAddress" style="color: var(--text-muted);">-</div>
+          <div style="margin-top:0.35rem;"><strong>Payment Mode:</strong> <span id="modalPaymentMode">-</span></div>
+        </div>
+      </div>
+
+      <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.6rem;">Purchased Items</h4>
+      <table class="order-items-table">
+        <thead>
+          <tr>
+            <th align="left">Item</th>
+            <th align="center">Unit Price</th>
+            <th align="center">Qty</th>
+            <th align="right">Line Total</th>
+          </tr>
+        </thead>
+        <tbody id="modalItemsBody"></tbody>
+      </table>
+
+      <div class="receipt-total-box">
+        <span>Grand Total Paid:</span>
+        <span id="modalOrderTotal" style="color:var(--accent);">₹0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-toast" id="adminToast">Notice updated</div>
+
+  <script type="module">
+    import { db, auth } from "../assets/js/firebase-config.js";
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    import { 
+      collection, 
+      onSnapshot, 
+      doc, 
+      updateDoc, 
+      query, 
+      orderBy 
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+    let fetchedOrders = [];
+    let activeFilter = "all";
+    let searchQuery = "";
+
+    const tableBody = document.getElementById("ordersTableBody");
+    const modal = document.getElementById("orderModal");
+    const toast = document.getElementById("adminToast");
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function updateOrderStats() {
+      const total = fetchedOrders.length;
+      const pending = fetchedOrders.filter(o => (o.status || "Pending") === "Pending").length;
+      const processing = fetchedOrders.filter(o => o.status === "Processing").length;
+      const shipped = fetchedOrders.filter(o => o.status === "Shipped").length;
+      const delivered = fetchedOrders.filter(o => o.status === "Delivered").length;
+
+      document.getElementById("statTotalOrders").textContent = total;
+      document.getElementById("statPendingOrders").textContent = pending;
+      document.getElementById("statShippedOrders").textContent = shipped;
+      document.getElementById("statDeliveredOrders").textContent = delivered;
+
+      const badgeSide = document.getElementById("sideBadgeOrders");
+      if (badgeSide) badgeSide.textContent = total;
+
+      document.getElementById("badgeTabAll").textContent = total;
+      document.getElementById("badgeTabPending").textContent = pending;
+      document.getElementById("badgeTabProcessing").textContent = processing;
+      document.getElementById("badgeTabShipped").textContent = shipped;
+      document.getElementById("badgeTabDelivered").textContent = delivered;
+    }
+
+    // Real-Time Cloud Firestore Sync
+    window.loadOrders = function() {
+      const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+
+      onSnapshot(q, (snapshot) => {
+        fetchedOrders = [];
+        snapshot.forEach(docSnap => {
+          fetchedOrders.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        updateOrderStats();
+        renderTable();
+      }, (err) => {
+        console.warn("Firestore snapshot error, falling back to local queue:", err);
+        const local = JSON.parse(localStorage.getItem("prizam_local_orders")) || [];
+        fetchedOrders = local;
+        updateOrderStats();
+        renderTable();
+      });
+    };
+
+    // Listen to products count for sidebar badge
+    onSnapshot(collection(db, "products"), (snap) => {
+      const prodBadge = document.getElementById("sideBadgeProducts");
+      if (prodBadge) prodBadge.textContent = snap.size;
+    }, () => {});
+
+    // Profile listener
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("sideUserName").textContent = user.displayName || "Administrator";
+        document.getElementById("sideUserEmail").textContent = user.email || "admin@prizam.com";
+        const initials = (user.displayName || user.email || "AD").substring(0, 2).toUpperCase();
+        document.getElementById("sideUserAvatar").textContent = initials;
+      }
+    });
+
+    window.setFilter = function(filter) {
+      activeFilter = filter;
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      if (filter === "all") document.getElementById("tabAll").classList.add("active");
+      else if (document.getElementById(`tab${filter}`)) {
+        document.getElementById(`tab${filter}`).classList.add("active");
+      }
+      renderTable();
+    };
+
+    window.handleSearch = function() {
+      searchQuery = document.getElementById("orderSearch").value.trim().toLowerCase();
+      renderTable();
+    };
+
+    window.changeOrderStatus = async function(orderId, newStatus) {
+      const target = fetchedOrders.find(o => o.id === orderId);
+      if (target) target.status = newStatus;
+
+      try {
+        await updateDoc(doc(db, "orders", orderId), { status: newStatus });
+        showToast(`Order status set to ${newStatus}`);
+      } catch (err) {
+        console.warn("Firestore status update error:", err);
+      }
+
+      updateOrderStats();
+      renderTable();
+    };
+
+    window.viewOrderDetails = function(orderId) {
+      const order = fetchedOrders.find(o => o.id === orderId);
+      if (!order) return;
+
+      const cust = order.customer || {};
+      document.getElementById("modalOrderId").textContent = `Order #${(order.orderId || order.id).slice(0, 10).toUpperCase()}`;
+      document.getElementById("modalCustomerName").textContent = `${cust.firstName || ''} ${cust.lastName || ''}`.trim() || "Valued Client";
+      document.getElementById("modalCustomerEmail").textContent = cust.email || order.userEmail || "N/A";
+      document.getElementById("modalCustomerPhone").textContent = cust.phone || "N/A";
+      document.getElementById("modalCustomerAddress").textContent = `${cust.address || ''}, ${cust.city || ''} - ${cust.pincode || ''}, ${cust.state || ''}`;
+      document.getElementById("modalPaymentMode").textContent = order.paymentMethod || "UPI";
+      document.getElementById("modalOrderTotal").textContent = `₹${Number(order.totalAmount || 0).toLocaleString()}`;
+
+      const itemsBody = document.getElementById("modalItemsBody");
+      itemsBody.innerHTML = "";
+
+      (order.items || []).forEach(item => {
+        const qty = Number(item.quantity) || 1;
+        const price = Number(item.price) || 0;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${item.title || 'Architectural Drain'}</strong></td>
+          <td align="center">₹${price.toLocaleString()}</td>
+          <td align="center">${qty}</td>
+          <td align="right"><strong>₹${(price * qty).toLocaleString()}</strong></td>
+        `;
+        itemsBody.appendChild(tr);
+      });
+
+      modal.classList.add("active");
+    };
+
+    window.closeOrderModal = function() {
+      modal.classList.remove("active");
+    };
+
+    function renderTable() {
+      tableBody.innerHTML = "";
+
+      let filtered = fetchedOrders.filter(o => {
+        const status = o.status || "Pending";
+        if (activeFilter !== "all" && status !== activeFilter) return false;
+
+        if (searchQuery) {
+          const idMatch = (o.orderId || o.id || "").toLowerCase().includes(searchQuery);
+          const custName = `${o.customer?.firstName || ''} ${o.customer?.lastName || ''}`.toLowerCase();
+          const nameMatch = custName.includes(searchQuery);
+          const phoneMatch = (o.customer?.phone || "").includes(searchQuery);
+          const cityMatch = (o.customer?.city || "").toLowerCase().includes(searchQuery);
+          return idMatch || nameMatch || phoneMatch || cityMatch;
+        }
+
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              No customer orders found matching filter "${activeFilter}".
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach(order => {
+        const cust = order.customer || {};
+        const status = order.status || "Pending";
+        const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleDateString("en-IN", {
+          day: "numeric",
+          month: "short",
+          year: "numeric"
+        }) : "Recent";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>#${(order.orderId || order.id).slice(0, 8).toUpperCase()}</strong></td>
+          <td>${dateStr}</td>
+          <td class="customer-cell">
+            <strong>${cust.firstName || ''} ${cust.lastName || ''}</strong>
+            <span>${cust.phone || cust.email || 'N/A'}</span>
+          </td>
+          <td>${cust.city || 'Rajkot'}, ${cust.state || 'Gujarat'}</td>
+          <td><span style="font-weight:700; font-size:0.82rem;">${order.paymentMethod || 'UPI'}</span></td>
+          <td><strong>₹${Number(order.totalAmount || 0).toLocaleString()}</strong></td>
+          <td>
+            <select class="status-select ${status}" onchange="changeOrderStatus('${order.id}', this.value)">
+              <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="Processing" ${status === 'Processing' ? 'selected' : ''}>Processing</option>
+              <option value="Shipped" ${status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+              <option value="Delivered" ${status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+              <option value="Cancelled" ${status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn-receipt" onclick="viewOrderDetails('${order.id}')" title="View Full Receipt">
+              <i class="fa-regular fa-file-lines"></i> Receipt
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    modal.addEventListener("click", (e) => {
+      if (e.target.id === "orderModal") closeOrderModal();
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      if (confirm("Sign out of Admin Portal?")) {
+        localStorage.removeItem("prizam_admin_logged_in");
+        await signOut(auth);
+        window.location.href = "login.html";
+      }
+    });
+
+    loadOrders();
+  </script>
+</body>
+</html>

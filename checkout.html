@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | Prizam Architectural Systems</title>
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #16a34a;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.18);
+      --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      width: 100%;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo-mark {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    .user-auth-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .user-auth-badge strong {
+      color: var(--text-main);
+    }
+
+    .checkout-wrapper {
+      margin: 2rem 0 5rem;
+      flex-grow: 1;
+    }
+
+    /* Stepper */
+    .checkout-stepper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .step-node {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .step-node.active {
+      color: var(--primary);
+    }
+
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      background: #ffffff;
+    }
+
+    .step-node.active .step-circle {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .step-connector {
+      width: 35px;
+      height: 2px;
+      background: var(--border);
+    }
+
+    /* Layout Split */
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (min-width: 960px) {
+      .checkout-grid {
+        grid-template-columns: 1.65fr 1fr;
+        gap: 2.5rem;
+      }
+    }
+
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-card h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--text-main);
+    }
+
+    .form-card h2 i {
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.15rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--text-main);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.8rem 0.95rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      background: #ffffff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .grid-3 {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+
+    /* Payment Methods */
+    .payment-options {
+      display: grid;
+      gap: 0.85rem;
+      margin-top: 1.25rem;
+    }
+
+    .payment-option {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      background: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .payment-option:hover {
+      border-color: #94a3b8;
+    }
+
+    .payment-option.selected {
+      border-color: var(--primary);
+      background: #f8fafc;
+      box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    .payment-option input[type="radio"] {
+      accent-color: var(--primary);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .payment-details strong {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.2rem;
+    }
+
+    .payment-details span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Order Summary Box */
+    .summary-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    @media (min-width: 960px) {
+      .summary-box {
+        position: sticky;
+        top: 5.5rem;
+      }
+    }
+
+    .summary-box h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mini-items-list {
+      max-height: 280px;
+      overflow-y: auto;
+      margin-bottom: 1.25rem;
+      padding-right: 0.25rem;
+    }
+
+    .mini-item {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .mini-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .mini-item img {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+    }
+
+    .mini-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mini-item-info h4 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mini-item-info span {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .mini-item-price {
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: var(--text-main);
+    }
+
+    .summary-calc-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      color: #475569;
+    }
+
+    .summary-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 1.25rem;
+      font-weight: 800;
+      border-top: 1px solid var(--border);
+      padding-top: 1.1rem;
+      margin-top: 1.1rem;
+      color: var(--text-main);
+    }
+
+    .btn-place-order {
+      width: 100%;
+      margin-top: 1.4rem;
+      padding: 0.95rem;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-place-order:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-place-order:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Auth Modal */
+    .auth-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 1rem;
+    }
+
+    .auth-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .auth-modal {
+      background: #ffffff;
+      width: 100%;
+      max-width: 420px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      transform: translateY(25px) scale(0.96);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .auth-modal-overlay.active .auth-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .auth-modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+    }
+
+    .auth-modal-close:hover {
+      background: #e2e8f0;
+      color: var(--primary);
+    }
+
+    .auth-modal-header {
+      padding: 2rem 1.5rem 1.25rem;
+      text-align: center;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .auth-modal-header h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .auth-modal-header p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .btn-google-auth {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.8rem 1rem;
+      background: #ffffff;
+      color: #374151;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-google-auth:hover {
+      background: #f9fafb;
+      border-color: #cbd5e1;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .auth-divider span {
+      padding: 0 0.65rem;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: #ffffff;
+    }
+
+    .auth-tab-btn {
+      flex: 1;
+      padding: 0.85rem;
+      border: none;
+      background: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition-smooth);
+    }
+
+    .auth-tab-btn.active {
+      color: var(--primary);
+    }
+
+    .auth-tab-btn.active::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--primary);
+    }
+
+    .auth-form-container {
+      padding: 1.5rem 1.25rem;
+    }
+
+    .auth-form {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .auth-form.active {
+      display: flex;
+    }
+
+    .btn-auth-submit {
+      width: 100%;
+      padding: 0.85rem;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      margin-top: 0.4rem;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-auth-submit:hover {
+      background: var(--primary-hover);
+    }
+
+    .auth-switch-text {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    .auth-switch-text a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Toast */
+    .checkout-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--primary);
+      color: #ffffff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 10000;
+      white-space: nowrap;
+    }
+
+    .checkout-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Confirmation View */
+    .order-success-screen {
+      display: none;
+      text-align: center;
+      padding: 3.5rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      max-width: 650px;
+      margin: 2rem auto;
+      box-shadow: var(--shadow-md);
+    }
+
+    .success-icon {
+      width: 68px;
+      height: 68px;
+      background: #dcfce7;
+      color: var(--success);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .receipt-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.75rem 0;
+      text-align: left;
+      line-height: 1.85;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">●</span> Prizam
+      </a>
+      <div style="display:flex; align-items:center; gap:1.25rem;">
+        <div class="user-auth-badge" id="userAuthBadge">
+          <i class="fa-regular fa-user"></i>
+          <span id="userStatusLabel">Checking Account...</span>
+        </div>
+        <a href="cart.html" style="text-decoration: none; font-size: 0.88rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.4rem;">
+          <i class="fa-solid fa-arrow-left"></i> Cart
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container checkout-wrapper">
+    
+    <!-- Step Tracker -->
+    <div class="checkout-stepper" id="stepper">
+      <div class="step-node active">
+        <div class="step-circle">1</div>
+        <span>Shipping</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-node active">
+        <div class="step-circle">2</div>
+        <span>Payment</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-node" id="stepNodeConfirm">
+        <div class="step-circle">3</div>
+        <span>Confirmation</span>
+      </div>
+    </div>
+
+    <!-- Active Form -->
+    <form id="checkoutForm">
+      <div class="checkout-grid" id="checkoutGrid">
+        
+        <!-- Left Column -->
+        <div>
+          <div class="form-card" style="margin-bottom: 1.75rem;">
+            <h2><i class="fa-solid fa-truck-fast"></i> Shipping Destination</h2>
+            
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" placeholder="First Name" required />
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" placeholder="Last Name" required />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="name@example.com" required />
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" placeholder="+91 98765 43210" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="address">Street Address / Site Location</label>
+              <input type="text" id="address" placeholder="Flat, building number, street name" required />
+            </div>
+
+            <div class="grid-3">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" placeholder="City" required />
+              </div>
+              <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" id="state" placeholder="State" required />
+              </div>
+              <div class="form-group">
+                <label for="pincode">PIN Code</label>
+                <input type="text" id="pincode" placeholder="380015" maxlength="6" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Options -->
+          <div class="form-card">
+            <h2><i class="fa-solid fa-credit-card"></i> Payment Method</h2>
+            <div class="payment-options">
+              
+              <label class="payment-option selected">
+                <input type="radio" name="paymentMethod" value="UPI" checked />
+                <div class="payment-details">
+                  <strong>UPI Transfer (GPay, PhonePe, Paytm)</strong>
+                  <span>Instant transfer with real-time order confirmation</span>
+                </div>
+              </label>
+
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="Credit/Debit Card" />
+                <div class="payment-details">
+                  <strong>Credit / Debit Card</strong>
+                  <span>Visa, MasterCard, and RuPay via secure gateway</span>
+                </div>
+              </label>
+
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="Cash On Delivery" />
+                <div class="payment-details">
+                  <strong>Cash On Delivery (COD)</strong>
+                  <span>Pay upon delivery at your destination</span>
+                </div>
+              </label>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <aside class="summary-box">
+          <h3>Order Summary</h3>
+          <div class="mini-items-list" id="miniCartContainer"></div>
+
+          <div class="summary-calc-row">
+            <span>Subtotal</span>
+            <span id="subtotalVal" style="font-weight:700;">₹0</span>
+          </div>
+          <div class="summary-calc-row">
+            <span>Standard Shipping</span>
+            <span id="shippingVal">Free</span>
+          </div>
+
+          <div class="summary-total-row">
+            <span>Total to Pay</span>
+            <span id="totalVal">₹0</span>
+          </div>
+
+          <button type="submit" class="btn-place-order" id="submitOrderBtn">
+            <span>Place Order Now</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </aside>
+
+      </div>
+    </form>
+
+    <!-- Receipt Confirmation View -->
+    <div class="order-success-screen" id="orderSuccessScreen">
+      <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+      <h2 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 0.4rem;">Order Confirmed!</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+        Your order has been recorded directly in our manufacturing and fulfillment queue.
+      </p>
+
+      <div class="receipt-box">
+        <p><strong>Order ID:</strong> <span id="placedOrderId">#ORD-PRZ</span></p>
+        <p><strong>Customer:</strong> <span id="placedCustomerName">-</span></p>
+        <p><strong>Shipping Address:</strong> <span id="placedAddress">-</span></p>
+        <p><strong>Payment Mode:</strong> <span id="placedPaymentMethod">-</span></p>
+        <p><strong>Amount Paid:</strong> <span id="placedTotal" style="font-weight: 800; color: var(--text-main);">-</span></p>
+      </div>
+
+      <a href="index.html" class="btn-place-order" style="max-width: 250px; text-decoration: none; margin: 0 auto;">
+        Back to Home
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Auth Modal -->
+  <div class="auth-modal-overlay" id="checkoutAuthModalOverlay">
+    <div class="auth-modal">
+      <button class="auth-modal-close" id="checkoutAuthModalClose" aria-label="Close Modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="auth-modal-header">
+        <h2>Account Verification</h2>
+        <p>Please sign in or create an account to proceed with your order</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="modalTabSignIn">Sign In</button>
+        <button class="auth-tab-btn" id="modalTabSignUp">Create Account</button>
+      </div>
+
+      <div class="auth-form-container">
+        <!-- Google Authentication Button -->
+        <button type="button" class="btn-google-auth" id="checkoutGoogleAuthBtn">
+          <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span id="checkoutGoogleBtnLabel">Continue with Google</span>
+        </button>
+
+        <div class="auth-divider">
+          <span>or continue with email</span>
+        </div>
+
+        <!-- Sign In Form -->
+        <form class="auth-form active" id="checkoutSignInForm">
+          <div class="form-group">
+            <label for="modalLoginEmail">Email Address</label>
+            <input type="email" id="modalLoginEmail" placeholder="name@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="modalLoginPassword">Password</label>
+            <input type="password" id="modalLoginPassword" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="btn-auth-submit" id="submitModalSignIn">Sign In & Continue &rarr;</button>
+          <p class="auth-switch-text">
+            Don't have an account? <a id="linkToSignUp">Create one now</a>
+          </p>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form class="auth-form" id="checkoutSignUpForm">
+          <div class="form-group">
+            <label for="modalRegName">Full Name</label>
+            <input type="text" id="modalRegName" placeholder="e.g. Datt Patel" required />
+          </div>
+          <div class="form-group">
+            <label for="modalRegEmail">Email Address</label>
+            <input type="email" id="modalRegEmail" placeholder="name@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="modalRegPhone">Phone Number</label>
+            <input type="tel" id="modalRegPhone" placeholder="+91 98765 43210" required />
+          </div>
+          <div class="form-group">
+            <label for="modalRegPassword">Password</label>
+            <input type="password" id="modalRegPassword" placeholder="Minimum 6 characters" minlength="6" required />
+          </div>
+          <button type="submit" class="btn-auth-submit" id="submitModalSignUp">Register & Continue &rarr;</button>
+          <p class="auth-switch-text">
+            Already have an account? <a id="linkToSignIn">Sign in here</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="checkout-toast" id="checkoutToast">Notice</div>
+
+  <script type="module">
+    import { db, auth, googleProvider } from "./assets/js/firebase-config.js";
+    import { 
+      collection, 
+      addDoc, 
+      doc, 
+      getDoc, 
+      setDoc, 
+      deleteDoc 
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    import { 
+      signInWithPopup, 
+      signInWithEmailAndPassword, 
+      createUserWithEmailAndPassword, 
+      updateProfile, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+    const toast = document.getElementById("checkoutToast");
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    // 1. Fetch Cart
+    function fetchCurrentCart() {
+      try {
+        const raw = localStorage.getItem("prizam_cart");
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    const cart = fetchCurrentCart();
+    if (cart.length === 0) {
+      window.location.href = "cart.html";
+    }
+
+    // 2. Auth State & Profile Pre-fill from Firestore
+    let activeUser = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      activeUser = user;
+      const userStatusLabel = document.getElementById("userStatusLabel");
+
+      if (user) {
+        userStatusLabel.innerHTML = `Signed in as <strong>${user.displayName || user.email.split("@")[0]}</strong>`;
+
+        const emailInput = document.getElementById("email");
+        const firstNameInput = document.getElementById("firstName");
+        const lastNameInput = document.getElementById("lastName");
+
+        if (user.email && !emailInput.value) emailInput.value = user.email;
+        if (user.displayName && !firstNameInput.value) {
+          const parts = user.displayName.trim().split(" ");
+          firstNameInput.value = parts[0] || "";
+          lastNameInput.value = parts.slice(1).join(" ") || "";
+        }
+
+        // Pull stored customer address from Firestore users collection
+        try {
+          const userSnap = await getDoc(doc(db, "users", user.uid));
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            if (data.phone && !document.getElementById("phone").value) document.getElementById("phone").value = data.phone;
+            if (data.address && !document.getElementById("address").value) document.getElementById("address").value = data.address;
+            if (data.city && !document.getElementById("city").value) document.getElementById("city").value = data.city;
+            if (data.state && !document.getElementById("state").value) document.getElementById("state").value = data.state;
+            if (data.pincode && !document.getElementById("pincode").value) document.getElementById("pincode").value = data.pincode;
+          }
+        } catch (e) {
+          console.warn("Could not pre-fill address:", e);
+        }
+
+        closeAuthModal();
+      } else {
+        userStatusLabel.textContent = "Guest";
+        setTimeout(openAuthModal, 350);
+      }
+    });
+
+    // 3. Render Mini Summary
+    const miniCartContainer = document.getElementById("miniCartContainer");
+    let calculatedSubtotal = 0;
+
+    cart.forEach(item => {
+      const qty = Number(item.quantity) || 1;
+      const price = Number(item.price) || 0;
+      const lineTotal = price * qty;
+      calculatedSubtotal += lineTotal;
+
+      const itemRow = document.createElement("div");
+      itemRow.className = "mini-item";
+      itemRow.innerHTML = `
+        <img src="${item.imageUrl || 'assets/images/logo/prizam.png'}" alt="${item.title}" />
+        <div class="mini-item-info">
+          <h4>${item.title || 'Architectural Drain'}</h4>
+          <span>Qty: ${qty}</span>
+        </div>
+        <div class="mini-item-price">₹${lineTotal.toLocaleString()}</div>
+      `;
+      miniCartContainer.appendChild(itemRow);
+    });
+
+    const calculatedShipping = calculatedSubtotal >= 1499 ? 0 : 150;
+    const finalTotal = calculatedSubtotal + calculatedShipping;
+
+    document.getElementById("subtotalVal").textContent = `₹${calculatedSubtotal.toLocaleString()}`;
+    document.getElementById("shippingVal").textContent = calculatedShipping === 0 ? "FREE" : `₹${calculatedShipping}`;
+    document.getElementById("totalVal").textContent = `₹${finalTotal.toLocaleString()}`;
+
+    // 4. Payment Selection
+    document.querySelectorAll(".payment-option").forEach(label => {
+      label.addEventListener("click", () => {
+        document.querySelectorAll(".payment-option").forEach(l => l.classList.remove("selected"));
+        label.classList.add("selected");
+      });
+    });
+
+    // 5. Auth Modal Functionality
+    const authModalOverlay = document.getElementById("checkoutAuthModalOverlay");
+    const authModalClose = document.getElementById("checkoutAuthModalClose");
+    const modalTabSignIn = document.getElementById("modalTabSignIn");
+    const modalTabSignUp = document.getElementById("modalTabSignUp");
+    const checkoutSignInForm = document.getElementById("checkoutSignInForm");
+    const checkoutSignUpForm = document.getElementById("checkoutSignUpForm");
+    const checkoutGoogleAuthBtn = document.getElementById("checkoutGoogleAuthBtn");
+    const checkoutGoogleBtnLabel = document.getElementById("checkoutGoogleBtnLabel");
+
+    function openAuthModal() {
+      authModalOverlay.classList.add("active");
+    }
+
+    function closeAuthModal() {
+      authModalOverlay.classList.remove("active");
+    }
+
+    authModalClose.addEventListener("click", () => {
+      if (!activeUser) {
+        showToast("Sign in required to complete order.");
+      }
+      closeAuthModal();
+    });
+
+    modalTabSignIn.addEventListener("click", () => {
+      modalTabSignIn.classList.add("active");
+      modalTabSignUp.classList.remove("active");
+      checkoutSignInForm.classList.add("active");
+      checkoutSignUpForm.classList.remove("active");
+      checkoutGoogleBtnLabel.textContent = "Continue with Google";
+    });
+
+    modalTabSignUp.addEventListener("click", () => {
+      modalTabSignUp.classList.add("active");
+      modalTabSignIn.classList.remove("active");
+      checkoutSignUpForm.classList.add("active");
+      checkoutSignInForm.classList.remove("active");
+      checkoutGoogleBtnLabel.textContent = "Sign up with Google";
+    });
+
+    document.getElementById("linkToSignUp").addEventListener("click", () => modalTabSignUp.click());
+    document.getElementById("linkToSignIn").addEventListener("click", () => modalTabSignIn.click());
+
+    // Google Sign In in Checkout
+    checkoutGoogleAuthBtn.addEventListener("click", async () => {
+      checkoutGoogleAuthBtn.disabled = true;
+      checkoutGoogleBtnLabel.textContent = "Connecting to Google...";
+
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          name: user.displayName || user.email.split("@")[0],
+          email: user.email,
+          provider: "google.com",
+          lastLogin: new Date().toISOString()
+        }, { merge: true });
+
+        closeAuthModal();
+        showToast(`Signed in as ${user.displayName || user.email}!`);
+      } catch (err) {
+        console.error("Google Auth error:", err);
+        if (err.code !== "auth/popup-closed-by-user") {
+          showToast("Google sign in failed: " + err.message);
+        }
+      } finally {
+        checkoutGoogleAuthBtn.disabled = false;
+        checkoutGoogleBtnLabel.textContent = "Continue with Google";
+      }
+    });
+
+    // Email/Password Sign In
+    checkoutSignInForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("modalLoginEmail").value.trim();
+      const password = document.getElementById("modalLoginPassword").value;
+      const submitBtn = document.getElementById("submitModalSignIn");
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Signing In...";
+
+      try {
+        const credential = await signInWithEmailAndPassword(auth, email, password);
+        const user = credential.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+          lastLogin: new Date().toISOString()
+        }, { merge: true });
+
+        closeAuthModal();
+        showToast("Signed in successfully!");
+      } catch (err) {
+        console.error("Sign in error:", err);
+        showToast(err.message || "Sign in failed.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "Sign In & Continue &rarr;";
+      }
+    });
+
+    // Email/Password Sign Up
+    checkoutSignUpForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("modalRegName").value.trim();
+      const email = document.getElementById("modalRegEmail").value.trim();
+      const phone = document.getElementById("modalRegPhone").value.trim();
+      const password = document.getElementById("modalRegPassword").value;
+      const submitBtn = document.getElementById("submitModalSignUp");
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating Account...";
+
+      try {
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = credential.user;
+
+        if (name) {
+          await updateProfile(user, { displayName: name });
+        }
+
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          name: name,
+          email: email,
+          phone: phone,
+          provider: "password",
+          createdAt: new Date().toISOString()
+        }, { merge: true });
+
+        closeAuthModal();
+        showToast("Account created successfully!");
+      } catch (err) {
+        console.error("Sign up error:", err);
+        showToast(err.message || "Registration failed.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "Register & Continue &rarr;";
+      }
+    });
+
+    // 6. Submit Order Directly to Firestore
+    const checkoutForm = document.getElementById("checkoutForm");
+    const submitOrderBtn = document.getElementById("submitOrderBtn");
+
+    checkoutForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const user = activeUser || auth.currentUser;
+      if (!user) {
+        showToast("Please sign in before placing an order.");
+        openAuthModal();
+        return;
+      }
+
+      submitOrderBtn.disabled = true;
+      submitOrderBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving to Cloud Database...`;
+
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+      const customerData = {
+        firstName: document.getElementById("firstName").value.trim(),
+        lastName: document.getElementById("lastName").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        address: document.getElementById("address").value.trim(),
+        city: document.getElementById("city").value.trim(),
+        state: document.getElementById("state").value.trim(),
+        pincode: document.getElementById("pincode").value.trim()
+      };
+
+      const generatedOrderId = "PRZ-" + Math.floor(100000 + Math.random() * 900000);
+
+      const orderPayload = {
+        orderId: generatedOrderId,
+        userUid: user.uid,
+        userEmail: user.email || customerData.email,
+        customer: customerData,
+        items: cart,
+        subtotal: calculatedSubtotal,
+        shippingFee: calculatedShipping,
+        totalAmount: finalTotal,
+        paymentMethod: paymentMethod,
+        status: "Pending",
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        // 1. Direct write to Firestore "orders" collection
+        await addDoc(collection(db, "orders"), orderPayload);
+
+        // 2. Backup customer address to Firestore "users/{uid}"
+        await setDoc(doc(db, "users", user.uid), {
+          name: `${customerData.firstName} ${customerData.lastName}`.trim(),
+          email: customerData.email,
+          phone: customerData.phone,
+          address: customerData.address,
+          city: customerData.city,
+          state: customerData.state,
+          pincode: customerData.pincode,
+          lastOrderAt: new Date().toISOString()
+        }, { merge: true });
+
+        // 3. Clear cloud cart from Firestore
+        await deleteDoc(doc(db, "carts", user.uid)).catch(() => {});
+
+        // 4. Clear local cache
+        localStorage.setItem("prizam_cart", JSON.stringify([]));
+
+        // 5. Present Success Confirmation
+        document.getElementById("checkoutGrid").style.display = "none";
+        document.getElementById("stepper").style.display = "none";
+
+        const successScreen = document.getElementById("orderSuccessScreen");
+        successScreen.style.display = "block";
+
+        document.getElementById("placedOrderId").textContent = `#${generatedOrderId}`;
+        document.getElementById("placedCustomerName").textContent = `${customerData.firstName} ${customerData.lastName}`;
+        document.getElementById("placedAddress").textContent = `${customerData.address}, ${customerData.city} - ${customerData.pincode}, ${customerData.state}`;
+        document.getElementById("placedPaymentMethod").textContent = paymentMethod;
+        document.getElementById("placedTotal").textContent = `₹${finalTotal.toLocaleString()}`;
+
+      } catch (err) {
+        console.error("Firestore Order Error:", err);
+        alert("Could not record order in Firestore: " + err.message + "\nPlease verify your Firestore rules permit orders creation.");
+        submitOrderBtn.disabled = false;
+        submitOrderBtn.innerHTML = `<span>Place Order Now</span> <i class="fa-solid fa-arrow-right"></i>`;
+      }
+    });
+  </script>
+</body>
+</html>

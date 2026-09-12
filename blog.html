@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog & Guides | Prizam</title>
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      width: 100%;
+    }
+
+    /* Navbar & Mobile Left-Drawer Hamburger Menu Styling */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo-mark {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.4rem;
+      z-index: 1001;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 300px;
+      height: 100vh;
+      background: #ffffff;
+      flex-direction: column;
+      padding: 5rem 2rem 2rem;
+      gap: 1.5rem;
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 999;
+      display: flex;
+      border-top-right-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+      position: relative;
+      width: fit-content;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    @media (min-width: 900px) {
+      .mobile-menu-toggle {
+        display: none;
+      }
+      .nav-links {
+        position: static;
+        height: auto;
+        width: auto;
+        max-width: none;
+        background: transparent;
+        flex-direction: row;
+        padding: 0;
+        box-shadow: none;
+        transform: none !important;
+        gap: 2rem;
+        border-radius: 0;
+      }
+      .nav-links a {
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.15rem;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      padding: 0.2rem;
+      transition: transform 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .cart-badge-wrapper {
+      position: relative;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .blog-banner {
+      background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
+                  url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      color: #fff;
+      padding: 4.5rem 1.5rem;
+      border-radius: var(--radius-md, 12px);
+      margin-top: 1.5rem;
+      margin-bottom: 3.5rem;
+      text-align: center;
+    }
+
+    .blog-banner h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .blog-banner p {
+      color: #e5e7eb;
+      font-size: 1.05rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 4rem;
+    }
+
+    .blog-card {
+      background: var(--bg-card, #ffffff);
+      border: 1px solid var(--border-color, #e5e7eb);
+      border-radius: var(--radius-md, 12px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.04));
+      transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 1, 0.5, 1));
+      cursor: pointer;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md, 0 12px 24px rgba(0,0,0,0.08));
+      border-color: #cbd5e1;
+    }
+
+    .blog-thumb {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      background: #f1f2f6;
+    }
+
+    .blog-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .blog-card:hover .blog-thumb img {
+      transform: scale(1.06);
+    }
+
+    .blog-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .blog-meta {
+      font-size: 0.82rem;
+      color: var(--text-muted, #64748b);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .blog-meta span.dot {
+      font-size: 0.45rem;
+    }
+
+    .blog-title {
+      font-size: 1.22rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 0.75rem;
+      color: var(--text-main, #0f172a);
+      transition: color 0.2s ease;
+    }
+
+    .blog-card:hover .blog-title {
+      color: var(--primary, #111827);
+    }
+
+    .blog-excerpt {
+      font-size: 0.92rem;
+      color: var(--secondary, #475569);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+      flex-grow: 1;
+    }
+
+    .read-more-link {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--primary, #111827);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: gap 0.2s ease;
+    }
+
+    .blog-card:hover .read-more-link {
+      gap: 0.7rem;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 5rem;
+    }
+
+    .page-btn {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color, #e5e7eb);
+      background: #ffffff;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: var(--text-main, #0f172a);
+      transition: all 0.2s ease;
+    }
+
+    .page-btn:hover {
+      border-color: var(--primary, #111827);
+    }
+
+    .page-btn.active {
+      background: var(--primary, #111827);
+      color: #ffffff;
+      border-color: var(--primary, #111827);
+    }
+
+    @media (max-width: 768px) {
+      .blog-grid {
+        grid-template-columns: 1fr;
+      }
+      .blog-banner h1 {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
+      </button>
+
+      <a href="index.html" class="logo">
+        <span class="logo-mark">●</span> Prizam
+      </a>
+
+      <nav class="nav-links" id="navLinksMenu">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Products</a>
+        <a href="index.html#top-picks">Top Picks</a>
+        <a href="blog.html" class="active">Blog</a>
+        <a href="contact.html">Contact</a>
+        <a href="brochure.html">B rochure</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+        <a href="admin/index.html" class="icon-btn" title="Admin Portal"><i class="fa-solid fa-gear"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Header Banner -->
+    <div class="blog-banner">
+      <h1>Blog & Architectural Guides</h1>
+      <p>Expert tips, plumbing guides, and home care advice for clean, clog-free living.</p>
+    </div>
+
+    <!-- Articles Grid -->
+    <div class="blog-grid">
+      
+      <!-- Article 1 -->
+      <article class="blog-card reveal">
+        <div class="blog-thumb">
+          <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=700&q=80" alt="Linear vs Square Drains" loading="lazy" />
+        </div>
+        <div class="blog-content">
+          <div class="blog-meta">
+            <span>Apr 10, 2026</span>
+            <span class="dot">●</span>
+            <span>5 min read</span>
+          </div>
+          <h2 class="blog-title">How to Choose the Right Drain for Your Luxury Bathroom</h2>
+          <p class="blog-excerpt">
+            Linear shower drain vs. center square drain: evaluate flow dynamics, single-slope tile layouts, and anti-odor seal traps.
+          </p>
+          <span class="read-more-link">Read Full Guide &rarr;</span>
+        </div>
+      </article>
+
+      <!-- Article 2 -->
+      <article class="blog-card reveal">
+        <div class="blog-thumb">
+          <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=700&q=80" alt="Kitchen Drain Maintenance" loading="lazy" />
+        </div>
+        <div class="blog-content">
+          <div class="blog-meta">
+            <span>Apr 08, 2026</span>
+            <span class="dot">●</span>
+            <span>4 min read</span>
+          </div>
+          <h2 class="blog-title">Kitchen Drain Maintenance Tips for a Clog-Free Home</h2>
+          <p class="blog-excerpt">
+            Simple, chemical-free preventive routines to halt grease accumulation, food particle blockage, and persistent sink odors.
+          </p>
+          <span class="read-more-link">Read Full Guide &rarr;</span>
+        </div>
+      </article>
+
+      <!-- Article 3 -->
+      <article class="blog-card reveal">
+        <div class="blog-thumb">
+          <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=700&q=80" alt="Outdoor Channel Drainage" loading="lazy" />
+        </div>
+        <div class="blog-content">
+          <div class="blog-meta">
+            <span>Apr 04, 2026</span>
+            <span class="dot">●</span>
+            <span>6 min read</span>
+          </div>
+          <h2 class="blog-title">Outdoor Drainage Solutions for Patios, Balconies & Lawns</h2>
+          <p class="blog-excerpt">
+            Prevent surface water ponding during monsoons using high-capacity trench channels and corrosion-resistant grates.
+          </p>
+          <span class="read-more-link">Read Full Guide &rarr;</span>
+        </div>
+      </article>
+
+      <!-- Article 4 -->
+      <article class="blog-card reveal">
+        <div class="blog-thumb">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=700&q=80" alt="Plumbing Troubleshooting" loading="lazy" />
+        </div>
+        <div class="blog-content">
+          <div class="blog-meta">
+            <span>Mar 28, 2026</span>
+            <span class="dot">●</span>
+            <span>5 min read</span>
+          </div>
+          <h2 class="blog-title">Common Drain Complications and How to Resolve Them</h2>
+          <p class="blog-excerpt">
+            Slow draining water, gurgling sound traps, or unpleasant sewer odor? An architectural checklist for homeowners.
+          </p>
+          <span class="read-more-link">Read Full Guide &rarr;</span>
+        </div>
+      </article>
+
+      <!-- Article 5 -->
+      <article class="blog-card reveal">
+        <div class="blog-thumb">
+          <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=700&q=80" alt="304 Stainless Steel" loading="lazy" />
+        </div>
+        <div class="blog-content">
+          <div class="blog-meta">
+            <span>Mar 20, 2026</span>
+            <span class="dot">●</span>
+            <span>4 min read</span>
+          </div>
+          <h2 class="blog-title">The Engineering Advantages of Grade 304 Stainless Steel</h2>
+          <p class="blog-excerpt">
+            Why 304 stainless steel stands as the gold benchmark in modern drainage hardware: zero rust, high tensile tolerance, and sanitary finish.
+          </p>
+          <span class="read-more-link">Read Full Guide &rarr;</span>
+        </div>
+      </article>
+
+      <!-- Article 6 -->
+      <article class="blog-card reveal">
+        <div class="blog-thumb">
+          <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=700&q=80" alt="Modern Architecture Trends" loading="lazy" />
+        </div>
+        <div class="blog-content">
+          <div class="blog-meta">
+            <span>Mar 12, 2026</span>
+            <span class="dot">●</span>
+            <span>5 min read</span>
+          </div>
+          <h2 class="blog-title">Minimalist Tile-Insert Drain Trends for Contemporary Living</h2>
+          <p class="blog-excerpt">
+            Concealed perimeter drainage and custom insert fixtures creating continuous, seamless floor patterns across modern villas.
+          </p>
+          <span class="read-more-link">Read Full Guide &rarr;</span>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="logo footer-logo"><span>●</span> Prizam</div>
+        <p class="footer-desc">Smart Drainage. Modern Living.</p>
+        <p class="copyright">&copy; 2026 Prizam Inc. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-links">
+        <h4>Our Products</h4>
+        <a href="shop.html?category=Bathroom+Drains">Bathroom Drains</a>
+        <a href="shop.html?category=Kitchen+Drains">Kitchen Drains</a>
+        <a href="shop.html?category=Outdoor+Drains">Outdoor Drains</a>
+        <a href="shop.html?category=Accessories">Accessories</a>
+      </div>
+      <div class="footer-links">
+        <h4>Customer Care</h4>
+        <a href="#">Shipping Policy</a>
+        <a href="#">Returns & Refunds</a>
+        <a href="#">Installation Manual</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Mobile Hamburger Toggle Logic (Left-Side Sliding Drawer Animation)
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const navLinksMenu = document.getElementById("navLinksMenu");
+    const menuIcon = document.getElementById("menuIcon");
+
+    if (mobileMenuBtn && navLinksMenu) {
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinksMenu.classList.toggle("active");
+        if (navLinksMenu.classList.contains("active")) {
+          menuIcon.className = "fa-solid fa-xmark";
+        } else {
+          menuIcon.className = "fa-solid fa-bars";
+        }
+      });
+    }
+  </script>
+  <script type="module">
+    import { updateCartBadge } from "./assets/js/cart.js";
+    document.addEventListener("DOMContentLoaded", updateCartBadge);
+  </script>
+  <script type="module" src="assets/js/search.js"></script>
+  <script src="assets/js/animations.js"></script>
+</body>
+</html>

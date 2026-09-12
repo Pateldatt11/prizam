@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop All Drains | Prizam Architectural Systems</title>
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #16a34a;
+      --radius: 12px;
+      --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      width: 100%;
+    }
+
+    /* Navbar & Mobile Left-Drawer Hamburger Menu Styling */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo-mark {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.4rem;
+      z-index: 1001;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 300px;
+      height: 100vh;
+      background: #ffffff;
+      flex-direction: column;
+      padding: 5rem 2rem 2rem;
+      gap: 1.5rem;
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 999;
+      display: flex;
+      border-top-right-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+      position: relative;
+      width: fit-content;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    @media (min-width: 900px) {
+      .mobile-menu-toggle {
+        display: none;
+      }
+      .nav-links {
+        position: static;
+        height: auto;
+        width: auto;
+        max-width: none;
+        background: transparent;
+        flex-direction: row;
+        padding: 0;
+        box-shadow: none;
+        transform: none !important;
+        gap: 2rem;
+        border-radius: 0;
+      }
+      .nav-links a {
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.15rem;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      padding: 0.2rem;
+      transition: transform 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .cart-badge-wrapper {
+      position: relative;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Header Banner */
+    .shop-header-banner {
+      background: linear-gradient(rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.72)),
+                  url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      color: #ffffff;
+      padding: 4rem 2rem;
+      border-radius: var(--radius);
+      margin-top: 1.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .shop-header-banner h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .shop-header-banner p {
+      color: #e2e8f0;
+      font-size: 1.05rem;
+      max-width: 650px;
+      line-height: 1.6;
+    }
+
+    /* Catalog Layout */
+    .catalog-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2.5rem;
+      align-items: start;
+      margin-bottom: 5rem;
+    }
+
+    /* Filters Sidebar */
+    .filter-sidebar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      position: sticky;
+      top: 90px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+
+    .filter-sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-sidebar-header h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .filter-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-group:last-of-type {
+      margin-bottom: 1.75rem;
+    }
+
+    .filter-group-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-bottom: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-main);
+    }
+
+    .filter-option {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.65rem;
+      font-size: 0.88rem;
+      color: #475569;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .filter-option input[type="checkbox"],
+    .filter-option input[type="radio"] {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .btn-filter-apply {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-filter-apply:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-filter-reset {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Toolbar */
+    .catalog-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.75rem;
+      background: var(--surface);
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .catalog-count {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .catalog-sort {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .sort-select {
+      padding: 0.45rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      background: #ffffff;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 25px -8px rgba(0, 0, 0, 0.08);
+      border-color: #cbd5e1;
+    }
+
+    .product-thumb {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      background: #f1f5f9;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .product-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-thumb img {
+      transform: scale(1.05);
+    }
+
+    .badge-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      z-index: 2;
+    }
+
+    .badge-tag.upcoming {
+      background: var(--accent);
+    }
+
+    .badge-tag.demand {
+      background: #16a34a;
+      top: 10px;
+      left: auto;
+      right: 10px;
+    }
+
+    .product-info {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-category-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .product-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .product-title:hover {
+      color: var(--accent);
+    }
+
+    .product-price-box {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .current-price {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .old-price {
+      font-size: 0.88rem;
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .btn-add-cart {
+      margin-top: auto;
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-add-cart:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    /* Toast */
+    .shop-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--primary);
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .shop-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 900px) {
+      .catalog-layout {
+        grid-template-columns: 1fr;
+      }
+      .filter-sidebar {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar with Left-Drawer Animation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
+      </button>
+
+      <a href="index.html" class="logo">
+        <span class="logo-mark">●</span> Prizam
+      </a>
+
+      <nav class="nav-links" id="navLinksMenu">
+        <a href="index.html">Home</a>
+        <a href="shop.html" class="active">Products</a>
+        <a href="index.html#top-picks">Top Picks</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="shop.html" class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+        <a href="admin/index.html" class="icon-btn" title="Admin Portal"><i class="fa-solid fa-gear"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Header Banner -->
+    <div class="shop-header-banner">
+      <h1 id="shopPageHeading">All Architectural Drains</h1>
+      <p id="shopPageSubheading">Explore our high-performance 304 stainless steel linear channels, concealed tile-insert grates, and square point drains.</p>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="catalog-layout">
+      
+      <!-- Left Filters Sidebar -->
+      <aside class="filter-sidebar">
+        <div class="filter-sidebar-header">
+          <h3>Filter Hardware</h3>
+          <i class="fa-solid fa-sliders" style="color:var(--text-muted);"></i>
+        </div>
+        
+        <!-- Category Filter -->
+        <div class="filter-group">
+          <div class="filter-group-title">Application Area</div>
+          <label class="filter-option">
+            <input type="checkbox" name="category" value="Bathroom Drains" /> Bathroom Drains
+          </label>
+          <label class="filter-option">
+            <input type="checkbox" name="category" value="Kitchen Drains" /> Kitchen Drains
+          </label>
+          <label class="filter-option">
+            <input type="checkbox" name="category" value="Outdoor Drains" /> Outdoor Drains
+          </label>
+          <label class="filter-option">
+            <input type="checkbox" name="category" value="Accessories" /> Accessories
+          </label>
+        </div>
+
+        <!-- Price Range Filter -->
+        <div class="filter-group">
+          <div class="filter-group-title">Price Range</div>
+          <label class="filter-option">
+            <input type="radio" name="price" value="all" checked /> All Price Points
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="price" value="0-1500" /> Under ₹1,500
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="price" value="1500-3000" /> ₹1,500 – ₹3,000
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="price" value="3000-99999" /> ₹3,000 and above
+          </label>
+        </div>
+
+        <!-- Material Filter -->
+        <div class="filter-group">
+          <div class="filter-group-title">Material Specification</div>
+          <label class="filter-option">
+            <input type="checkbox" name="material" value="304 Stainless Steel" /> 304 Stainless Steel
+          </label>
+          <label class="filter-option">
+            <input type="checkbox" name="material" value="Brass" /> Solid Brass
+          </label>
+          <label class="filter-option">
+            <input type="checkbox" name="material" value="ABS Plastic" /> ABS Polymer
+          </label>
+          <label class="filter-option">
+            <input type="checkbox" name="material" value="Cast Iron" /> Cast Iron
+          </label>
+        </div>
+
+        <button class="btn-filter-apply" id="applyFiltersBtn">Apply Filters</button>
+        <button class="btn-filter-reset" id="resetFiltersBtn">Reset All Filters</button>
+      </aside>
+
+      <!-- Right Catalog Area -->
+      <main class="catalog-main">
+        <div class="catalog-toolbar">
+          <div class="catalog-count" id="productCountLabel">Streaming catalog from Firestore...</div>
+          <div class="catalog-sort">
+            <label for="sortSelect">Sort:</label>
+            <select id="sortSelect" class="sort-select">
+              <option value="featured">Featured First</option>
+              <option value="demand">🔥 Highest Demand (Most Viewed)</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="newest">Newest Arrivals</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dynamic Product Grid -->
+        <div class="product-grid" id="catalogGrid">
+          <div class="skeleton-card" style="height:320px; border-radius:12px; background:#eee;"></div>
+          <div class="skeleton-card" style="height:320px; border-radius:12px; background:#eee;"></div>
+          <div class="skeleton-card" style="height:320px; border-radius:12px; background:#eee;"></div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="logo footer-logo"><span>●</span> Prizam</div>
+        <p class="footer-desc">Smart Drainage. Modern Living.</p>
+        <p class="copyright">&copy; 2026 Prizam Inc. Metoda GIDC, Rajkot, Gujarat. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop Catalog</a>
+        <a href="blog.html">Architectural Blog</a>
+        <a href="contact.html">Contact Rajkot Hub</a>
+      </div>
+      <div class="footer-links">
+        <h4>Products</h4>
+        <a href="shop.html?category=Bathroom+Drains">Bathroom Drains</a>
+        <a href="shop.html?category=Kitchen+Drains">Kitchen Drains</a>
+        <a href="shop.html?category=Outdoor+Drains">Outdoor Drains</a>
+        <a href="shop.html?category=Accessories">Accessories</a>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <a href="#">Shipping Guidelines</a>
+        <a href="#">Returns & Refunds</a>
+        <a href="#">Installation Guide</a>
+        <a href="admin/login.html">Admin Portal</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="shop-toast" id="shopToast">Product added to cart</div>
+
+  <!-- Real-Time Firestore Syncer & Click-Through Demand Controller -->
+  <script type="module">
+    import { db } from "./assets/js/firebase-config.js";
+    import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+    // Mobile Hamburger Toggle Logic
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const navLinksMenu = document.getElementById("navLinksMenu");
+    const menuIcon = document.getElementById("menuIcon");
+
+    if (mobileMenuBtn && navLinksMenu) {
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinksMenu.classList.toggle("active");
+        if (navLinksMenu.classList.contains("active")) {
+          menuIcon.className = "fa-solid fa-xmark";
+        } else {
+          menuIcon.className = "fa-solid fa-bars";
+        }
+      });
+    }
+
+    let allProducts = [];
+    let displayedProducts = [];
+
+    // Parse URL params (e.g. ?filter=top-picks or ?category=Bathroom+Drains)
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterParam = urlParams.get("filter");
+    const categoryParam = urlParams.get("category");
+
+    const toast = document.getElementById("shopToast");
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    // Cart Management in LocalStorage
+    function getCart() {
+      try {
+        const raw = localStorage.getItem("prizam_cart");
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function updateCartBadge() {
+      const cart = getCart();
+      const count = cart.reduce((tot, item) => tot + (Number(item.quantity) || 1), 0);
+      const badge = document.getElementById("cartCount");
+      if (badge) badge.textContent = count;
+    }
+
+    window.addCatalogItemToCart = function(productStr) {
+      const product = JSON.parse(decodeURIComponent(productStr));
+      let cart = getCart();
+      const existing = cart.find(i => i.id === product.id);
+
+      if (existing) {
+        existing.quantity = (Number(existing.quantity) || 1) + 1;
+      } else {
+        cart.push({
+          id: product.id,
+          title: product.title,
+          price: Number(product.price),
+          imageUrl: product.imageUrl,
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem("prizam_cart", JSON.stringify(cart));
+      updateCartBadge();
+      showToast(`Added "${product.title}" to bag!`);
+    };
+
+    // Real-Time Firestore Stream for Catalog
+    onSnapshot(collection(db, "products"), (snapshot) => {
+      allProducts = [];
+      snapshot.forEach(docSnap => {
+        allProducts.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      // Filter out draft listings
+      allProducts = allProducts.filter(p => p.status !== "draft");
+
+      // Cache locally for offline resilience
+      try {
+        localStorage.setItem("prizam_local_catalog", JSON.stringify(allProducts));
+      } catch (e) {}
+
+      initCatalogView();
+    }, (error) => {
+      console.warn("Firestore catalog stream offline, falling back to local cache:", error);
+      const local = JSON.parse(localStorage.getItem("prizam_local_catalog") || "[]");
+      allProducts = local.filter(p => p.status !== "draft");
+      initCatalogView();
+    });
+
+    function initCatalogView() {
+      if (filterParam === "top-picks") {
+        document.getElementById("shopPageHeading").textContent = "Top Picks";
+        document.getElementById("shopPageSubheading").textContent = "Architectural fixtures chosen for premier residential installations.";
+      } else if (filterParam === "best-sellers") {
+        document.getElementById("shopPageHeading").textContent = "Best Sellers";
+        document.getElementById("shopPageSubheading").textContent = "Our most widely installed commercial and domestic linear drains.";
+      }
+
+      if (categoryParam) {
+        const matchingBox = document.querySelector(`input[name="category"][value="${categoryParam}"]`);
+        if (matchingBox) matchingBox.checked = true;
+      }
+
+      applyCurrentFilters();
+    }
+
+    function applyCurrentFilters() {
+      const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
+      const selectedPrice = document.querySelector('input[name="price"]:checked')?.value || "all";
+      const selectedMaterials = Array.from(document.querySelectorAll('input[name="material"]:checked')).map(cb => cb.value);
+
+      displayedProducts = allProducts.filter(p => {
+        if (filterParam === "top-picks" && !p.isTopPick) return false;
+        if (filterParam === "best-sellers" && !p.isTopSeller) return false;
+
+        if (selectedCategories.length > 0 && !selectedCategories.includes(p.category)) {
+          return false;
+        }
+
+        if (selectedMaterials.length > 0 && !selectedMaterials.includes(p.material)) {
+          return false;
+        }
+
+        if (selectedPrice !== "all") {
+          const [min, max] = selectedPrice.split("-").map(Number);
+          if (p.price < min || p.price > max) return false;
+        }
+
+        return true;
+      });
+
+      const sortBy = document.getElementById("sortSelect").value;
+      if (sortBy === "demand") {
+        // Sort by highest clickCount / demand
+        displayedProducts.sort((a, b) => (Number(b.clickCount) || 0) - (Number(a.clickCount) || 0));
+      } else if (sortBy === "price-low") {
+        displayedProducts.sort((a, b) => Number(a.price) - Number(b.price));
+      } else if (sortBy === "price-high") {
+        displayedProducts.sort((a, b) => Number(b.price) - Number(a.price));
+      } else if (sortBy === "newest") {
+        displayedProducts.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      }
+
+      renderGrid();
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById("catalogGrid");
+      const countLabel = document.getElementById("productCountLabel");
+      grid.innerHTML = "";
+
+      countLabel.textContent = `Showing ${displayedProducts.length} verified products`;
+
+      if (displayedProducts.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; padding: 4rem 1rem; text-align: center; color: var(--text-muted);">
+            <h3>No products match your filters</h3>
+            <p style="margin-top: 0.5rem;">Try clearing your selection or adjusting search criteria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      displayedProducts.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        let badgeHtml = "";
+        if (item.isTopPick) {
+          badgeHtml = `<span class="badge-tag">Top Pick</span>`;
+        } else if (item.isTopSeller) {
+          badgeHtml = `<span class="badge-tag">Best Seller</span>`;
+        } else if (item.isUpcoming) {
+          badgeHtml = `<span class="badge-tag upcoming">Upcoming</span>`;
+        }
+
+        // Highlight high demand items (>10 clicks or views)
+        if (Number(item.clickCount) >= 10) {
+          badgeHtml += `<span class="badge-tag demand"><i class="fa-solid fa-fire"></i> High Demand</span>`;
+        }
+
+        const serialized = encodeURIComponent(JSON.stringify(item));
+
+        card.innerHTML = `
+          <div class="product-thumb" onclick="location.href='product-details.html?id=${item.id}'">
+            ${badgeHtml}
+            <img src="${item.imageUrl || 'https://via.placeholder.com/400x300'}" alt="${item.title}" loading="lazy" />
+          </div>
+          <div class="product-info">
+            <div class="product-category-label">${item.category || 'Drainage'}</div>
+            <h3 class="product-title" onclick="location.href='product-details.html?id=${item.id}'">
+              ${item.title}
+            </h3>
+            <div class="product-price-box">
+              <span class="current-price">₹${Number(item.price).toLocaleString()}</span>
+              ${item.originalPrice ? `<span class="old-price">₹${Number(item.originalPrice).toLocaleString()}</span>` : ''}
+            </div>
+            <button class="btn-add-cart" onclick="addCatalogItemToCart('${serialized}')">
+              <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Filter Listeners
+    document.getElementById("applyFiltersBtn").addEventListener("click", applyCurrentFilters);
+    document.getElementById("sortSelect").addEventListener("change", applyCurrentFilters);
+    document.getElementById("resetFiltersBtn").addEventListener("click", () => {
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      const defaultRadio = document.querySelector('input[type="radio"][value="all"]');
+      if (defaultRadio) defaultRadio.checked = true;
+      applyCurrentFilters();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateCartBadge();
+    });
+  </script>
+</body>
+</html>

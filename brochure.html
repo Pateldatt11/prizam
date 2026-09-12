@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Brochures & Technical Drawings | Prizam Architectural Systems</title>
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #16a34a;
+      --radius: 12px;
+      --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      width: 100%;
+    }
+
+    /* Navbar & Mobile Drawer */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo-mark {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.4rem;
+      z-index: 1001;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 300px;
+      height: 100vh;
+      background: #ffffff;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      padding: 5rem 2rem 2rem;
+      gap: 1.5rem !important;
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 999;
+      display: flex;
+      border-top-right-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+      position: relative;
+      width: 100%;
+      display: block;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    @media (min-width: 900px) {
+      .mobile-menu-toggle {
+        display: none;
+      }
+      .nav-links {
+        position: static;
+        height: auto;
+        width: auto;
+        max-width: none;
+        background: transparent;
+        flex-direction: row !important;
+        align-items: center !important;
+        padding: 0;
+        box-shadow: none;
+        transform: none !important;
+        gap: 2rem !important;
+        border-radius: 0;
+      }
+      .nav-links a {
+        font-size: 0.95rem;
+        font-weight: 500;
+        width: fit-content;
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.15rem;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      padding: 0.2rem;
+      transition: transform 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .cart-badge-wrapper {
+      position: relative;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Immersive Header Banner */
+    .brochures-header-banner {
+      background: linear-gradient(rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.78)),
+                  url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      color: #ffffff;
+      padding: 4.5rem 2rem;
+      border-radius: var(--radius);
+      margin-top: 1.5rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      text-align: center;
+    }
+
+    .brochures-header-banner h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .brochures-header-banner p {
+      color: #e2e8f0;
+      font-size: 1.05rem;
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Toolbar */
+    .brochures-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      background: var(--surface);
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brochures-count {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .brochure-search-input {
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      outline: none;
+      width: 280px;
+      background: #ffffff;
+      transition: border-color 0.2s;
+    }
+
+    .brochure-search-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Brochures Grid */
+    .brochures-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+      margin-bottom: 5rem;
+    }
+
+    .brochure-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .brochure-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+      border-color: #cbd5e1;
+    }
+
+    .brochure-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .pdf-icon-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      background: #fee2e2;
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+    }
+
+    .brochure-meta h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 0.35rem;
+      line-height: 1.35;
+    }
+
+    .brochure-meta span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .brochure-desc {
+      font-size: 0.92rem;
+      color: #475569;
+      line-height: 1.65;
+      margin-bottom: 1.75rem;
+      flex-grow: 1;
+    }
+
+    .btn-download {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+      cursor: pointer;
+    }
+
+    .btn-download:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    /* Toast */
+    .brochure-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--primary);
+      color: #ffffff;
+      padding: 0.85rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 10000;
+      white-space: nowrap;
+    }
+
+    .brochure-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    .footer {
+      background: #111;
+      color: #fff;
+      padding: 3rem 0 2rem;
+      margin-top: auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.25rem;
+    }
+
+    .footer-logo {
+      color: #fff;
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .footer-desc {
+      color: #9ca3af;
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .copyright {
+      color: #6b7280;
+      font-size: 0.78rem;
+    }
+
+    .footer-links h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links a {
+      display: block;
+      color: #9ca3af;
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-bottom: 0.6rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+    }
+
+    @media (min-width: 576px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .footer {
+        padding: 4.5rem 0 2.5rem;
+      }
+      .footer-grid {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 3rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .brochures-grid {
+        grid-template-columns: 1fr;
+      }
+      .brochures-header-banner h1 {
+        font-size: 2.2rem;
+      }
+      .brochures-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .brochure-search-input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
+      </button>
+
+      <a href="index.html" class="logo">
+        <span class="logo-mark">●</span> Prizam
+      </a>
+
+      <nav class="nav-links" id="navLinksMenu">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Products</a>
+        <a href="index.html#top-picks">Top Picks</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+        <a href="brochures.html" class="active">Brochures</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="shop.html" class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+        <a href="admin/index.html" class="icon-btn" title="Admin Portal"><i class="fa-solid fa-gear"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Header Banner -->
+    <div class="brochures-header-banner">
+      <h1>Product Brochures & Technical Drawings</h1>
+      <p>Download official Prizam architectural drain catalogs, Grade 304 specification sheets, and installation manuals directly from our Rajkot manufacturing plant.</p>
+    </div>
+
+    <!-- Toolbar with counter and search -->
+    <div class="brochures-toolbar">
+      <div class="brochures-count" id="brochuresCountLabel">Streaming technical documentation from Firestore...</div>
+      <input type="text" id="brochureSearchInput" class="brochure-search-input" placeholder="Search brochures, CAD, or specs..." />
+    </div>
+
+    <!-- Brochures Grid Container -->
+    <div class="brochures-grid" id="brochuresGrid">
+      <div class="skeleton-card" style="height: 280px; border-radius: 12px; background: #eee;"></div>
+      <div class="skeleton-card" style="height: 280px; border-radius: 12px; background: #eee;"></div>
+      <div class="skeleton-card" style="height: 280px; border-radius: 12px; background: #eee;"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="logo footer-logo"><span>●</span> Prizam</div>
+        <p class="footer-desc">Smart Drainage. Modern Living.</p>
+        <p class="copyright">&copy; 2026 Prizam Inc. Metoda GIDC, Rajkot, Gujarat. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop Catalog</a>
+        <a href="blog.html">Architectural Blog</a>
+        <a href="contact.html">Contact Rajkot Hub</a>
+      </div>
+      <div class="footer-links">
+        <h4>Products</h4>
+        <a href="shop.html?category=Bathroom+Drains">Bathroom Drains</a>
+        <a href="shop.html?category=Kitchen+Drains">Kitchen Drains</a>
+        <a href="shop.html?category=Outdoor+Drains">Outdoor Drains</a>
+        <a href="shop.html?category=Accessories">Accessories</a>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <a href="brochures.html">Brochures & Manuals</a>
+        <a href="#">Shipping Guidelines</a>
+        <a href="#">Installation Guide</a>
+        <a href="admin/login.html">Admin Portal</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="brochure-toast" id="brochureToast">Download initiated</div>
+
+  <!-- Real-Time Cloud Firestore Sync Controller -->
+  <script type="module">
+    import { db } from "./assets/js/firebase-config.js";
+    import { updateCartBadge } from "./assets/js/cart.js";
+    import { 
+      collection, 
+      onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+    // Mobile Drawer Logic
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const navLinksMenu = document.getElementById("navLinksMenu");
+    const menuIcon = document.getElementById("menuIcon");
+
+    if (mobileMenuBtn && navLinksMenu) {
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinksMenu.classList.toggle("active");
+        menuIcon.className = navLinksMenu.classList.contains("active") 
+          ? "fa-solid fa-xmark" 
+          : "fa-solid fa-bars";
+      });
+    }
+
+    const toast = document.getElementById("brochureToast");
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2500);
+    }
+
+    const defaultBrochures = [
+      {
+        id: "b1",
+        title: "Linear Shower Drains Catalog 2026",
+        fileSize: "4.8 MB",
+        updatedAt: "April 2026",
+        description: "Complete architectural specifications, flow rate charts, and dimensional drawings for all SS304 linear floor drains.",
+        downloadUrl: "#"
+      },
+      {
+        id: "b2",
+        title: "Tile-Insert Concealed Grates Manual",
+        fileSize: "3.2 MB",
+        updatedAt: "March 2026",
+        description: "Installation guidelines, single-slope tile formatting guides, and invisible perimeter frame specifications.",
+        downloadUrl: "#"
+      },
+      {
+        id: "b3",
+        title: "Outdoor Trench & Patio Drains",
+        fileSize: "5.1 MB",
+        updatedAt: "February 2026",
+        description: "Heavy-duty load capacity charts, monsoon hydraulic discharge metrics, and corrosion-resistant grates specification guide.",
+        downloadUrl: "#"
+      },
+      {
+        id: "b4",
+        title: "Commercial Kitchen Grease & Waste Traps",
+        fileSize: "6.0 MB",
+        updatedAt: "January 2026",
+        description: "Industrial wastewater management fixtures, sediment basket maintenance intervals, and stainless steel cleanout access specs.",
+        downloadUrl: "#"
+      }
+    ];
+
+    let allBrochures = [];
+    let currentSearchQuery = "";
+
+    // Real-Time Listener on Firestore "brochures"
+    onSnapshot(collection(db, "brochures"), (snapshot) => {
+      allBrochures = [];
+      snapshot.forEach(docSnap => {
+        allBrochures.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      if (allBrochures.length === 0) {
+        // Fallback to local storage or defaults if collection not populated yet
+        const local = JSON.parse(localStorage.getItem("prizam_local_brochures") || "[]");
+        allBrochures = local.length > 0 ? local : defaultBrochures;
+      }
+
+      // Mirror locally for resilient caching
+      try {
+        localStorage.setItem("prizam_local_brochures", JSON.stringify(allBrochures));
+      } catch (e) {}
+
+      applyFilterAndRender();
+    }, (error) => {
+      console.warn("Firestore brochures stream error, loading cached data:", error);
+      const local = JSON.parse(localStorage.getItem("prizam_local_brochures") || "[]");
+      allBrochures = local.length > 0 ? local : defaultBrochures;
+      applyFilterAndRender();
+    });
+
+    function applyFilterAndRender() {
+      const filtered = allBrochures.filter(b => {
+        const title = (b.title || "").toLowerCase();
+        const desc = (b.description || "").toLowerCase();
+        return title.includes(currentSearchQuery) || desc.includes(currentSearchQuery);
+      });
+      renderBrochures(filtered);
+    }
+
+    function renderBrochures(list) {
+      const grid = document.getElementById("brochuresGrid");
+      const countLabel = document.getElementById("brochuresCountLabel");
+      grid.innerHTML = "";
+
+      countLabel.textContent = `Showing ${list.length} official technical documents`;
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; padding: 4rem 1rem; text-align: center; color: var(--text-muted);">
+            <i class="fa-solid fa-folder-open" style="font-size:2.4rem; margin-bottom: 1rem; color: #cbd5e1;"></i>
+            <h3>No technical documents found</h3>
+            <p>No specifications match your search query "${currentSearchQuery}".</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "brochure-card";
+        card.innerHTML = `
+          <div class="brochure-card-header">
+            <div class="pdf-icon-box"><i class="fa-solid fa-file-pdf"></i></div>
+            <div class="brochure-meta">
+              <h3>${item.title}</h3>
+              <span>PDF • ${item.fileSize || '3.5 MB'} • ${item.updatedAt || '2026'}</span>
+            </div>
+          </div>
+          <p class="brochure-desc">${item.description || 'Official Prizam architectural drainage specifications and installation manual.'}</p>
+          <a href="${item.downloadUrl && item.downloadUrl !== '#' ? item.downloadUrl : 'javascript:void(0)'}" 
+             class="btn-download" 
+             data-title="${item.title}" 
+             ${item.downloadUrl && item.downloadUrl !== '#' ? 'target="_blank" download' : ''}>
+            <i class="fa-solid fa-download"></i> Download Brochure
+          </a>
+        `;
+
+        card.querySelector(".btn-download").addEventListener("click", () => {
+          showToast(`Downloading "${item.title}"...`);
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    // Search input handler
+    document.getElementById("brochureSearchInput").addEventListener("input", (e) => {
+      currentSearchQuery = e.target.value.trim().toLowerCase();
+      applyFilterAndRender();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateCartBadge();
+    });
+  </script>
+</body>
+</html>
