@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile | Prizam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+  <script type="module" src="assets/js/navbar-search.js"></script>
+  <style>
+    .profile-page { max-width: 760px; margin: 0 auto; padding: 3rem 1rem 5rem; }
+    .profile-card { background:#fff; border:1px solid #e5e7eb; border-radius:14px; padding:2rem; box-shadow:0 10px 25px rgba(15,23,42,.06); }
+    .profile-heading { margin-bottom:1.5rem; }
+    .profile-heading h1 { margin:0; font-size:2rem; }
+    .profile-heading p { margin:.45rem 0 0; color:#6b7280; }
+    .profile-state { display:none; }
+    .profile-state.active { display:block; }
+    .auth-tabs { display:flex; gap:.5rem; border-bottom:1px solid #e5e7eb; margin-bottom:1.25rem; }
+    .auth-tab { border:0; background:none; color:#6b7280; padding:.7rem .85rem; font:inherit; font-weight:700; cursor:pointer; border-bottom:2px solid transparent; }
+    .auth-tab.active { color:#111827; border-bottom-color:#2563eb; }
+    .profile-field { margin-bottom:1rem; }
+    .profile-field label { display:block; margin-bottom:.4rem; color:#374151; font-size:.82rem; font-weight:700; }
+    .profile-field input { width:100%; padding:.8rem .9rem; border:1px solid #e5e7eb; border-radius:8px; font:inherit; }
+    .profile-field input:focus { outline:2px solid rgba(37,99,235,.18); border-color:#2563eb; }
+    .profile-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .profile-button { width:100%; border:0; border-radius:8px; padding:.8rem 1rem; background:#0f172a; color:#fff; font:inherit; font-weight:700; cursor:pointer; }
+    .google-button { background:#fff; color:#111827; border:1px solid #e5e7eb; margin-bottom:1rem; }
+    .google-button i { color:#4285f4; margin-right:.45rem; }
+    .auth-divider { display:flex; align-items:center; gap:.75rem; color:#9ca3af; font-size:.78rem; margin:1rem 0; }
+    .auth-divider::before, .auth-divider::after { content:""; height:1px; flex:1; background:#e5e7eb; }
+    .profile-actions { display:flex; gap:.75rem; margin-top:1.25rem; }
+    .profile-actions button { flex:1; }
+    .secondary-button { background:#f1f5f9; color:#111827; }
+    .profile-user { display:flex; align-items:center; gap:1rem; padding-bottom:1.25rem; margin-bottom:1.25rem; border-bottom:1px solid #e5e7eb; }
+    .profile-avatar { width:54px; height:54px; border-radius:50%; object-fit:cover; background:#e2e8f0; display:grid; place-items:center; color:#475569; font-weight:800; font-size:1.2rem; }
+    .profile-user h2 { margin:0; font-size:1.1rem; }
+    .profile-user p { margin:.2rem 0 0; color:#6b7280; font-size:.82rem; }
+    .profile-message { min-height:1.25rem; margin-top:.9rem; color:#64748b; font-size:.82rem; }
+    @media (max-width:560px) { .profile-page { padding-top:2rem; } .profile-card { padding:1.25rem; } .profile-grid { grid-template-columns:1fr; gap:0; } .profile-heading h1 { font-size:1.6rem; } }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Mobile Menu"><i class="fa-solid fa-bars" id="menuIcon"></i></button>
+      <a href="index.html" class="logo"><span class="logo-mark">●</span> Prizam</a>
+      <nav class="nav-links" id="navLinksMenu">
+        <a href="index.html">Home</a><a href="shop.html">Products</a><a href="index.html#top-picks">Top Picks</a><a href="blog.html">Blog</a><a href="brochure.html">Brochures</a><a href="contact.html">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <form class="navbar-search" action="shop.html" method="get" role="search"><input type="search" name="search" placeholder="Search products" aria-label="Search products" /><button type="submit" aria-label="Submit product search"><i class="fa-solid fa-magnifying-glass"></i></button></form>
+        <a href="profile.html" class="icon-btn" aria-label="My Profile"><i class="fa-solid fa-user"></i></a>
+        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart"><i class="fa-solid fa-bag-shopping"></i><span class="cart-badge" id="cartCount">0</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="profile-page">
+    <div class="profile-heading"><h1>My Profile</h1><p>Sign in to save your details and make checkout faster.</p></div>
+    <section class="profile-card">
+      <div class="profile-state active" id="authState">
+        <div class="auth-tabs"><button class="auth-tab active" id="signInTab" type="button">Sign in</button><button class="auth-tab" id="signUpTab" type="button">Create account</button></div>
+        <button class="profile-button google-button" id="googleButton" type="button"><i class="fa-brands fa-google"></i><span>Continue with Google</span></button>
+        <div class="auth-divider">or use email</div>
+        <form id="authForm">
+          <div class="profile-field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required /></div>
+          <div class="profile-field"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required /></div>
+          <button class="profile-button" id="authSubmit" type="submit">Sign in</button>
+        </form>
+        <div class="profile-message" id="authMessage"></div>
+      </div>
+
+      <div class="profile-state" id="userState">
+        <div class="profile-user"><div class="profile-avatar" id="profileAvatar">U</div><div><h2 id="profileName">Customer</h2><p id="profileEmail"></p></div></div>
+        <form id="profileForm">
+          <div class="profile-grid"><div class="profile-field"><label for="profileNameInput">Name</label><input id="profileNameInput" autocomplete="name" /></div><div class="profile-field"><label for="profilePhone">Phone</label><input id="profilePhone" type="tel" autocomplete="tel" /></div></div>
+          <div class="profile-field"><label for="profileAddress">Address</label><input id="profileAddress" autocomplete="street-address" /></div>
+          <div class="profile-grid"><div class="profile-field"><label for="profileCity">City</label><input id="profileCity" autocomplete="address-level2" /></div><div class="profile-field"><label for="profilePincode">Pincode</label><input id="profilePincode" autocomplete="postal-code" /></div></div>
+          <div class="profile-actions"><button class="profile-button" type="submit">Save profile</button><button class="profile-button secondary-button" id="signOutButton" type="button">Sign out</button></div>
+        </form>
+        <div class="profile-message" id="profileMessage"></div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { auth, db, googleProvider } from "./assets/js/firebase-config.js";
+    import { collection, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+    const authState = document.getElementById("authState");
+    const userState = document.getElementById("userState");
+    const authForm = document.getElementById("authForm");
+    const authMessage = document.getElementById("authMessage");
+    const profileMessage = document.getElementById("profileMessage");
+    const signInTab = document.getElementById("signInTab");
+    const signUpTab = document.getElementById("signUpTab");
+    const authSubmit = document.getElementById("authSubmit");
+    let isSignUp = false;
+
+    function showMessage(element, message, error = false) { element.textContent = message; element.style.color = error ? "#dc2626" : "#64748b"; }
+    function switchMode(signUp) { isSignUp = signUp; signInTab.classList.toggle("active", !signUp); signUpTab.classList.toggle("active", signUp); authSubmit.textContent = signUp ? "Create account" : "Sign in"; document.getElementById("authPassword").autocomplete = signUp ? "new-password" : "current-password"; }
+    signInTab.addEventListener("click", () => switchMode(false));
+    signUpTab.addEventListener("click", () => switchMode(true));
+
+    async function saveUserProfile(user, extra = {}) {
+      await setDoc(doc(db, "users", user.uid), { uid:user.uid, name:user.displayName || user.email.split("@")[0], email:user.email, provider:user.providerData[0]?.providerId || "password", ...extra, updatedAt:new Date().toISOString() }, { merge:true });
+    }
+
+    async function handleAuth(user) {
+      authState.classList.toggle("active", !user); userState.classList.toggle("active", Boolean(user));
+      if (!user) {
+        localStorage.removeItem("prizam_user");
+        return;
+      }
+      localStorage.setItem("prizam_user", JSON.stringify({
+        uid: user.uid,
+        name: user.displayName || user.email.split("@")[0],
+        email: user.email,
+        provider: user.providerData[0]?.providerId || "password"
+      }));
+      const stored = (await getDoc(doc(db, "users", user.uid))).data() || {};
+      document.getElementById("profileAvatar").textContent = (user.displayName || user.email || "U").slice(0, 1).toUpperCase();
+      document.getElementById("profileName").textContent = user.displayName || user.email.split("@")[0];
+      document.getElementById("profileEmail").textContent = user.email || "";
+      document.getElementById("profileNameInput").value = stored.name || user.displayName || "";
+      document.getElementById("profilePhone").value = stored.phone || "";
+      document.getElementById("profileAddress").value = stored.address || "";
+      document.getElementById("profileCity").value = stored.city || "";
+      document.getElementById("profilePincode").value = stored.pincode || "";
+    }
+
+    onAuthStateChanged(auth, (user) => handleAuth(user).catch(() => showMessage(profileMessage, "Could not load your profile.", true)));
+
+    document.getElementById("googleButton").addEventListener("click", async () => {
+      showMessage(authMessage, "Connecting to Google...");
+      try { const result = await signInWithPopup(auth, googleProvider); await saveUserProfile(result.user); showMessage(authMessage, "Signed in successfully."); }
+      catch (error) { showMessage(authMessage, error.code === "auth/popup-closed-by-user" ? "Google sign-in was cancelled." : "Google sign-in could not be completed.", true); }
+    });
+
+    authForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const email = document.getElementById("authEmail").value.trim();
+      const password = document.getElementById("authPassword").value;
+      try {
+        const result = isSignUp ? await createUserWithEmailAndPassword(auth, email, password) : await signInWithEmailAndPassword(auth, email, password);
+        await saveUserProfile(result.user);
+        showMessage(authMessage, isSignUp ? "Account created." : "Signed in successfully.");
+      } catch (error) { showMessage(authMessage, error.code === "auth/email-already-in-use" ? "This email already has an account." : "Please check your email and password.", true); }
+    });
+
+    document.getElementById("profileForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return;
+      const name = document.getElementById("profileNameInput").value.trim();
+      const profile = { name, phone:document.getElementById("profilePhone").value.trim(), address:document.getElementById("profileAddress").value.trim(), city:document.getElementById("profileCity").value.trim(), pincode:document.getElementById("profilePincode").value.trim() };
+      try { if (name && name !== user.displayName) await updateProfile(user, { displayName:name }); await saveUserProfile(user, profile); await handleAuth(auth.currentUser); showMessage(profileMessage, "Profile saved."); }
+      catch (error) { showMessage(profileMessage, "Could not save your profile.", true); }
+    });
+
+    document.getElementById("signOutButton").addEventListener("click", async () => { await signOut(auth); showMessage(authMessage, "You have signed out."); });
+  </script>
+</body>
+</html>

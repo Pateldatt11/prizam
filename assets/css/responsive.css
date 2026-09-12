@@ -124,12 +124,44 @@
     overflow-wrap: anywhere;
   }
 
+  .product-info-column,
+  .detail-desc,
+  .key-spec-item {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .detail-desc {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .detail-title,
+  .rating-row,
+  .price-row,
+  .action-row {
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .key-spec-item span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
   .btn,
   button,
   input,
   select,
   textarea {
     max-width: 100%;
+  }
+
+  textarea,
+  #pDescription {
+    width: 100%;
+    min-width: 0;
+    resize: vertical;
   }
 
   .btn-add-cart,

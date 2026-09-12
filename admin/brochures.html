@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prizam Admin | Brochures</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <style>
+    :root { --ink:#0f172a; --muted:#64748b; --blue:#2563eb; --bg:#f8fafc; --line:#e2e8f0; --panel:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:"Plus Jakarta Sans",sans-serif; }
+    .admin-shell { min-height:100vh; display:grid; grid-template-columns:250px 1fr; }
+    .admin-sidebar { background:#070b13; color:#94a3b8; padding:1.5rem 1rem; }
+    .admin-brand { display:block; color:#fff; font-size:1.2rem; font-weight:800; text-decoration:none; margin:0 .5rem 2rem; }
+    .sidebar-link { display:flex; align-items:center; gap:.7rem; color:#94a3b8; text-decoration:none; padding:.7rem .75rem; border-radius:8px; font-size:.85rem; font-weight:600; }
+    .sidebar-link:hover, .sidebar-link.active { color:#fff; background:#2563eb; }
+    .sidebar-link i { width:1.1rem; text-align:center; }
+    .sidebar-heading { color:#64748b; font-size:.68rem; font-weight:800; letter-spacing:.08em; margin:1.4rem .75rem .5rem; text-transform:uppercase; }
+    .admin-main { min-width:0; padding:2rem; }
+    .page-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; }
+    .page-header h1 { margin:0; font-size:1.6rem; }
+    .page-header p { margin:.3rem 0 0; color:var(--muted); font-size:.85rem; }
+    .layout { display:grid; grid-template-columns:minmax(280px,380px) minmax(0,1fr); gap:1.5rem; align-items:start; }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:1.25rem; }
+    .panel h2 { margin:0 0 1rem; font-size:1rem; }
+    .field { margin-bottom:1rem; }
+    label { display:block; margin-bottom:.4rem; font-size:.78rem; font-weight:700; }
+    input, textarea { width:100%; border:1px solid var(--line); border-radius:8px; padding:.7rem .75rem; font:inherit; font-size:.85rem; color:var(--ink); }
+    textarea { min-height:120px; resize:vertical; }
+    input:focus, textarea:focus { outline:2px solid rgba(37,99,235,.18); border-color:var(--blue); }
+    .button-row { display:flex; gap:.65rem; }
+    button { border:0; border-radius:8px; padding:.7rem 1rem; font:inherit; font-size:.82rem; font-weight:700; cursor:pointer; }
+    .primary { background:var(--blue); color:#fff; }
+    .secondary { background:#f1f5f9; color:var(--ink); }
+    .brochure-list { display:grid; gap:.75rem; }
+    .brochure-item { border:1px solid var(--line); border-radius:10px; padding:1rem; }
+    .brochure-item h3 { margin:0 0 .35rem; font-size:.95rem; }
+    .brochure-item p { margin:0 0 .75rem; color:var(--muted); font-size:.8rem; line-height:1.5; }
+    .brochure-meta { color:var(--muted); font-size:.72rem; margin-bottom:.75rem; }
+    .item-actions { display:flex; gap:.5rem; }
+    .empty { color:var(--muted); font-size:.85rem; padding:1rem 0; }
+    .toast { position:fixed; right:1.5rem; bottom:1.5rem; padding:.8rem 1rem; border-radius:8px; color:#fff; background:var(--ink); display:none; }
+    .toast.show { display:block; }
+    @media (max-width:800px) {
+      .admin-shell { display:block; }
+      .admin-sidebar { padding:.8rem; }
+      .admin-sidebar nav { display:flex; gap:.35rem; overflow-x:auto; }
+      .admin-sidebar .sidebar-heading { display:none; }
+      .sidebar-link { flex:0 0 auto; white-space:nowrap; }
+      .admin-main { padding:1rem; }
+      .layout { grid-template-columns:1fr; }
+      .page-header { align-items:flex-start; flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <a class="admin-brand" href="index.html">Prizam Admin</a>
+      <div class="sidebar-heading">Storefront</div>
+      <nav>
+        <a class="sidebar-link" href="index.html"><i class="fa-solid fa-boxes-stacked"></i>Products</a>
+        <a class="sidebar-link" href="add-product.html"><i class="fa-solid fa-circle-plus"></i>Add Product</a>
+        <a class="sidebar-link active" href="brochures.html"><i class="fa-solid fa-file-lines"></i>Brochures</a>
+      </nav>
+      <div class="sidebar-heading">Management</div>
+      <nav>
+        <a class="sidebar-link" href="orders.html"><i class="fa-solid fa-truck-ramp-box"></i>Orders</a>
+        <a class="sidebar-link" href="inquiries.html"><i class="fa-solid fa-envelope-open-text"></i>Inquiries</a>
+        <a class="sidebar-link" href="settings.html"><i class="fa-solid fa-gears"></i>Settings</a>
+      </nav>
+      <div class="sidebar-heading">Preview</div>
+      <nav>
+        <a class="sidebar-link" href="../brochure.html" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i>View Brochures</a>
+        <a class="sidebar-link" href="../index.html" target="_blank"><i class="fa-solid fa-store"></i>Live Storefront</a>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+      <header class="page-header">
+        <div>
+          <h1>Brochures & Manuals</h1>
+          <p>Add documents here and they appear on the public brochure page automatically.</p>
+        </div>
+        <button class="secondary" id="logoutBtn" type="button"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</button>
+      </header>
+
+      <div class="layout">
+        <section class="panel">
+          <h2 id="formTitle">Add brochure</h2>
+          <form id="brochureForm">
+            <div class="field"><label for="brochureTitle">Title</label><input id="brochureTitle" required placeholder="Linear Shower Drains Catalog 2026" /></div>
+            <div class="field"><label for="brochureDescription">Description</label><textarea id="brochureDescription" required placeholder="Describe the specifications or installation guide."></textarea></div>
+            <div class="field"><label for="brochureFileSize">File size</label><input id="brochureFileSize" placeholder="4.8 MB" /></div>
+            <div class="field"><label for="brochureUpdatedAt">Updated date</label><input id="brochureUpdatedAt" placeholder="June 2026" /></div>
+            <div class="field"><label for="brochureDownloadUrl">Download URL</label><input id="brochureDownloadUrl" type="url" placeholder="https://example.com/file.pdf" /></div>
+            <div class="button-row"><button class="primary" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> <span id="submitLabel">Publish brochure</span></button><button class="secondary" id="cancelBtn" type="button">Clear</button></div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h2>Published brochures</h2>
+          <div class="brochure-list" id="brochureList"><div class="empty">Loading brochures...</div></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { db, auth } from "../assets/js/firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    import { addDoc, collection, deleteDoc, doc, onSnapshot, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+    const adminEmail = "admin@prizam.com";
+    const form = document.getElementById("brochureForm");
+    const list = document.getElementById("brochureList");
+    const toast = document.getElementById("toast");
+    let editingId = null;
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user || user.email !== adminEmail) window.location.href = "login.html";
+    });
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function readForm() {
+      return {
+        title: document.getElementById("brochureTitle").value.trim(),
+        description: document.getElementById("brochureDescription").value.trim(),
+        fileSize: document.getElementById("brochureFileSize").value.trim() || "PDF",
+        updatedAt: document.getElementById("brochureUpdatedAt").value.trim() || new Date().toLocaleDateString(),
+        downloadUrl: document.getElementById("brochureDownloadUrl").value.trim() || "#",
+        status: "published",
+        updatedAtTimestamp: serverTimestamp()
+      };
+    }
+
+    function resetForm() {
+      form.reset();
+      editingId = null;
+      document.getElementById("formTitle").textContent = "Add brochure";
+      document.getElementById("submitLabel").textContent = "Publish brochure";
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const data = readForm();
+      try {
+        if (editingId) {
+          await updateDoc(doc(db, "brochures", editingId), data);
+          showToast("Brochure updated");
+        } else {
+          await addDoc(collection(db, "brochures"), { ...data, createdAt: serverTimestamp() });
+          showToast("Brochure published");
+        }
+        resetForm();
+      } catch (error) {
+        console.error(error);
+        showToast("Could not save brochure");
+      }
+    });
+
+    document.getElementById("cancelBtn").addEventListener("click", resetForm);
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
+    });
+
+    onSnapshot(collection(db, "brochures"), (snapshot) => {
+      const brochures = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+      list.innerHTML = "";
+      if (!brochures.length) {
+        list.innerHTML = '<div class="empty">No brochures published yet.</div>';
+        return;
+      }
+      brochures.forEach((item) => {
+        const card = document.createElement("article");
+        card.className = "brochure-item";
+        card.innerHTML = `<h3></h3><p></p><div class="brochure-meta"></div><div class="item-actions"><button class="secondary edit-btn" type="button">Edit</button><button class="secondary delete-btn" type="button">Delete</button></div>`;
+        card.querySelector("h3").textContent = item.title || "Untitled brochure";
+        card.querySelector("p").textContent = item.description || "No description";
+        card.querySelector(".brochure-meta").textContent = `${item.fileSize || "PDF"} | ${item.updatedAt || ""}`;
+        card.querySelector(".edit-btn").addEventListener("click", () => {
+          editingId = item.id;
+          document.getElementById("formTitle").textContent = "Edit brochure";
+          document.getElementById("submitLabel").textContent = "Save changes";
+          document.getElementById("brochureTitle").value = item.title || "";
+          document.getElementById("brochureDescription").value = item.description || "";
+          document.getElementById("brochureFileSize").value = item.fileSize || "";
+          document.getElementById("brochureUpdatedAt").value = item.updatedAt || "";
+          document.getElementById("brochureDownloadUrl").value = item.downloadUrl === "#" ? "" : (item.downloadUrl || "");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        card.querySelector(".delete-btn").addEventListener("click", async () => {
+          if (!window.confirm(`Delete ${item.title || "this brochure"}?`)) return;
+          try { await deleteDoc(doc(db, "brochures", item.id)); showToast("Brochure deleted"); } catch (error) { showToast("Could not delete brochure"); }
+        });
+        list.appendChild(card);
+      });
+    }, () => {
+      list.innerHTML = '<div class="empty">Could not load brochures.</div>';
+    });
+  </script>
+</body>
+</html>
