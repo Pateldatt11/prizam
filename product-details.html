@@ -10,11 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <!-- External Stylesheets -->
+  
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="assets/css/main.css" />
   <link rel="stylesheet" href="assets/css/animations.css" />
-  <link rel="stylesheet" href="assets/css/responsive.css" />
 
   <style>
     :root {
@@ -54,7 +53,6 @@
       margin: 0 auto;
       padding: 0 1.25rem;
       width: 100%;
-      box-sizing: border-box;
     }
 
     @media (min-width: 768px) {
@@ -222,12 +220,12 @@
 
     /* Breadcrumbs */
     .breadcrumb-row {
-      padding: 1.25rem 0 0.75rem;
-      font-size: 0.85rem;
+      padding: 1.5rem 0 1rem;
+      font-size: 0.88rem;
       color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
       flex-wrap: wrap;
     }
 
@@ -248,10 +246,6 @@
 
     .breadcrumb-row strong {
       color: var(--text-main);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 200px;
     }
 
     /* Product Details Layout */
@@ -261,7 +255,6 @@
       gap: 3.5rem;
       align-items: start;
       margin: 1.5rem 0 4.5rem;
-      min-width: 0;
     }
 
     /* Gallery Layout */
@@ -271,8 +264,6 @@
       position: sticky;
       top: 90px;
       align-items: flex-start;
-      min-width: 0;
-      width: 100%;
     }
 
     .thumbnails-track {
@@ -349,8 +340,6 @@
     .product-info-column {
       display: flex;
       flex-direction: column;
-      min-width: 0;
-      width: 100%;
     }
 
     .badge-row {
@@ -358,20 +347,17 @@
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.85rem;
-      flex-wrap: wrap;
     }
 
     .detail-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      display: inline-block;
       background: #eff6ff;
       color: var(--accent);
       font-size: 0.72rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      padding: 5px 11px;
+      padding: 4px 10px;
       border-radius: 6px;
     }
 
@@ -382,57 +368,52 @@
     }
 
     .detail-title {
-      font-size: clamp(1.45rem, 4vw, 2.2rem);
+      font-size: 2.2rem;
       font-weight: 800;
       letter-spacing: -0.5px;
       line-height: 1.25;
       color: var(--text-main);
       margin-bottom: 0.6rem;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      white-space: normal !important;
     }
 
     .rating-row {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.85rem;
+      gap: 0.5rem;
+      font-size: 0.88rem;
       color: #f59e0b;
-      margin-bottom: 1.15rem;
-      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
     }
 
     .rating-row span {
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 600;
     }
 
     .price-row {
       display: flex;
       align-items: baseline;
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
-      padding-bottom: 1.1rem;
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
       border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
     }
 
     .price-current {
-      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      font-size: 2.2rem;
       font-weight: 800;
       color: var(--text-main);
     }
 
     .price-original {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       color: var(--text-muted);
       text-decoration: line-through;
     }
 
     .price-discount {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 800;
       color: var(--success);
       background: #dcfce7;
@@ -440,105 +421,19 @@
       border-radius: 4px;
     }
 
-    /* ==========================================================================
-       PRODUCT DESCRIPTION: MS WORD TABS + NORMAL SENTENCE SPACING
-       ========================================================================== */
     .detail-desc {
       color: #475569;
-      font-size: clamp(0.88rem, 2.4vw, 0.96rem);
+      font-size: 0.96rem;
       line-height: 1.7;
       margin-bottom: 1.75rem;
-      overflow-wrap: anywhere;
-      word-wrap: break-word;
-      word-break: normal;
-      width: 100%;
-      box-sizing: border-box;
     }
-
-    /* Intentional blank line margins between paragraphs */
-    .detail-desc p {
-      margin-bottom: 0.95rem;
-      line-height: 1.7;
-    }
-
-    .detail-desc p:last-child {
-      margin-bottom: 0;
-    }
-
-    .detail-desc p:empty,
-    .detail-desc p:has(br:only-child) {
-      min-height: 1.2rem;
-      margin-bottom: 0.75rem;
-    }
-
-    /* Styled Tab Stop (MS Word tab spacing) */
-    .detail-desc .tab-stop {
-      display: inline-block;
-      width: 2rem;
-      min-width: 2rem;
-      white-space: pre;
-    }
-
-    /* Word Indentation Levels */
-    .detail-desc .ql-indent-1 { padding-left: 2rem; }
-    .detail-desc .ql-indent-2 { padding-left: 4rem; }
-    .detail-desc .ql-indent-3 { padding-left: 6rem; }
-
-    .detail-desc strong,
-    .detail-desc b {
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .detail-desc em,
-    .detail-desc i {
-      font-style: italic;
-    }
-
-    .detail-desc u {
-      text-decoration: underline;
-    }
-
-    .detail-desc s {
-      text-decoration: line-through;
-    }
-
-    .detail-desc h1,
-    .detail-desc h2,
-    .detail-desc h3,
-    .detail-desc h4 {
-      font-weight: 800;
-      color: var(--text-main);
-      margin-top: 1.1rem;
-      margin-bottom: 0.5rem;
-      line-height: 1.35;
-    }
-
-    .detail-desc h1 { font-size: 1.45rem; }
-    .detail-desc h2 { font-size: 1.25rem; }
-    .detail-desc h3 { font-size: 1.1rem; }
-    .detail-desc h4 { font-size: 1rem; }
-
-    .detail-desc ul,
-    .detail-desc ol {
-      padding-left: 1.4rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .detail-desc li {
-      margin-bottom: 0.35rem;
-    }
-
-    .detail-desc .ql-size-small { font-size: 0.8rem; }
-    .detail-desc .ql-size-large { font-size: 1.2rem; font-weight: 700; }
-    .detail-desc .ql-size-huge { font-size: 1.45rem; font-weight: 800; }
 
     .key-specs {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 1.75rem;
-      padding: 1.15rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin-bottom: 2rem;
+      padding: 1.25rem;
       background: var(--surface);
       border-radius: 10px;
       border: 1px solid var(--border);
@@ -548,25 +443,21 @@
       display: flex;
       align-items: center;
       gap: 0.65rem;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       font-weight: 700;
       color: var(--text-main);
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      white-space: normal !important;
     }
 
     .key-spec-item i {
       color: var(--accent);
-      font-size: 0.95rem;
-      flex-shrink: 0;
+      font-size: 1rem;
     }
 
     .action-row {
       display: flex;
       align-items: center;
-      gap: 0.85rem;
-      margin-bottom: 1.75rem;
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
 
     .qty-selector {
@@ -576,13 +467,12 @@
       border-radius: 8px;
       background: #ffffff;
       overflow: hidden;
-      flex-shrink: 0;
     }
 
     .qty-btn {
       background: none;
       border: none;
-      padding: 0.75rem 1rem;
+      padding: 0.75rem 1.1rem;
       font-size: 1.1rem;
       font-weight: 700;
       cursor: pointer;
@@ -602,25 +492,23 @@
       font-weight: 700;
       color: var(--text-main);
       outline: none;
-      background: transparent;
     }
 
     .btn-checkout {
       flex: 1;
-      padding: 0.9rem;
+      padding: 0.95rem;
       background: var(--primary);
       color: #ffffff;
       border: none;
       border-radius: 8px;
       font-weight: 800;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.6rem;
       transition: all 0.2s ease;
-      min-height: 48px;
     }
 
     .btn-checkout:hover {
@@ -632,12 +520,12 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.25rem;
+      padding: 1.5rem;
       margin-bottom: 2rem;
     }
 
     .delivery-box label {
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 700;
       display: block;
       margin-bottom: 0.6rem;
@@ -651,11 +539,10 @@
 
     .pincode-input {
       flex: 1;
-      min-width: 0;
-      padding: 0.7rem 0.9rem;
+      padding: 0.75rem 1rem;
       border: 1px solid var(--border);
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       outline: none;
       transition: border-color 0.2s;
     }
@@ -665,7 +552,7 @@
     }
 
     .pincode-btn {
-      padding: 0.7rem 1.15rem;
+      padding: 0.75rem 1.25rem;
       background: #f1f5f9;
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -673,7 +560,6 @@
       font-size: 0.85rem;
       cursor: pointer;
       transition: all 0.2s;
-      flex-shrink: 0;
     }
 
     .pincode-btn:hover {
@@ -681,81 +567,57 @@
     }
 
     .pincode-status {
-      font-size: 0.82rem;
-      margin-top: 0.65rem;
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
       display: flex;
       align-items: center;
       gap: 0.4rem;
       font-weight: 600;
-      line-height: 1.4;
     }
 
-    /* ==========================================================================
-       ENGINEERING SPECIFICATIONS - ZERO-CUTOFF MOBILE WRAPPING
-       ========================================================================== */
     .specs-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 2.25rem;
-      margin-bottom: 4.5rem;
+      padding: 2.5rem;
+      margin-bottom: 5rem;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-      width: 100%;
-      box-sizing: border-box;
-      overflow: hidden;
     }
 
     .specs-card h2 {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       font-weight: 800;
       letter-spacing: -0.5px;
       margin-bottom: 1.5rem;
-      line-height: 1.3;
-      white-space: normal !important;
-      overflow-wrap: anywhere;
     }
 
-    .specs-card table.specs-table {
-      width: 100% !important;
-      min-width: 0 !important;
-      max-width: 100% !important;
-      table-layout: fixed !important;
+    .specs-table {
+      width: 100%;
       border-collapse: collapse;
-      box-sizing: border-box;
     }
 
-    .specs-card table.specs-table tr {
+    .specs-table tr {
       border-bottom: 1px solid var(--border);
     }
 
-    .specs-card table.specs-table tr:last-child {
+    .specs-table tr:last-child {
       border-bottom: none;
     }
 
-    .specs-card table.specs-table td {
+    .specs-table td {
       padding: 1.1rem 0;
       font-size: 0.92rem;
-      line-height: 1.6;
-      white-space: normal !important;
-      word-wrap: break-word !important;
-      overflow-wrap: anywhere !important;
-      word-break: break-word !important;
-      box-sizing: border-box;
     }
 
-    .specs-card table.specs-table td:first-child {
+    .specs-table td:first-child {
       color: var(--text-muted);
       font-weight: 600;
-      width: 35%;
-      padding-right: 1.25rem;
-      vertical-align: top;
+      width: 32%;
     }
 
-    .specs-card table.specs-table td:last-child {
+    .specs-table td:last-child {
       color: var(--text-main);
       font-weight: 700;
-      width: 65%;
-      vertical-align: top;
     }
 
     .detail-toast {
@@ -772,7 +634,7 @@
       transform: translateY(100px);
       opacity: 0;
       transition: all 0.3s ease;
-      z-index: 10001;
+      z-index: 1000;
     }
 
     .detail-toast.show {
@@ -780,12 +642,10 @@
       opacity: 1;
     }
 
-    /* Tablet Responsive Support */
     @media (max-width: 900px) {
       .product-detail-layout {
         grid-template-columns: 1fr;
         gap: 2rem;
-        margin: 1rem 0 3rem;
       }
       .gallery-container {
         flex-direction: column-reverse;
@@ -796,127 +656,23 @@
         max-height: none;
         overflow-x: auto;
         width: 100%;
-        padding-bottom: 4px;
-      }
-      .thumb-item {
-        width: 64px;
-        height: 64px;
       }
       .main-image-viewport {
-        height: 340px;
+        height: 360px;
         width: 100%;
       }
-    }
-
-    /* Smartphone Breakpoint */
-    @media (max-width: 768px) {
-      .detail-desc {
-        white-space: normal !important;
-        line-height: 1.62 !important;
+      .detail-title {
+        font-size: 1.8rem;
       }
-
-      .detail-desc .tab-stop {
-        width: 1.25rem !important;
-        min-width: 1.25rem !important;
+      .price-current {
+        font-size: 1.8rem;
       }
-
-      .detail-desc .ql-indent-1 { padding-left: 1.25rem !important; }
-      .detail-desc .ql-indent-2 { padding-left: 2.25rem !important; }
-      .detail-desc .ql-indent-3 { padding-left: 3.25rem !important; }
-
-      .detail-desc p {
-        margin-bottom: 0.85rem !important;
-      }
-
-      .detail-desc p:last-child {
-        margin-bottom: 0 !important;
-      }
-
-      .detail-desc p:empty,
-      .detail-desc p:has(br:only-child) {
-        min-height: 1rem !important;
-        margin-bottom: 0.6rem !important;
-      }
-
-      .specs-card {
-        padding: 1.5rem 1.15rem !important;
-        margin-bottom: 3rem;
-      }
-
-      .specs-card h2 {
-        font-size: 1.2rem;
-        margin-bottom: 1.1rem;
-      }
-
-      .specs-card table.specs-table,
-      .specs-card table.specs-table tbody,
-      .specs-card table.specs-table tr,
-      .specs-card table.specs-table td {
-        display: block !important;
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-      }
-
-      .specs-card table.specs-table tr {
-        padding: 1rem 0 !important;
-        border-bottom: 1px solid var(--border) !important;
-      }
-
-      .specs-card table.specs-table td:first-child {
-        width: 100% !important;
-        padding: 0 0 0.4rem 0 !important;
-        font-size: 0.76rem !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.8px !important;
-        color: var(--text-muted) !important;
-        font-weight: 700 !important;
-      }
-
-      .specs-card table.specs-table td:last-child {
-        width: 100% !important;
-        padding: 0 !important;
-        font-size: 0.95rem !important;
-        line-height: 1.55 !important;
-        color: var(--text-main) !important;
-        font-weight: 700 !important;
-        white-space: normal !important;
-        overflow-wrap: anywhere !important;
-        word-wrap: break-word !important;
-        word-break: break-word !important;
-      }
-
       .key-specs {
         grid-template-columns: 1fr;
       }
-
-      .action-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .qty-selector {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .qty-input {
-        flex: 1;
-      }
-
-      .btn-checkout {
-        width: 100%;
-      }
-
-      .detail-toast {
-        left: 1rem;
-        right: 1rem;
-        bottom: 1.25rem;
-        text-align: center;
-      }
     }
   </style>
+  <link rel="stylesheet" href="assets/css/responsive.css" />
   <script type="module" src="assets/js/navbar-search.js"></script>
 </head>
 <body>
@@ -1005,10 +761,9 @@
           <span class="price-discount" id="productDiscount">28% OFF</span>
         </div>
 
-        <!-- Fully Responsive Overview Description -->
-        <div class="detail-desc" id="productDescription">
-          The Linear Shower Drain combines <strong>functionality, durability, and modern aesthetics</strong>. Its streamlined design helps create a more open and elegant shower area while providing dependable drainage for everyday use.
-        </div>
+        <p class="detail-desc" id="productDescription">
+          Architectural drainage fixture precision engineered from grade 304 stainless steel. Provides rapid hydraulic discharge, anti-odor air seal traps, and flush-floor aesthetic integration.
+        </p>
 
         <!-- Fast Feature Overview -->
         <div class="key-specs">
@@ -1044,34 +799,34 @@
 
     </div>
 
-    <!-- Technical Specs Table (Wrapped & Unclipped across all phones) -->
+    <!-- Technical Specs Table -->
     <div class="specs-card">
       <h2>Comprehensive Engineering Specifications</h2>
       <table class="specs-table">
         <tbody>
           <tr>
-            <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Material Grade</td>
-            <td id="tableMaterial" style="white-space: normal !important; overflow-wrap: anywhere !important;">Grade 304 Stainless Steel (SS304)</td>
+            <td>Material Grade</td>
+            <td id="tableMaterial">Grade 304 Stainless Steel (SS304)</td>
           </tr>
           <tr>
-            <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Manufacturing Origin</td>
-            <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Metoda GIDC, Rajkot, Gujarat, India</td>
+            <td>Manufacturing Origin</td>
+            <td>Metoda GIDC, Rajkot, Gujarat, India</td>
           </tr>
           <tr>
-            <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Dimensions (L x W x H)</td>
-            <td id="specDimensions" style="white-space: normal !important; overflow-wrap: anywhere !important;">600mm x 70mm x 20mm</td>
+            <td>Dimensions (L x W x H)</td>
+            <td id="specDimensions">600mm x 70mm x 20mm</td>
           </tr>
           <tr>
-            <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Hydraulic Discharge Rate</td>
-            <td id="tableFlowRate" style="white-space: normal !important; overflow-wrap: anywhere !important;">40 L/min</td>
+            <td>Hydraulic Discharge Rate</td>
+            <td id="tableFlowRate">40 L/min</td>
           </tr>
           <tr>
-            <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Debris Filter Core</td>
-            <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Removable Stainless Steel Hair/Sediment Trap Included</td>
+            <td>Debris Filter Core</td>
+            <td>Removable Stainless Steel Hair/Sediment Trap Included</td>
           </tr>
           <tr>
-            <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Manufacturer Warranty</td>
-            <td style="white-space: normal !important; overflow-wrap: anywhere !important;">5-Year Complete Prizam Warranty against rust and pitting</td>
+            <td>Manufacturer Warranty</td>
+            <td>5-Year Complete Prizam Warranty against rust and pitting</td>
           </tr>
         </tbody>
       </table>
@@ -1132,6 +887,7 @@
       });
     }
 
+    // 1. Get Product ID from URL parameters (?id=...)
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get("id");
 
@@ -1141,7 +897,7 @@
       price: 2499,
       originalPrice: 3499,
       category: "Bathroom Drains",
-      description: "The Linear Shower Drain combines <strong>functionality, durability, and modern aesthetics</strong>. Its streamlined design helps create a more open and elegant shower area while providing dependable drainage for everyday use.",
+      description: "Architectural drainage fixture precision engineered from grade 304 stainless steel. Provides rapid hydraulic discharge, anti-odor air seal traps, and flush-floor aesthetic integration.",
       imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
       additionalImages: [
         "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
@@ -1162,6 +918,7 @@
       setTimeout(() => toast.classList.remove("show"), 2200);
     }
 
+    // Cart Management
     function getCart() {
       try {
         const raw = localStorage.getItem("prizam_cart");
@@ -1216,7 +973,7 @@
       }
     });
 
-    // ================= 1. FETCH PRODUCT & INITIALIZE =================
+    // 2. Fetch Product (Hybrid: Firebase Firestore + Local Admin Catalog)
     async function loadProductDetails() {
       if (productId) {
         let fetched = null;
@@ -1247,38 +1004,10 @@
         }
       }
 
+      // Track Product View / Click in Firestore for Demand Analytics
       trackProductClick(currentProduct.id);
-      renderProductToUI();
-    }
 
-    /**
-     * Converts intentional tabs (\t) to styled tab-stops (<span class="tab-stop">&emsp;</span>),
-     * collapses accidental double/triple spaces inside running sentences to single spaces,
-     * and preserves blank lines / paragraph separation.
-     */
-    function formatDescriptionWithTabsAndSpacing(rawHtml) {
-      if (!rawHtml || typeof rawHtml !== 'string') return '';
-      
-      let formatted = rawHtml;
-
-      // 1. Convert Word tab characters to tab-stop spans
-      formatted = formatted.replace(/\t/g, '<span class="tab-stop">&emsp;</span>');
-
-      // 2. Collapse accidental duplicate spaces inside running text
-      formatted = formatted.replace(/ {2,}/g, ' ');
-      formatted = formatted.replace(/(&nbsp;|\u00A0){2,}/g, ' ');
-
-      // 3. Wrap plain text into distinct <p> tags if no HTML wrapper exists
-      if (!/<[a-z][\s\S]*>/i.test(formatted)) {
-        formatted = formatted.split(/\r?\n\r?\n/)
-          .map(para => `<p>${para.replace(/\r?\n/g, '<br>')}</p>`)
-          .join('');
-      }
-
-      return formatted;
-    }
-
-    function renderProductToUI() {
+      // Render Product Data
       document.getElementById("productTitle").textContent = currentProduct.title;
       document.getElementById("bcTitle").textContent = currentProduct.title;
       document.getElementById("bcCategory").textContent = currentProduct.category || "Bathroom Drains";
@@ -1286,8 +1015,6 @@
       document.getElementById("productPrice").textContent = `₹${Number(currentProduct.price).toLocaleString()}`;
 
       if (currentProduct.originalPrice && Number(currentProduct.originalPrice) > Number(currentProduct.price)) {
-        document.getElementById("productOldPrice").style.display = "inline";
-        document.getElementById("productDiscount").style.display = "inline-block";
         document.getElementById("productOldPrice").textContent = `₹${Number(currentProduct.originalPrice).toLocaleString()}`;
         const discountPct = Math.round(((currentProduct.originalPrice - currentProduct.price) / currentProduct.originalPrice) * 100);
         document.getElementById("productDiscount").textContent = `${discountPct}% OFF`;
@@ -1296,9 +1023,8 @@
         document.getElementById("productDiscount").style.display = "none";
       }
 
-      // Render Description: Single space in ongoing sentence, full MS Word tab stops & paragraph gaps preserved
       if (currentProduct.description) {
-        document.getElementById("productDescription").innerHTML = formatDescriptionWithTabsAndSpacing(currentProduct.description);
+        document.getElementById("productDescription").textContent = currentProduct.description;
       }
 
       const detailBadge = document.getElementById("detailBadge");
@@ -1337,13 +1063,14 @@
       `).join("");
     }
 
+    // Image switcher
     window.switchImage = function(src, thumbElement) {
       document.getElementById("mainImage").src = src;
       document.querySelectorAll(".thumb-item").forEach(t => t.classList.remove("active"));
       if (thumbElement) thumbElement.classList.add("active");
     };
 
-    // Zoom on Hover
+    // Amazon-style Mouse Hover Zoom Effect
     const imageViewport = document.getElementById("imageViewpoint");
     const mainImgEl = document.getElementById("mainImage");
 

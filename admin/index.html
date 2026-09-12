@@ -11,9 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- Quill Rich Text Editor (Preserves MS Word bold, sizes, headings & lists) -->
-  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-
   <style>
     :root {
       --sidebar-bg: #070b13;
@@ -551,7 +548,7 @@
     .action-group {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
 
     .btn-table-action {
@@ -573,16 +570,6 @@
       background: #e2e8f0;
     }
 
-    .btn-table-edit {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: var(--accent);
-    }
-
-    .btn-table-edit:hover {
-      background: #dbeafe;
-    }
-
     .btn-delete {
       background: none;
       border: none;
@@ -597,9 +584,8 @@
       color: var(--danger);
     }
 
-    /* ================= 3. MODALS (PREVIEW & EDIT) ================= */
-    .preview-modal-backdrop,
-    .edit-modal-backdrop {
+    /* ================= 3. LIVE PREVIEW MODAL DRAWER ================= */
+    .preview-modal-backdrop {
       position: fixed;
       inset: 0;
       background: rgba(15, 23, 42, 0.6);
@@ -611,8 +597,7 @@
       padding: 1.5rem;
     }
 
-    .preview-modal-backdrop.active,
-    .edit-modal-backdrop.active {
+    .preview-modal-backdrop.active {
       display: flex;
     }
 
@@ -626,26 +611,12 @@
       animation: modalSlide 0.25s ease-out;
     }
 
-    .edit-modal-box {
-      background: #ffffff;
-      width: 100%;
-      max-width: 760px;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      animation: modalSlide 0.25s ease-out;
-    }
-
     @keyframes modalSlide {
       from { transform: scale(0.95) translateY(10px); opacity: 0; }
       to { transform: scale(1) translateY(0); opacity: 1; }
     }
 
-    .preview-header,
-    .edit-modal-header {
+    .preview-header {
       padding: 1.25rem 1.5rem;
       border-bottom: 1px solid var(--border);
       display: flex;
@@ -653,16 +624,15 @@
       align-items: center;
     }
 
-    .preview-header h3,
-    .edit-modal-header h3 {
-      font-size: 1.1rem;
+    .preview-header h3 {
+      font-size: 1.05rem;
       font-weight: 700;
     }
 
-    .btn-close-modal {
+    .btn-close-preview {
       background: none;
       border: none;
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       color: var(--text-muted);
       cursor: pointer;
     }
@@ -670,84 +640,6 @@
     .preview-body {
       padding: 1.75rem;
       background: #f8fafc;
-    }
-
-    .edit-modal-body {
-      padding: 1.75rem;
-      overflow-y: auto;
-      background: #ffffff;
-    }
-
-    .edit-modal-footer {
-      padding: 1rem 1.5rem;
-      background: #f8fafc;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-    }
-
-    .edit-form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .edit-form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 0.45rem;
-      color: var(--text-main);
-    }
-
-    .edit-form-group input,
-    .edit-form-group select {
-      width: 100%;
-      padding: 0.75rem 0.95rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      color: var(--text-main);
-      outline: none;
-      background: #ffffff;
-      transition: all 0.2s;
-    }
-
-    .edit-form-group input:focus,
-    .edit-form-group select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
-    }
-
-    .edit-form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    /* Quill in Modal */
-    .edit-quill-wrapper {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      background: #ffffff;
-    }
-
-    .edit-quill-wrapper .ql-toolbar {
-      border: none !important;
-      border-bottom: 1px solid var(--border) !important;
-      background: #f8fafc;
-    }
-
-    .edit-quill-wrapper .ql-container {
-      border: none !important;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.92rem;
-      min-height: 220px;
-    }
-
-    .edit-quill-wrapper .ql-editor {
-      min-height: 220px;
-      line-height: 1.65;
     }
 
     .mock-store-card {
@@ -840,12 +732,6 @@
     .admin-toast.show {
       transform: translateY(0);
       opacity: 1;
-    }
-
-    @media (max-width: 640px) {
-      .edit-form-row {
-        grid-template-columns: 1fr;
-      }
     }
   </style>
   <link rel="stylesheet" href="../assets/css/responsive.css" />
@@ -964,7 +850,7 @@
       <div class="page-title-row">
         <div>
           <h1>Catalog & Section Controls</h1>
-          <p>Real-time Firestore catalog: toggle showcase placements, switch items between Draft and Published, edit product specs & formatted descriptions, or preview customer appearance.</p>
+          <p>Real-time Firestore catalog: toggle showcase placements, switch items between Draft and Published, or preview customer appearance.</p>
         </div>
       </div>
 
@@ -1009,95 +895,12 @@
     </div>
   </main>
 
-  <!-- ================= 3. EDIT PRODUCT & DESCRIPTION MODAL ================= -->
-  <div class="edit-modal-backdrop" id="editModal">
-    <div class="edit-modal-box">
-      <div class="edit-modal-header">
-        <h3><i class="fa-solid fa-pen-to-square" style="color:var(--accent); margin-right:0.4rem;"></i> Edit Product & Description</h3>
-        <button class="btn-close-modal" onclick="closeEditModal()">&times;</button>
-      </div>
-
-      <div class="edit-modal-body">
-        <input type="hidden" id="editProductId" />
-
-        <div class="edit-form-group">
-          <label for="editTitle">Product Title</label>
-          <input type="text" id="editTitle" required placeholder="e.g. Linear Shower Drain 600mm" />
-        </div>
-
-        <div class="edit-form-row">
-          <div class="edit-form-group">
-            <label for="editCategory">Category</label>
-            <select id="editCategory">
-              <option value="Bathroom Drains">Bathroom Drains</option>
-              <option value="Kitchen Drains">Kitchen Drains</option>
-              <option value="Outdoor Drains">Outdoor Drains</option>
-              <option value="Accessories">Accessories</option>
-            </select>
-          </div>
-
-          <div class="edit-form-group">
-            <label for="editMaterial">Material Grade</label>
-            <select id="editMaterial">
-              <option value="304 Stainless Steel">304 Stainless Steel</option>
-              <option value="Solid Brass">Solid Brass</option>
-              <option value="ABS Polymer">ABS Polymer</option>
-              <option value="Cast Iron">Cast Iron</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="edit-form-row">
-          <div class="edit-form-group">
-            <label for="editPrice">Selling Price (₹)</label>
-            <input type="number" id="editPrice" required min="0" />
-          </div>
-
-          <div class="edit-form-group">
-            <label for="editOldPrice">Original Price / MRP (₹)</label>
-            <input type="number" id="editOldPrice" min="0" />
-          </div>
-        </div>
-
-        <div class="edit-form-row">
-          <div class="edit-form-group">
-            <label for="editDimensions">Dimensions</label>
-            <input type="text" id="editDimensions" placeholder="600mm x 70mm x 20mm" />
-          </div>
-
-          <div class="edit-form-group">
-            <label for="editFlowRate">Hydraulic Discharge Rate</label>
-            <input type="text" id="editFlowRate" placeholder="40 L/min" />
-          </div>
-        </div>
-
-        <!-- Quill Rich Text Editor Container -->
-        <div class="edit-form-group">
-          <label>Product Description (Formatted Text, Bold, Sizes, Headings & Tabs)</label>
-          <div class="edit-quill-wrapper">
-            <div id="editDescriptionQuill"></div>
-          </div>
-          <small style="color:var(--text-muted); font-size:0.78rem; display:block; margin-top:0.35rem;">
-            Supports paste from Microsoft Word, bold formatting, paragraphs, bullet points, font sizes, and indentations.
-          </small>
-        </div>
-      </div>
-
-      <div class="edit-modal-footer">
-        <button type="button" class="btn-table-action" onclick="closeEditModal()">Cancel</button>
-        <button type="button" class="btn-add" id="btnSaveEdit" onclick="saveProductEdit()">
-          <i class="fa-solid fa-floppy-disk"></i> Save Changes
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= 4. LIVE PREVIEW MODAL DRAWER ================= -->
+  <!-- ================= 3. LIVE PREVIEW MODAL DRAWER ================= -->
   <div class="preview-modal-backdrop" id="previewModal">
     <div class="preview-box">
       <div class="preview-header">
         <h3>Customer Live Card Preview</h3>
-        <button class="btn-close-modal" onclick="closePreview()">&times;</button>
+        <button class="btn-close-preview" onclick="closePreview()">&times;</button>
       </div>
       <div class="preview-body">
         <div class="mock-store-card">
@@ -1118,9 +921,6 @@
 
   <div class="admin-toast" id="adminToast">Notice updated</div>
 
-  <!-- Quill JS Core Engine -->
-  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-
   <!-- Real-Time Cloud Firestore Sync Controller -->
   <script type="module">
     import { db, auth } from "../assets/js/firebase-config.js";
@@ -1138,23 +938,6 @@
       window.location.href = "login.html";
     }
 
-    // 2. Initialize Quill Rich Text Editor for Edit Modal
-    const editQuill = new Quill('#editDescriptionQuill', {
-      theme: 'snow',
-      placeholder: 'Edit product description or paste directly from Microsoft Word...',
-      modules: {
-        toolbar: [
-          [{ 'header': [1, 2, 3, false] }],
-          [{ 'size': ['small', false, 'large', 'huge'] }],
-          ['bold', 'italic', 'underline', 'strike'],
-          [{ 'color': [] }, { 'background': [] }],
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-          [{ 'indent': '-1' }, { 'indent': '+1' }],
-          ['clean']
-        ]
-      }
-    });
-
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById("sideUserName").textContent = user.displayName || "Administrator";
@@ -1168,6 +951,7 @@
     let currentFilter = "all";
     let searchQuery = "";
 
+    // Parse URL parameters for initial filters (e.g., ?filter=published)
     const urlParams = new URLSearchParams(window.location.search);
     const initialFilter = urlParams.get("filter");
     if (initialFilter === "published" || initialFilter === "draft") {
@@ -1194,21 +978,23 @@
       document.getElementById("tabBadgeDraft").textContent = draftCount;
     }
 
-    // Orders Counter Stream
+    // 2. Real-Time Orders Counter for Sidebar
     onSnapshot(collection(db, "orders"), (snap) => {
       const sideOrders = document.getElementById("sideBadgeOrders");
       if (sideOrders) sideOrders.textContent = snap.size;
     }, () => {});
 
-    // Real-Time Products Listener from Firestore
+    // 3. Real-Time Products Listener from Firestore
     onSnapshot(collection(db, "products"), (snapshot) => {
       products = [];
       snapshot.forEach((docSnap) => {
         products.push({ id: docSnap.id, ...docSnap.data() });
       });
 
+      // Sort by newest created first
       products.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
+      // Cache mirror for offline resilience
       try {
         localStorage.setItem("prizam_local_catalog", JSON.stringify(products));
       } catch (e) {}
@@ -1222,14 +1008,17 @@
       renderTable();
     });
 
+    // 4. Synchronize Sidebar Links and Tab Buttons
     window.setFilter = function(filter) {
       currentFilter = filter;
 
+      // Update horizontal tabs
       document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
       if (filter === "all" && document.getElementById("tabAll")) document.getElementById("tabAll").classList.add("active");
       if (filter === "published" && document.getElementById("tabPublished")) document.getElementById("tabPublished").classList.add("active");
       if (filter === "draft" && document.getElementById("tabDraft")) document.getElementById("tabDraft").classList.add("active");
 
+      // Update sidebar links
       document.querySelectorAll(".sidebar-link").forEach(link => link.classList.remove("active"));
       if (filter === "all" && document.getElementById("sideLinkAll")) document.getElementById("sideLinkAll").classList.add("active");
       if (filter === "published" && document.getElementById("sideLinkPublished")) document.getElementById("sideLinkPublished").classList.add("active");
@@ -1243,6 +1032,7 @@
       renderTable();
     };
 
+    // 5. Direct Firestore Operations
     window.toggleStatus = async function(productId) {
       const target = products.find(p => p.id === productId);
       if (!target) return;
@@ -1284,79 +1074,6 @@
       }
     };
 
-    // ================= EDIT MODAL CONTROLLERS =================
-    window.openEditModal = function(productId) {
-      const item = products.find(p => p.id === productId);
-      if (!item) return;
-
-      document.getElementById("editProductId").value = item.id;
-      document.getElementById("editTitle").value = item.title || "";
-      document.getElementById("editCategory").value = item.category || "Bathroom Drains";
-      document.getElementById("editMaterial").value = item.material || "304 Stainless Steel";
-      document.getElementById("editPrice").value = item.price !== undefined ? item.price : "";
-      document.getElementById("editOldPrice").value = item.originalPrice !== undefined && item.originalPrice !== null ? item.originalPrice : "";
-      document.getElementById("editDimensions").value = item.dimensions || "";
-      document.getElementById("editFlowRate").value = item.flowRate || "";
-
-      // Load formatted HTML description into Quill
-      editQuill.root.innerHTML = item.description || "";
-
-      document.getElementById("editModal").classList.add("active");
-    };
-
-    window.closeEditModal = function() {
-      document.getElementById("editModal").classList.remove("active");
-    };
-
-    window.saveProductEdit = async function() {
-      const productId = document.getElementById("editProductId").value;
-      const title = document.getElementById("editTitle").value.trim();
-      const price = Number(document.getElementById("editPrice").value);
-      const originalPrice = Number(document.getElementById("editOldPrice").value) || null;
-      const category = document.getElementById("editCategory").value;
-      const material = document.getElementById("editMaterial").value;
-      const dimensions = document.getElementById("editDimensions").value.trim();
-      const flowRate = document.getElementById("editFlowRate").value.trim();
-      
-      const richDescription = editQuill.root.innerHTML.trim();
-
-      if (!title) {
-        alert("Please provide a product title.");
-        return;
-      }
-      if (isNaN(price) || price < 0) {
-        alert("Please enter a valid price.");
-        return;
-      }
-
-      const saveBtn = document.getElementById("btnSaveEdit");
-      saveBtn.disabled = true;
-      saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
-
-      try {
-        await updateDoc(doc(db, "products", productId), {
-          title,
-          category,
-          material,
-          price,
-          originalPrice,
-          dimensions: dimensions || "Standard",
-          flowRate: flowRate || "35 L/min",
-          description: richDescription === '<p><br></p>' ? '' : richDescription
-        });
-
-        showToast("Product & formatted description updated!");
-        closeEditModal();
-      } catch (err) {
-        console.error("Failed to update product in Firestore:", err);
-        showToast("Error updating product in cloud.");
-      } finally {
-        saveBtn.disabled = false;
-        saveBtn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save Changes`;
-      }
-    };
-
-    // Live Preview Controllers
     window.openPreview = function(productId) {
       const item = products.find(p => p.id === productId);
       if (!item) return;
@@ -1448,9 +1165,6 @@
           </td>
           <td>
             <div class="action-group">
-              <button class="btn-table-action btn-table-edit" onclick="openEditModal('${item.id}')" title="Edit Specs & Description">
-                <i class="fa-solid fa-pen-to-square"></i> Edit
-              </button>
               <button class="btn-table-action" onclick="openPreview('${item.id}')" title="Preview Storefront Card">
                 <i class="fa-solid fa-eye"></i> Live
               </button>
@@ -1467,10 +1181,6 @@
     // Modal dismiss on backdrop click
     document.getElementById("previewModal").addEventListener("click", (e) => {
       if (e.target.id === "previewModal") closePreview();
-    });
-
-    document.getElementById("editModal").addEventListener("click", (e) => {
-      if (e.target.id === "editModal") closeEditModal();
     });
 
     // Logout
