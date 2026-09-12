@@ -820,7 +820,10 @@
       </nav>
 
       <div class="nav-actions">
-        <a href="shop.html?focus=search" class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <form class="navbar-search" action="shop.html" method="get" role="search">
+          <input type="search" name="search" placeholder="Search products" aria-label="Search products" />
+          <button type="submit" aria-label="Submit product search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
         <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
           <i class="fa-solid fa-bag-shopping"></i>
           <span class="cart-badge" id="cartCount">0</span>

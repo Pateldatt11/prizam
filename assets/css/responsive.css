@@ -1,3 +1,43 @@
+.navbar-search {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  width: 220px;
+  padding: 0.2rem 0.3rem 0.2rem 0.75rem;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.navbar-search input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-main, #111827);
+  font: inherit;
+  font-size: 0.78rem;
+}
+
+.navbar-search button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--primary, #121212);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.navbar-search:focus-within {
+  border-color: var(--accent, #2e7d32);
+}
+
 /* Smartphone layout overrides. Desktop styles remain unchanged. */
 @media (max-width: 767px) {
   html,
@@ -31,6 +71,10 @@
 
   .nav-actions {
     gap: 0.65rem;
+  }
+
+  .navbar-search {
+    width: 140px;
   }
 
   .icon-btn {
@@ -254,6 +298,11 @@
 }
 
 @media (max-width: 420px) {
+  .navbar-search {
+    width: 100px;
+    padding-left: 0.55rem;
+  }
+
   .category-grid,
   .product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
