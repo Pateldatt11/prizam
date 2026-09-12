@@ -499,11 +499,11 @@
         <a href="index.html#top-picks">Top Picks</a>
         <a href="blog.html">Blog</a>
         <a href="contact.html">Contact</a>
-        <a href="brochures.html" class="active">Brochures</a>
+        <a href="brochure.html" class="active">Brochures</a>
       </nav>
 
       <div class="nav-actions">
-        <a href="shop.html" class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a href="shop.html?focus=search" class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></a>
         <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
           <i class="fa-solid fa-bag-shopping"></i>
           <span class="cart-badge" id="cartCount">0</span>
@@ -558,7 +558,7 @@
       </div>
       <div class="footer-links">
         <h4>Support</h4>
-        <a href="brochures.html">Brochures & Manuals</a>
+        <a href="brochure.html">Brochures & Manuals</a>
         <a href="#">Shipping Guidelines</a>
         <a href="#">Installation Guide</a>
         <a href="admin/login.html">Admin Portal</a>
@@ -664,9 +664,11 @@
 
     function applyFilterAndRender() {
       const filtered = allBrochures.filter(b => {
-        const title = (b.title || "").toLowerCase();
-        const desc = (b.description || "").toLowerCase();
-        return title.includes(currentSearchQuery) || desc.includes(currentSearchQuery);
+        const searchableText = [b.title, b.description, b.fileSize, b.updatedAt, b.id]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        return searchableText.includes(currentSearchQuery);
       });
       renderBrochures(filtered);
     }

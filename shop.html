@@ -352,6 +352,22 @@
       color: var(--text-muted);
     }
 
+    .catalog-search {
+      width: min(100%, 320px);
+      padding: 0.55rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      background: #ffffff;
+      outline: none;
+    }
+
+    .catalog-search:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
     .catalog-sort {
       display: flex;
       align-items: center;
@@ -568,7 +584,7 @@
       </nav>
 
       <div class="nav-actions">
-        <a href="shop.html" class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></a>
+        <a href="shop.html?focus=search" class="icon-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></a>
         <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
           <i class="fa-solid fa-bag-shopping"></i>
           <span class="cart-badge" id="cartCount">0</span>
@@ -654,6 +670,7 @@
       <main class="catalog-main">
         <div class="catalog-toolbar">
           <div class="catalog-count" id="productCountLabel">Streaming catalog from Firestore...</div>
+          <input type="search" id="catalogSearch" class="catalog-search" placeholder="Search products..." aria-label="Search products" />
           <div class="catalog-sort">
             <label for="sortSelect">Sort:</label>
             <select id="sortSelect" class="sort-select">
@@ -734,11 +751,20 @@
 
     let allProducts = [];
     let displayedProducts = [];
+    let searchQuery = "";
 
     // Parse URL params (e.g. ?filter=top-picks or ?category=Bathroom+Drains)
     const urlParams = new URLSearchParams(window.location.search);
     const filterParam = urlParams.get("filter");
     const categoryParam = urlParams.get("category");
+    const searchParam = urlParams.get("search") || "";
+    searchQuery = searchParam.trim().toLowerCase();
+
+    const searchInput = document.getElementById("catalogSearch");
+    if (searchInput) {
+      searchInput.value = searchParam;
+      if (urlParams.get("focus") === "search") searchInput.focus();
+    }
 
     const toast = document.getElementById("shopToast");
 
@@ -836,6 +862,14 @@
         if (filterParam === "top-picks" && !p.isTopPick) return false;
         if (filterParam === "best-sellers" && !p.isTopSeller) return false;
 
+        if (searchQuery) {
+          const searchableText = [p.title, p.category, p.material, p.id]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+          if (!searchableText.includes(searchQuery)) return false;
+        }
+
         if (selectedCategories.length > 0 && !selectedCategories.includes(p.category)) {
           return false;
         }
@@ -930,10 +964,16 @@
     // Filter Listeners
     document.getElementById("applyFiltersBtn").addEventListener("click", applyCurrentFilters);
     document.getElementById("sortSelect").addEventListener("change", applyCurrentFilters);
+    document.getElementById("catalogSearch").addEventListener("input", (event) => {
+      searchQuery = event.target.value.trim().toLowerCase();
+      applyCurrentFilters();
+    });
     document.getElementById("resetFiltersBtn").addEventListener("click", () => {
       document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
       const defaultRadio = document.querySelector('input[type="radio"][value="all"]');
       if (defaultRadio) defaultRadio.checked = true;
+      document.getElementById("catalogSearch").value = "";
+      searchQuery = "";
       applyCurrentFilters();
     });
 
