@@ -13,14 +13,14 @@
     :root { --ink:#0f172a; --muted:#64748b; --blue:#2563eb; --bg:#f8fafc; --line:#e2e8f0; --panel:#fff; }
     * { box-sizing:border-box; }
     body { margin:0; background:var(--bg); color:var(--ink); font-family:"Plus Jakarta Sans",sans-serif; }
-    .admin-shell { min-height:100vh; display:grid; grid-template-columns:250px 1fr; }
-    .admin-sidebar { background:#070b13; color:#94a3b8; padding:1.5rem 1rem; }
+    .admin-shell { min-height:100vh; display:block; }
+    .admin-sidebar { width:270px; background:#070b13; color:#94a3b8; padding:1.5rem 1rem; position:fixed; top:0; bottom:0; left:0; z-index:100; overflow-y:auto; border-right:1px solid #131b2e; }
     .admin-brand { display:block; color:#fff; font-size:1.2rem; font-weight:800; text-decoration:none; margin:0 .5rem 2rem; }
     .sidebar-link { display:flex; align-items:center; gap:.7rem; color:#94a3b8; text-decoration:none; padding:.7rem .75rem; border-radius:8px; font-size:.85rem; font-weight:600; }
     .sidebar-link:hover, .sidebar-link.active { color:#fff; background:#2563eb; }
     .sidebar-link i { width:1.1rem; text-align:center; }
     .sidebar-heading { color:#64748b; font-size:.68rem; font-weight:800; letter-spacing:.08em; margin:1.4rem .75rem .5rem; text-transform:uppercase; }
-    .admin-main { min-width:0; padding:2rem; }
+    .admin-main { margin-left:270px; min-width:0; padding:2rem; }
     .page-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; }
     .page-header h1 { margin:0; font-size:1.6rem; }
     .page-header p { margin:.3rem 0 0; color:var(--muted); font-size:.85rem; }
@@ -54,11 +54,11 @@
     .toast.show { display:block; }
     @media (max-width:800px) {
       .admin-shell { display:block; }
-      .admin-sidebar { padding:.8rem; }
+      .admin-sidebar { position:static; width:100%; padding:.8rem; }
       .admin-sidebar nav { display:flex; gap:.35rem; overflow-x:auto; }
       .admin-sidebar .sidebar-heading { display:none; }
       .sidebar-link { flex:0 0 auto; white-space:nowrap; }
-      .admin-main { padding:1rem; }
+      .admin-main { margin-left:0; padding:1rem; }
       .layout { grid-template-columns:1fr; }
       .page-header { align-items:flex-start; flex-direction:column; }
     }
