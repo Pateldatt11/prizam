@@ -24,7 +24,7 @@
     .page-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; }
     .page-header h1 { margin:0; font-size:1.6rem; }
     .page-header p { margin:.3rem 0 0; color:var(--muted); font-size:.85rem; }
-    .layout { display:grid; grid-template-columns:minmax(280px,380px) minmax(0,1fr); gap:1.5rem; align-items:start; }
+    .layout { display:grid; grid-template-columns:minmax(280px,380px) minmax(0,1fr) minmax(240px,300px); gap:1.5rem; align-items:start; }
     .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:1.25rem; }
     .panel h2 { margin:0 0 1rem; font-size:1rem; }
     .field { margin-bottom:1rem; }
@@ -43,6 +43,13 @@
     .brochure-meta { color:var(--muted); font-size:.72rem; margin-bottom:.75rem; }
     .item-actions { display:flex; gap:.5rem; }
     .empty { color:var(--muted); font-size:.85rem; padding:1rem 0; }
+    .preview-card { border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+    .preview-icon { display:grid; place-items:center; height:110px; background:#eff6ff; color:var(--blue); font-size:2.5rem; }
+    .preview-content { padding:1rem; }
+    .preview-content h3 { margin:0 0 .45rem; font-size:1rem; line-height:1.35; }
+    .preview-content p { margin:0 0 .8rem; color:var(--muted); font-size:.8rem; line-height:1.55; }
+    .preview-meta { color:var(--muted); font-size:.72rem; margin-bottom:1rem; }
+    .preview-download { display:block; text-align:center; background:var(--ink); color:#fff; border-radius:8px; padding:.65rem; font-size:.78rem; font-weight:700; text-decoration:none; }
     .toast { position:fixed; right:1.5rem; bottom:1.5rem; padding:.8rem 1rem; border-radius:8px; color:#fff; background:var(--ink); display:none; }
     .toast.show { display:block; }
     @media (max-width:800px) {
@@ -106,6 +113,19 @@
           <h2>Published brochures</h2>
           <div class="brochure-list" id="brochureList"><div class="empty">Loading brochures...</div></div>
         </section>
+
+        <section class="panel">
+          <h2>Live preview</h2>
+          <div class="preview-card">
+            <div class="preview-icon"><i class="fa-solid fa-file-pdf"></i></div>
+            <div class="preview-content">
+              <h3 id="previewTitle">Your brochure title</h3>
+              <p id="previewDescription">Your brochure description will appear here.</p>
+              <div class="preview-meta" id="previewMeta">PDF | File size | Updated date</div>
+              <a class="preview-download" id="previewDownload" href="#" target="_blank"><i class="fa-solid fa-download"></i> Download Brochure</a>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   </div>
@@ -120,6 +140,11 @@
     const form = document.getElementById("brochureForm");
     const list = document.getElementById("brochureList");
     const toast = document.getElementById("toast");
+    const titleInput = document.getElementById("brochureTitle");
+    const descriptionInput = document.getElementById("brochureDescription");
+    const fileSizeInput = document.getElementById("brochureFileSize");
+    const updatedAtInput = document.getElementById("brochureUpdatedAt");
+    const downloadUrlInput = document.getElementById("brochureDownloadUrl");
     let editingId = null;
 
     onAuthStateChanged(auth, (user) => {
@@ -131,6 +156,17 @@
       toast.classList.add("show");
       setTimeout(() => toast.classList.remove("show"), 2200);
     }
+
+    function updatePreview() {
+      document.getElementById("previewTitle").textContent = titleInput.value.trim() || "Your brochure title";
+      document.getElementById("previewDescription").textContent = descriptionInput.value.trim() || "Your brochure description will appear here.";
+      document.getElementById("previewMeta").textContent = `PDF | ${fileSizeInput.value.trim() || "File size"} | ${updatedAtInput.value.trim() || "Updated date"}`;
+      document.getElementById("previewDownload").href = downloadUrlInput.value.trim() || "#";
+    }
+
+    [titleInput, descriptionInput, fileSizeInput, updatedAtInput, downloadUrlInput].forEach((input) => {
+      input.addEventListener("input", updatePreview);
+    });
 
     function readForm() {
       return {
@@ -146,6 +182,7 @@
 
     function resetForm() {
       form.reset();
+      updatePreview();
       editingId = null;
       document.getElementById("formTitle").textContent = "Add brochure";
       document.getElementById("submitLabel").textContent = "Publish brochure";
@@ -198,6 +235,7 @@
           document.getElementById("brochureFileSize").value = item.fileSize || "";
           document.getElementById("brochureUpdatedAt").value = item.updatedAt || "";
           document.getElementById("brochureDownloadUrl").value = item.downloadUrl === "#" ? "" : (item.downloadUrl || "");
+          updatePreview();
           window.scrollTo({ top: 0, behavior: "smooth" });
         });
         card.querySelector(".delete-btn").addEventListener("click", async () => {
