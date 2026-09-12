@@ -10,125 +10,478 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="../assets/css/responsive.css" />
   <style>
-    :root { --ink:#0f172a; --muted:#64748b; --blue:#2563eb; --bg:#f8fafc; --line:#e2e8f0; --panel:#fff; }
-    * { box-sizing:border-box; }
-    body { margin:0; background:var(--bg); color:var(--ink); font-family:"Plus Jakarta Sans",sans-serif; }
-    .admin-shell { min-height:100vh; display:block; }
-    .admin-sidebar { width:270px; background:#070b13; color:#94a3b8; padding:1.5rem 1rem; position:fixed; top:0; bottom:0; left:0; z-index:100; overflow-y:auto; border-right:1px solid #131b2e; }
-    .admin-brand { display:block; color:#fff; font-size:1.2rem; font-weight:800; text-decoration:none; margin:0 .5rem 2rem; }
-    .sidebar-link { display:flex; align-items:center; gap:.7rem; color:#94a3b8; text-decoration:none; padding:.7rem .75rem; border-radius:8px; font-size:.85rem; font-weight:600; }
-    .sidebar-link:hover, .sidebar-link.active { color:#fff; background:#2563eb; }
-    .sidebar-link i { width:1.1rem; text-align:center; }
-    .sidebar-heading { color:#64748b; font-size:.68rem; font-weight:800; letter-spacing:.08em; margin:1.4rem .75rem .5rem; text-transform:uppercase; }
-    .admin-main { margin-left:270px; min-width:0; padding:2rem; }
-    .page-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; }
-    .page-header h1 { margin:0; font-size:1.6rem; }
-    .page-header p { margin:.3rem 0 0; color:var(--muted); font-size:.85rem; }
-    .layout { display:grid; grid-template-columns:minmax(280px,380px) minmax(0,1fr) minmax(240px,300px); gap:1.5rem; align-items:start; }
-    .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:1.25rem; }
-    .panel h2 { margin:0 0 1rem; font-size:1rem; }
-    .field { margin-bottom:1rem; }
-    label { display:block; margin-bottom:.4rem; font-size:.78rem; font-weight:700; }
-    input, textarea { width:100%; border:1px solid var(--line); border-radius:8px; padding:.7rem .75rem; font:inherit; font-size:.85rem; color:var(--ink); }
-    textarea { min-height:120px; resize:vertical; }
-    input:focus, textarea:focus { outline:2px solid rgba(37,99,235,.18); border-color:var(--blue); }
-    .button-row { display:flex; gap:.65rem; }
-    button { border:0; border-radius:8px; padding:.7rem 1rem; font:inherit; font-size:.82rem; font-weight:700; cursor:pointer; }
-    .primary { background:var(--blue); color:#fff; }
-    .secondary { background:#f1f5f9; color:var(--ink); }
-    .brochure-list { display:grid; gap:.75rem; }
-    .brochure-item { border:1px solid var(--line); border-radius:10px; padding:1rem; }
-    .brochure-item h3 { margin:0 0 .35rem; font-size:.95rem; }
-    .brochure-item p { margin:0 0 .75rem; color:var(--muted); font-size:.8rem; line-height:1.5; }
-    .brochure-meta { color:var(--muted); font-size:.72rem; margin-bottom:.75rem; }
-    .item-actions { display:flex; gap:.5rem; }
-    .empty { color:var(--muted); font-size:.85rem; padding:1rem 0; }
-    .preview-card { border:1px solid var(--line); border-radius:10px; overflow:hidden; }
-    .preview-icon { display:grid; place-items:center; height:110px; background:#eff6ff; color:var(--blue); font-size:2.5rem; }
-    .preview-content { padding:1rem; }
-    .preview-content h3 { margin:0 0 .45rem; font-size:1rem; line-height:1.35; }
-    .preview-content p { margin:0 0 .8rem; color:var(--muted); font-size:.8rem; line-height:1.55; }
-    .preview-meta { color:var(--muted); font-size:.72rem; margin-bottom:1rem; }
-    .preview-download { display:block; text-align:center; background:var(--ink); color:#fff; border-radius:8px; padding:.65rem; font-size:.78rem; font-weight:700; text-decoration:none; }
-    .toast { position:fixed; right:1.5rem; bottom:1.5rem; padding:.8rem 1rem; border-radius:8px; color:#fff; background:var(--ink); display:none; }
-    .toast.show { display:block; }
-    @media (max-width:800px) {
-      .admin-shell { display:block; }
-      .admin-sidebar { position:static; width:100%; padding:.8rem; }
-      .admin-sidebar nav { display:flex; gap:.35rem; overflow-x:auto; }
-      .admin-sidebar .sidebar-heading { display:none; }
-      .sidebar-link { flex:0 0 auto; white-space:nowrap; }
-      .admin-main { margin-left:0; padding:1rem; }
-      .layout { grid-template-columns:1fr; }
-      .page-header { align-items:flex-start; flex-direction:column; }
+    :root {
+      --sidebar-bg: #070b13;
+      --sidebar-hover: #0f172a;
+      --sidebar-border: #131b2e;
+      --sidebar-text: #94a3b8;
+      --sidebar-heading: #475569;
+      --sidebar-active-bg: #2563eb;
+      --sidebar-active-text: #ffffff;
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ================= 1. PRECISION DARK SIDEBAR ================= */
+    .admin-sidebar {
+      width: 270px;
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      border-right: 1px solid var(--sidebar-border);
+      user-select: none;
+    }
+
+    .sidebar-header {
+      padding: 1.75rem 1.5rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .sidebar-brand-dot {
+      width: 9px;
+      height: 9px;
+      background-color: #38bdf8;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand-title {
+      color: #ffffff;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+
+    .sidebar-nav-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem 1rem 1.5rem;
+    }
+
+    .sidebar-nav-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .sidebar-nav-scroll::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--sidebar-heading);
+      padding: 1.25rem 0.75rem 0.5rem;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.75rem 0.95rem;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      margin-bottom: 0.2rem;
+    }
+
+    .sidebar-link i {
+      font-size: 1rem;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-link:hover {
+      color: #ffffff;
+      background: var(--sidebar-hover);
+    }
+
+    .sidebar-link.active {
+      background: var(--sidebar-active-bg);
+      color: var(--sidebar-active-text);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    .sidebar-badge {
+      margin-left: auto;
+      background: rgba(0, 0, 0, 0.25);
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.15rem 0.55rem;
+      border-radius: 12px;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .sidebar-link.active .sidebar-badge {
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .sidebar-sublink {
+      padding-left: 1.15rem;
+    }
+
+    .sidebar-footer {
+      padding: 1.25rem 1.25rem;
+      border-top: 1px solid var(--sidebar-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #060910;
+    }
+
+    .sidebar-user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      overflow: hidden;
+    }
+
+    .sidebar-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #1e293b;
+      color: #38bdf8;
+      font-weight: 800;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-meta {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-user-name {
+      color: #ffffff;
+      font-size: 0.88rem;
+      font-weight: 700;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .sidebar-user-email {
+      color: #64748b;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .sidebar-logout-btn {
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 1.15rem;
+      cursor: pointer;
+      padding: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .sidebar-logout-btn:hover {
+      color: var(--danger);
+      transform: translateX(2px);
+    }
+
+    /* ================= 2. MAIN WORKSPACE ================= */
+    .admin-main {
+      margin-left: 270px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: 2rem;
+    }
+
+    .page-header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      gap: 1rem; 
+      margin-bottom: 1.5rem; 
+    }
+    .page-header h1 { 
+      margin: 0; 
+      font-size: 1.6rem; 
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .page-header p { 
+      margin: .3rem 0 0; 
+      color: var(--text-muted); 
+      font-size: 0.88rem; 
+    }
+
+    .layout { 
+      display: grid; 
+      grid-template-columns: minmax(280px,380px) minmax(0,1fr) minmax(240px,300px); 
+      gap: 1.5rem; 
+      align-items: start; 
+    }
+
+    .panel { 
+      background: var(--surface); 
+      border: 1px solid var(--border); 
+      border-radius: var(--radius); 
+      padding: 1.25rem; 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+    .panel h2 { 
+      margin: 0 0 1rem; 
+      font-size: 1.05rem; 
+      font-weight: 700;
+    }
+
+    .field { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: .4rem; font-size: .78rem; font-weight: 700; }
+    input, textarea { 
+      width: 100%; 
+      border: 1px solid var(--border); 
+      border-radius: 8px; 
+      padding: .7rem .75rem; 
+      font: inherit; 
+      font-size: .85rem; 
+      color: var(--text-main); 
+      background: #f8fafc;
+      outline: none;
+      transition: all 0.2s;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    input:focus, textarea:focus { background: #fff; border-color: var(--primary); }
+
+    .button-row { display: flex; gap: .65rem; }
+    button { border: 0; border-radius: 8px; padding: .7rem 1rem; font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
+    .primary { background: var(--primary); color: #fff; transition: background 0.2s; }
+    .primary:hover { background: var(--primary-hover); }
+    .secondary { background: #f1f5f9; color: var(--text-main); border: 1px solid var(--border); transition: background 0.2s; }
+    .secondary:hover { background: #e2e8f0; }
+
+    .brochure-list { display: grid; gap: .75rem; }
+    .brochure-item { border: 1px solid var(--border); border-radius: 10px; padding: 1rem; background: #fff; }
+    .brochure-item h3 { margin: 0 0 .35rem; font-size: .95rem; font-weight: 700; }
+    .brochure-item p { margin: 0 0 .75rem; color: var(--text-muted); font-size: .8rem; line-height: 1.5; }
+    .brochure-meta { color: var(--text-muted); font-size: .72rem; margin-bottom: .75rem; font-weight: 600; }
+    .item-actions { display: flex; gap: .5rem; }
+
+    .empty { color: var(--text-muted); font-size: .85rem; padding: 1rem 0; text-align: center; }
+
+    .preview-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff; }
+    .preview-icon { display: grid; place-items: center; height: 110px; background: #fee2e2; color: #dc2626; font-size: 2.5rem; }
+    .preview-content { padding: 1rem; }
+    .preview-content h3 { margin: 0 0 .45rem; font-size: 1rem; line-height: 1.35; font-weight: 700; }
+    .preview-content p { margin: 0 0 .8rem; color: var(--text-muted); font-size: .8rem; line-height: 1.55; }
+    .preview-meta { color: var(--text-muted); font-size: .72rem; margin-bottom: 1rem; font-weight: 600; }
+    .preview-download { display: block; text-align: center; background: var(--primary); color: #fff; border-radius: 8px; padding: .65rem; font-size: .78rem; font-weight: 700; text-decoration: none; transition: background 0.2s; }
+    .preview-download:hover { background: var(--primary-hover); }
+
+    .toast { 
+      position: fixed; 
+      right: 1.5rem; 
+      bottom: 1.5rem; 
+      padding: .85rem 1.25rem; 
+      border-radius: 8px; 
+      color: #fff; 
+      background: var(--primary); 
+      font-size: 0.85rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s ease;
+      z-index: 2000;
+    }
+    .toast.show { 
+      transform: translateY(0);
+      opacity: 1; 
+    }
+
+    @media (max-width: 1024px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 800px) {
+      .admin-sidebar { position: static; width: 100%; padding: .8rem; }
+      .admin-sidebar nav { display: flex; gap: .35rem; overflow-x: auto; }
+      .admin-sidebar .sidebar-section-title { display: none; }
+      .sidebar-link { flex: 0 0 auto; white-space: nowrap; }
+      .admin-main { margin-left: 0; padding: 1rem; }
+      .page-header { align-items: flex-start; flex-direction: column; }
     }
   </style>
 </head>
 <body>
-  <div class="admin-shell">
-    <aside class="admin-sidebar">
-      <a class="admin-brand" href="index.html">Prizam Admin</a>
-      <div class="sidebar-heading">Storefront</div>
-      <nav>
-        <a class="sidebar-link" href="index.html"><i class="fa-solid fa-boxes-stacked"></i>Products</a>
-        <a class="sidebar-link" href="add-product.html"><i class="fa-solid fa-circle-plus"></i>Add Product</a>
-        <a class="sidebar-link active" href="brochures.html"><i class="fa-solid fa-file-lines"></i>Brochures</a>
-      </nav>
-      <div class="sidebar-heading">Management</div>
-      <nav>
-        <a class="sidebar-link" href="orders.html"><i class="fa-solid fa-truck-ramp-box"></i>Orders</a>
-        <a class="sidebar-link" href="inquiries.html"><i class="fa-solid fa-envelope-open-text"></i>Inquiries</a>
-        <a class="sidebar-link" href="settings.html"><i class="fa-solid fa-gears"></i>Settings</a>
-      </nav>
-      <div class="sidebar-heading">Preview</div>
-      <nav>
-        <a class="sidebar-link" href="../brochure.html" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i>View Brochures</a>
-        <a class="sidebar-link" href="../index.html" target="_blank"><i class="fa-solid fa-store"></i>Live Storefront</a>
-      </nav>
-    </aside>
 
-    <main class="admin-main">
-      <header class="page-header">
-        <div>
-          <h1>Brochures & Manuals</h1>
-          <p>Add documents here and they appear on the public brochure page automatically.</p>
+  <!-- ================= 1. PRECISION DARK SIDEBAR ================= -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-brand-dot"></span>
+      <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
+    </div>
+
+    <div class="sidebar-nav-scroll">
+      <div class="sidebar-section-title">Storefront Catalog</div>
+
+      <a href="index.html" class="sidebar-link">
+        <i class="fa-solid fa-boxes-stacked"></i>
+        <span>Products</span>
+      </a>
+
+      <a href="add-product.html" class="sidebar-link">
+        <i class="fa-solid fa-circle-plus"></i>
+        <span>Add New Product</span>
+      </a>
+
+      <div class="sidebar-section-title">Management & Sales</div>
+
+      <a href="brochures.html" class="sidebar-link active">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>Brochures</span>
+      </a>
+
+      <a href="orders.html" class="sidebar-link">
+        <i class="fa-solid fa-truck-ramp-box"></i>
+        <span>Orders</span>
+        <span class="sidebar-badge" id="sideBadgeOrders">0</span>
+      </a>
+
+      <a href="returns.html" class="sidebar-link">
+        <i class="fa-solid fa-rotate-left"></i>
+        <span>Returns</span>
+      </a>
+
+      <a href="inquiries.html" class="sidebar-link">
+        <i class="fa-solid fa-envelope-open-text"></i>
+        <span>Contact Request</span>
+      </a>
+
+      <a href="analytics.html" class="sidebar-link">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Store Analysis</span>
+      </a>
+
+      <a href="settings.html" class="sidebar-link">
+        <i class="fa-solid fa-gears"></i>
+        <span>System Maintenance</span>
+      </a>
+
+      <div class="sidebar-section-title">Live Preview</div>
+
+      <a href="../brochure.html" target="_blank" class="sidebar-link">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <span>View Brochures</span>
+      </a>
+
+      <a href="../index.html" target="_blank" class="sidebar-link">
+        <i class="fa-solid fa-store"></i>
+        <span>Live Storefront</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user-info">
+        <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
+        <div class="sidebar-meta">
+          <span class="sidebar-user-name" id="sideUserName">Administrator</span>
+          <span class="sidebar-user-email" id="sideUserEmail">admin@prizam.com</span>
         </div>
-        <button class="secondary" id="logoutBtn" type="button"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</button>
-      </header>
-
-      <div class="layout">
-        <section class="panel">
-          <h2 id="formTitle">Add brochure</h2>
-          <form id="brochureForm">
-            <div class="field"><label for="brochureTitle">Title</label><input id="brochureTitle" required placeholder="Linear Shower Drains Catalog 2026" /></div>
-            <div class="field"><label for="brochureDescription">Description</label><textarea id="brochureDescription" required placeholder="Describe the specifications or installation guide."></textarea></div>
-            <div class="field"><label for="brochureFileSize">File size</label><input id="brochureFileSize" placeholder="4.8 MB" /></div>
-            <div class="field"><label for="brochureUpdatedAt">Updated date</label><input id="brochureUpdatedAt" placeholder="June 2026" /></div>
-            <div class="field"><label for="brochureDownloadUrl">Download URL</label><input id="brochureDownloadUrl" type="url" placeholder="https://example.com/file.pdf" /></div>
-            <div class="button-row"><button class="primary" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> <span id="submitLabel">Publish brochure</span></button><button class="secondary" id="cancelBtn" type="button">Clear</button></div>
-          </form>
-        </section>
-
-        <section class="panel">
-          <h2>Published brochures</h2>
-          <div class="brochure-list" id="brochureList"><div class="empty">Loading brochures...</div></div>
-        </section>
-
-        <section class="panel">
-          <h2>Live preview</h2>
-          <div class="preview-card">
-            <div class="preview-icon"><i class="fa-solid fa-file-pdf"></i></div>
-            <div class="preview-content">
-              <h3 id="previewTitle">Your brochure title</h3>
-              <p id="previewDescription">Your brochure description will appear here.</p>
-              <div class="preview-meta" id="previewMeta">PDF | File size | Updated date</div>
-              <a class="preview-download" id="previewDownload" href="#" target="_blank"><i class="fa-solid fa-download"></i> Download Brochure</a>
-            </div>
-          </div>
-        </section>
       </div>
-    </main>
-  </div>
+      <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ================= 2. MAIN WORKSPACE ================= -->
+  <main class="admin-main">
+    <header class="page-header">
+      <div>
+        <h1>Brochures & Manuals</h1>
+        <p>Add documents here and they appear on the public brochure page automatically.</p>
+      </div>
+    </header>
+
+    <div class="layout">
+      <section class="panel">
+        <h2 id="formTitle">Add brochure</h2>
+        <form id="brochureForm">
+          <div class="field"><label for="brochureTitle">Title</label><input id="brochureTitle" required placeholder="Linear Shower Drains Catalog 2026" /></div>
+          <div class="field"><label for="brochureDescription">Description</label><textarea id="brochureDescription" required placeholder="Describe the specifications or installation guide."></textarea></div>
+          <div class="field"><label for="brochureFileSize">File size</label><input id="brochureFileSize" placeholder="4.8 MB" /></div>
+          <div class="field"><label for="brochureUpdatedAt">Updated date</label><input id="brochureUpdatedAt" placeholder="June 2026" /></div>
+          <div class="field"><label for="brochureDownloadUrl">Download URL</label><input id="brochureDownloadUrl" type="url" placeholder="https://example.com/file.pdf" /></div>
+          <div class="button-row"><button class="primary" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> <span id="submitLabel">Publish brochure</span></button><button class="secondary" id="cancelBtn" type="button">Clear</button></div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Published brochures</h2>
+        <div class="brochure-list" id="brochureList"><div class="empty">Loading brochures...</div></div>
+      </section>
+
+      <section class="panel">
+        <h2>Live preview</h2>
+        <div class="preview-card">
+          <div class="preview-icon"><i class="fa-solid fa-file-pdf"></i></div>
+          <div class="preview-content">
+            <h3 id="previewTitle">Your brochure title</h3>
+            <p id="previewDescription">Your brochure description will appear here.</p>
+            <div class="preview-meta" id="previewMeta">PDF | File size | Updated date</div>
+            <a class="preview-download" id="previewDownload" href="#" target="_blank"><i class="fa-solid fa-download"></i> Download Brochure</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
   <div class="toast" id="toast"></div>
 
   <script type="module">
@@ -136,7 +489,6 @@
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
     import { addDoc, collection, deleteDoc, doc, onSnapshot, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-    const adminEmail = "admin@prizam.com";
     const form = document.getElementById("brochureForm");
     const list = document.getElementById("brochureList");
     const toast = document.getElementById("toast");
@@ -147,9 +499,23 @@
     const downloadUrlInput = document.getElementById("brochureDownloadUrl");
     let editingId = null;
 
+    if (localStorage.getItem("prizam_admin_logged_in") !== "true") {
+      window.location.href = "login.html";
+    }
+
     onAuthStateChanged(auth, (user) => {
-      if (!user || user.email !== adminEmail) window.location.href = "login.html";
+      if (user) {
+        document.getElementById("sideUserName").textContent = user.displayName || "Administrator";
+        document.getElementById("sideUserEmail").textContent = user.email || "admin@prizam.com";
+        const initials = (user.displayName || user.email || "AD").substring(0, 2).toUpperCase();
+        document.getElementById("sideUserAvatar").textContent = initials;
+      }
     });
+
+    onSnapshot(collection(db, "orders"), (snap) => {
+      const sideOrders = document.getElementById("sideBadgeOrders");
+      if (sideOrders) sideOrders.textContent = snap.size;
+    }, () => {});
 
     function showToast(message) {
       toast.textContent = message;
@@ -208,8 +574,11 @@
 
     document.getElementById("cancelBtn").addEventListener("click", resetForm);
     document.getElementById("logoutBtn").addEventListener("click", async () => {
-      await signOut(auth);
-      window.location.href = "login.html";
+      if (confirm("Sign out of Admin Portal?")) {
+        localStorage.removeItem("prizam_admin_logged_in");
+        await signOut(auth);
+        window.location.href = "login.html";
+      }
     });
 
     onSnapshot(collection(db, "brochures"), (snapshot) => {
