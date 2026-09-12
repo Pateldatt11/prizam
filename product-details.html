@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Product Details | Prizam Architectural Drains</title>
 
   <!-- Typography & Icons -->
@@ -38,6 +38,12 @@
       padding: 0;
       font-family: "Plus Jakarta Sans", sans-serif;
       -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Prevents Android Chrome from inflating text size in horizontal mode */
+    html, body {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
 
     body {
@@ -440,9 +446,7 @@
       border-radius: 4px;
     }
 
-    /* ==========================================================================
-       PRODUCT DESCRIPTION: MS WORD TABS + NORMAL SENTENCE SPACING
-       ========================================================================== */
+    /* Product Description Engine */
     .detail-desc {
       color: #475569;
       font-size: clamp(0.88rem, 2.4vw, 0.96rem);
@@ -455,7 +459,6 @@
       box-sizing: border-box;
     }
 
-    /* Intentional blank line margins between paragraphs */
     .detail-desc p {
       margin-bottom: 0.95rem;
       line-height: 1.7;
@@ -471,7 +474,6 @@
       margin-bottom: 0.75rem;
     }
 
-    /* Styled Tab Stop (MS Word tab spacing) */
     .detail-desc .tab-stop {
       display: inline-block;
       width: 2rem;
@@ -479,7 +481,6 @@
       white-space: pre;
     }
 
-    /* Word Indentation Levels */
     .detail-desc .ql-indent-1 { padding-left: 2rem; }
     .detail-desc .ql-indent-2 { padding-left: 4rem; }
     .detail-desc .ql-indent-3 { padding-left: 6rem; }
@@ -528,10 +529,6 @@
     .detail-desc li {
       margin-bottom: 0.35rem;
     }
-
-    .detail-desc .ql-size-small { font-size: 0.8rem; }
-    .detail-desc .ql-size-large { font-size: 1.2rem; font-weight: 700; }
-    .detail-desc .ql-size-huge { font-size: 1.45rem; font-weight: 800; }
 
     .key-specs {
       display: grid;
@@ -690,9 +687,7 @@
       line-height: 1.4;
     }
 
-    /* ==========================================================================
-       ENGINEERING SPECIFICATIONS - ZERO-CUTOFF MOBILE WRAPPING
-       ========================================================================== */
+    /* Engineering Specifications Table */
     .specs-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -780,8 +775,8 @@
       opacity: 1;
     }
 
-    /* Tablet Responsive Support */
-    @media (max-width: 900px) {
+    /* Portrait Tablet & Phone View (Stack when held vertically) */
+    @media (max-width: 900px) and (orientation: portrait) {
       .product-detail-layout {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -808,8 +803,112 @@
       }
     }
 
-    /* Smartphone Breakpoint */
-    @media (max-width: 768px) {
+    /* ==========================================================================
+       SMARTPHONE HORIZONTAL (LANDSCAPE) VIEW: MAKES ANDROID MATCH IPHONE
+       ========================================================================== */
+    @media (orientation: landscape) and (max-height: 600px) {
+      .container {
+        padding-left: max(1rem, env(safe-area-inset-left)) !important;
+        padding-right: max(1rem, env(safe-area-inset-right)) !important;
+      }
+
+      .nav-container {
+        padding: 0.5rem 1rem !important;
+      }
+
+      /* Forces clean side-by-side 2-column view on all phones */
+      .product-detail-layout {
+        grid-template-columns: 1.05fr 1fr !important;
+        gap: 1.5rem !important;
+        margin: 0.75rem 0 2rem !important;
+        align-items: start !important;
+      }
+
+      .gallery-container {
+        flex-direction: row !important;
+        position: sticky !important;
+        top: 65px !important;
+        gap: 0.75rem !important;
+      }
+
+      .thumbnails-track {
+        flex-direction: column !important;
+        max-height: 280px !important;
+        width: auto !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        gap: 0.5rem !important;
+        padding: 0 !important;
+      }
+
+      .thumb-item {
+        width: 52px !important;
+        height: 52px !important;
+      }
+
+      .main-image-viewport {
+        height: 280px !important;
+        max-height: 72vh !important;
+        width: 100% !important;
+      }
+
+      .detail-title {
+        font-size: 1.35rem !important;
+        margin-bottom: 0.35rem !important;
+      }
+
+      .rating-row {
+        margin-bottom: 0.65rem !important;
+        font-size: 0.8rem !important;
+      }
+
+      .price-row {
+        margin-bottom: 0.75rem !important;
+        padding-bottom: 0.65rem !important;
+      }
+
+      .price-current {
+        font-size: 1.45rem !important;
+      }
+
+      .detail-desc {
+        font-size: 0.88rem !important;
+        line-height: 1.55 !important;
+        margin-bottom: 1.1rem !important;
+      }
+
+      .key-specs {
+        grid-template-columns: repeat(2, 1fr) !important;
+        padding: 0.75rem !important;
+        gap: 0.5rem !important;
+        margin-bottom: 1rem !important;
+      }
+
+      .action-row {
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 0.65rem !important;
+        margin-bottom: 1.15rem !important;
+      }
+
+      .qty-selector {
+        width: auto !important;
+      }
+
+      .btn-checkout {
+        width: auto !important;
+        flex: 1 !important;
+        min-height: 42px !important;
+      }
+
+      .delivery-box {
+        padding: 1rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+    }
+
+    /* Smartphone Portrait Breakpoint (≤ 768px) */
+    @media (max-width: 768px) and (orientation: portrait) {
       .detail-desc {
         white-space: normal !important;
         line-height: 1.62 !important;
@@ -820,22 +919,12 @@
         min-width: 1.25rem !important;
       }
 
-      .detail-desc .ql-indent-1 { padding-left: 1.25rem !important; }
-      .detail-desc .ql-indent-2 { padding-left: 2.25rem !important; }
-      .detail-desc .ql-indent-3 { padding-left: 3.25rem !important; }
-
       .detail-desc p {
         margin-bottom: 0.85rem !important;
       }
 
       .detail-desc p:last-child {
         margin-bottom: 0 !important;
-      }
-
-      .detail-desc p:empty,
-      .detail-desc p:has(br:only-child) {
-        min-height: 1rem !important;
-        margin-bottom: 0.6rem !important;
       }
 
       .specs-card {
@@ -984,7 +1073,7 @@
       <div class="product-info-column">
         
         <div class="badge-row">
-          <span class="detail-badge" id="detailBadge">Featured Product</span>
+          <span class="detail-badge">Featured Product</span>
           <span class="detail-badge origin"><i class="fa-solid fa-location-dot"></i> Rajkot Facility</span>
         </div>
 
@@ -1252,9 +1341,11 @@
     }
 
     /**
-     * Converts intentional tabs (\t) to styled tab-stops (<span class="tab-stop">&emsp;</span>),
-     * collapses accidental double/triple spaces inside running sentences to single spaces,
-     * and preserves blank lines / paragraph separation.
+     * Preserves:
+     * - Word Tabs (\t -> styled tab stop)
+     * - Intentional blank lines between paragraphs (<p> & <br>)
+     * Normalizes:
+     * - Excessive consecutive spaces inside ongoing sentences ("providing    dependable")
      */
     function formatDescriptionWithTabsAndSpacing(rawHtml) {
       if (!rawHtml || typeof rawHtml !== 'string') return '';
@@ -1300,12 +1391,6 @@
       if (currentProduct.description) {
         document.getElementById("productDescription").innerHTML = formatDescriptionWithTabsAndSpacing(currentProduct.description);
       }
-
-      const detailBadge = document.getElementById("detailBadge");
-      if (currentProduct.isTopPick) detailBadge.textContent = "Top Pick";
-      else if (currentProduct.isTopSeller) detailBadge.textContent = "Best Seller";
-      else if (currentProduct.isUpcoming) detailBadge.textContent = "Upcoming Release";
-      else detailBadge.textContent = currentProduct.category || "Featured Hardware";
 
       const material = currentProduct.material || "304 Stainless Steel";
       const dimensions = currentProduct.dimensions || "600mm x 70mm x 20mm";
