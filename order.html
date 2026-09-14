@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Your Orders | Prizam</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+  <style>
+  :root {
+    --primary: #121212;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --card-header-bg: #f8fafc;
+    --page: #f1f3f6;
+    --card: #ffffff;
+    --green: #15803d;
+    --orange: #c2410c;
+    --red: #b91c1c;
+    --blue: #2563eb;
+    --btn-secondary: #f3f4f6;
+    --transition-smooth: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  body {
+    background: var(--page);
+    color: #111827;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 1140px;
+    margin: auto;
+    padding: 0 16px;
+  }
+
+  /* Navigation Bar */
+  .nav {
+    height: 70px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  .nav-in {
+    max-width: 1140px;
+    width: 100%;
+    margin: auto;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--primary);
+    cursor: pointer;
+  }
+  .logo {
+    font-weight: 800;
+    font-size: 21px;
+    text-decoration: none;
+    color: #121212;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .nav-links a {
+    color: #374151;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+  .nav-links a:hover,
+  .nav-links a[aria-current="page"] {
+    color: var(--primary);
+  }
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.15rem;
+  }
+  .icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.15rem;
+    color: var(--primary);
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    padding: 0.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+  .icon-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Desktop Profile Hover Menu */
+  .profile-menu {
+    position: relative;
+    display: block;
+  }
+  .profile-trigger {
+    display: inline-flex;
+    align-items: center;
+  }
+  .mobile-profile-icon {
+    display: none;
+  }
+  .profile-menu::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: -24px;
+    width: 320px;
+    height: 18px;
+    background: transparent;
+    z-index: 1099;
+  }
+  .profile-dropdown {
+    position: absolute;
+    top: calc(100% + 7px);
+    right: -18px;
+    width: 270px;
+    background: #ffffff;
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+    padding: 0.75rem 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 1100;
+  }
+  .profile-dropdown::before {
+    content: "";
+    position: absolute;
+    top: -7px;
+    right: 20px;
+    width: 14px;
+    height: 14px;
+    background: #ffffff;
+    border-left: 1px solid rgba(17, 24, 39, 0.08);
+    border-top: 1px solid rgba(17, 24, 39, 0.08);
+    transform: rotate(45deg);
+  }
+  .profile-menu:hover .profile-dropdown,
+  .profile-menu:focus-within .profile-dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .profile-dropdown-header {
+    padding: 0.7rem 1rem 0.85rem;
+    border-bottom: 1px solid #eef0f3;
+  }
+  .profile-dropdown-header strong {
+    display: block;
+    color: #111827;
+    font-size: 0.92rem;
+  }
+  .profile-dropdown-header span {
+    display: block;
+    color: #6b7280;
+    font-size: 0.76rem;
+    margin-top: 0.18rem;
+  }
+  .profile-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.72rem 1rem;
+    color: #374151;
+    text-decoration: none;
+    font-size: 0.84rem;
+    font-weight: 500;
+    transition: background 0.2s ease;
+  }
+  .profile-dropdown a i {
+    width: 18px;
+    text-align: center;
+    color: #6b7280;
+  }
+  .profile-dropdown a:hover {
+    background: #f7f8fa;
+    color: #111827;
+  }
+  .profile-dropdown .profile-login-btn {
+    margin: 0.3rem 0.75rem 0.15rem;
+    width: calc(100% - 1.5rem);
+    justify-content: center;
+    border-radius: 8px;
+    background: #121212;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 0.65rem 0.9rem;
+  }
+  .profile-dropdown .profile-login-btn i {
+    color: #ffffff;
+  }
+  .profile-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.72rem 1rem;
+    margin: 0.15rem 0 0;
+    border: 0;
+    border-top: 1px solid #eef0f3;
+    background: transparent;
+    color: #b42318;
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Cart Hover Menu */
+  .cart-menu { position: relative; }
+  .cart-badge-wrapper { position: relative; display: inline-flex; }
+  .cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 17px;
+    height: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cart-menu::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: -22px;
+    width: 300px;
+    height: 18px;
+    background: transparent;
+    z-index: 1099;
+  }
+  .cart-hover-card {
+    position: absolute;
+    top: calc(100% + 7px);
+    right: -18px;
+    width: 285px;
+    background: #ffffff;
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1100;
+  }
+  .cart-menu:hover .cart-hover-card {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .cart-hover-title {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: #111827;
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin-bottom: 0.85rem;
+  }
+  .cart-hover-status {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.8rem;
+    border-radius: 9px;
+    background: #f7f8fa;
+    border: 1px solid #eef0f3;
+    margin-bottom: 0.85rem;
+  }
+  .cart-hover-status-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+  }
+  .cart-hover-status strong {
+    display: block;
+    color: #111827;
+    font-size: 0.82rem;
+  }
+  .cart-hover-status span {
+    display: block;
+    color: #6b7280;
+    font-size: 0.74rem;
+  }
+  .cart-hover-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 38px;
+    border-radius: 8px;
+    background: #121212;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  /* Page Header & Toolbar */
+  .orders-header {
+    padding: 24px 0 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .orders-header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .orders-header p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Flipkart / Amazon Style Toolbar (Search & Filter Tabs) */
+  .orders-toolbar {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  }
+  .orders-search-box {
+    position: relative;
+    flex: 1;
+    min-width: 260px;
+  }
+  .orders-search-box i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 14px;
+  }
+  .orders-search-box input {
+    width: 100%;
+    padding: 9px 14px 9px 38px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .orders-search-box input:focus {
+    border-color: var(--primary);
+  }
+  .orders-filter-tabs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+  }
+  .filter-tab {
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b5563;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .filter-tab:hover {
+    background: #f3f4f6;
+  }
+  .filter-tab.active {
+    background: #111827;
+    color: #ffffff;
+    border-color: #111827;
+  }
+
+  /* Amazon / Flipkart Combined Order Card */
+  .orders-feed {
+    padding-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .order-card {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    transition: box-shadow 0.2s ease;
+  }
+  .order-card:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+  }
+
+  /* Amazon-style Card Header */
+  .order-header-strip {
+    background: var(--card-header-bg);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    font-size: 12px;
+  }
+  .order-header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .meta-col small {
+    display: block;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .meta-col strong {
+    color: #111827;
+    font-size: 13px;
+  }
+  .order-header-actions {
+    text-align: right;
+  }
+  .order-id-label {
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .order-id-code {
+    font-weight: 700;
+    color: #111827;
+  }
+
+  /* Flipkart-style Product Items & Tracking Grid */
+  .order-items-wrap {
+    padding: 6px 18px;
+  }
+  .order-item-row {
+    display: grid;
+    grid-template-columns: 2.5fr 2fr 1.5fr;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .order-item-row:last-child {
+    border-bottom: none;
+  }
+
+  /* Col 1: Product info */
+  .item-col-product {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .item-thumb-box {
+    width: 78px;
+    height: 78px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #f8fafc;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .item-thumb-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .item-thumb-box i {
+    font-size: 26px;
+    color: #cbd5e1;
+  }
+  .item-details-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .item-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.35;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .item-specs {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .item-price-tag {
+    font-size: 14px;
+    font-weight: 800;
+    color: #111827;
+  }
+
+  /* Col 2: Flipkart Status & Tracking Dot */
+  .item-col-status {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .status-indicator-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .status-dot.delivered { background: #16a34a; }
+  .status-dot.shipped { background: #2563eb; }
+  .status-dot.processing,
+  .status-dot.pending { background: #f59e0b; }
+  .status-dot.cancelled { background: #dc2626; }
+  .status-dot.default { background: #64748b; }
+
+  .status-subtext {
+    font-size: 11px;
+    color: var(--muted);
+    padding-left: 18px;
+  }
+
+  /* Col 3: Quick Action Buttons */
+  .item-col-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    width: 140px;
+    text-align: center;
+    transition: var(--transition-smooth);
+  }
+  .action-btn-primary {
+    background: #111827;
+    color: #ffffff;
+    border: 1px solid #111827;
+  }
+  .action-btn-primary:hover {
+    background: #2a2a2a;
+  }
+  .action-btn-secondary {
+    background: #ffffff;
+    color: #374151;
+    border: 1px solid var(--line);
+  }
+  .action-btn-secondary:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  /* State feedback boxes */
+  .state {
+    padding: 40px 20px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    text-align: center;
+  }
+  .state i {
+    font-size: 38px;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+  }
+  .state h3 {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .state p {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 6px 0 16px;
+  }
+  .btn-start {
+    background: #111827;
+    color: #fff;
+    padding: 9px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .loading-skeleton {
+    height: 180px;
+    background: linear-gradient(90deg, #eceff3, #f7f7f7, #eceff3);
+    background-size: 200% 100%;
+    animation: shine 1.2s infinite;
+    border-radius: 12px;
+    margin-bottom: 14px;
+  }
+  @keyframes shine {
+    to { background-position: -200% 0; }
+  }
+
+  /* Responsive styling */
+  @media (max-width: 899px) {
+    .profile-menu { display: none; }
+    .mobile-profile-icon { display: inline-flex; }
+    .cart-hover-card, .cart-menu::after { display: none; }
+    .mobile-menu-toggle { display: block; }
+    .nav-links {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 280px;
+      height: 100vh;
+      background: #ffffff;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 4.5rem 1.5rem;
+      gap: 1.25rem;
+      box-shadow: 10px 0 30px rgba(0,0,0,0.15);
+      transform: translateX(-100%);
+      transition: transform 0.35s ease;
+      z-index: 1050;
+    }
+    .nav-links.active { transform: translateX(0); }
+    
+    .order-item-row {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .item-col-actions {
+      flex-direction: row;
+      justify-content: flex-start;
+      width: 100%;
+    }
+    .action-btn {
+      width: auto;
+      flex: 1;
+    }
+  }
+  </style>
+ </head>
+ <body>
+  <header class="nav">
+   <div class="nav-in">
+    <div class="nav-left">
+      <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
+      </button>
+      <a class="logo" href="index.html">
+       <span>●</span> Prizam
+      </a>
+    </div>
+
+    <nav class="nav-links" id="navLinks">
+     <a href="index.html">Home</a>
+     <a href="shop.html">Products</a>
+     <a href="cart.html">Cart</a>
+     <a aria-current="page" href="my-orders.html">Orders</a>
+    </nav>
+
+    <div class="nav-actions">
+      <!-- Desktop Profile Hover Dropdown -->
+      <div class="profile-menu">
+        <a href="profile.html" class="icon-btn profile-trigger" aria-label="My Profile">
+          <i class="fa-solid fa-user"></i>
+        </a>
+        <div class="profile-dropdown">
+          <div class="profile-dropdown-header">
+            <strong id="profileGreeting">Hello, Welcome!</strong>
+            <span id="profileAccountText">Access your Prizam account</span>
+          </div>
+          <a href="my-orders.html">
+            <i class="fa-solid fa-box"></i>
+            <span>My Orders</span>
+          </a>
+          <a href="profile.html#wishlist">
+            <i class="fa-regular fa-heart"></i>
+            <span>Wishlist</span>
+          </a>
+          <a href="profile.html#rewards">
+            <i class="fa-solid fa-star"></i>
+            <span>Rewards &amp; Offers</span>
+          </a>
+          <a href="profile.html#settings">
+            <i class="fa-solid fa-gear"></i>
+            <span>Account Settings</span>
+          </a>
+          <button type="button" class="profile-logout-btn" id="profileLogoutBtn" style="display:none;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Logout</span>
+          </button>
+          <a href="profile.html" class="profile-login-btn" id="profileLoginBtn">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span id="profileLoginText">Login / Sign Up</span>
+          </a>
+        </div>
+      </div>
+
+      <a href="profile.html" class="icon-btn mobile-profile-icon" aria-label="My Profile">
+        <i class="fa-solid fa-user"></i>
+      </a>
+
+      <!-- Cart with Hover Card -->
+      <div class="cart-menu">
+        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+        <div class="cart-hover-card" role="status">
+          <div class="cart-hover-title">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span>Shopping Cart</span>
+          </div>
+          <div class="cart-hover-status">
+            <div class="cart-hover-status-icon" id="cartHoverIcon">
+              <i class="fa-solid fa-bag-shopping"></i>
+            </div>
+            <div>
+              <strong id="cartHoverTitle">Your cart is empty</strong>
+              <span id="cartHoverText">Add products to see them here.</span>
+            </div>
+          </div>
+          <a href="cart.html" class="cart-hover-action" id="cartHoverAction">View Cart</a>
+        </div>
+      </div>
+
+      <a href="profile.html#settings" class="icon-btn" title="User Settings" aria-label="User Settings">
+        <i class="fa-solid fa-gear"></i>
+      </a>
+    </div>
+   </div>
+  </header>
+
+  <main class="container">
+   <div class="orders-header">
+     <div>
+       <h1>Your Orders</h1>
+       <p id="ordersIntro">Track packages, download invoices, and manage returns.</p>
+     </div>
+   </div>
+
+   <!-- Toolbar: Search Orders & Filter Tabs -->
+   <section class="orders-toolbar" id="ordersToolbar" style="display:none;">
+     <div class="orders-search-box">
+       <i class="fa-solid fa-magnifying-glass"></i>
+       <input type="text" id="orderSearchInput" placeholder="Search by product name or Order ID..." />
+     </div>
+     <div class="orders-filter-tabs" id="filterTabs">
+       <button class="filter-tab active" data-filter="all">All Orders</button>
+       <button class="filter-tab" data-filter="active">In Progress</button>
+       <button class="filter-tab" data-filter="delivered">Delivered</button>
+       <button class="filter-tab" data-filter="cancelled">Cancelled</button>
+     </div>
+   </section>
+
+   <!-- Orders Container -->
+   <section class="orders-feed" id="ordersArea">
+    <div class="loading-skeleton"></div>
+    <div class="loading-skeleton"></div>
+   </section>
+  </main>
+
+  <script type="module">
+   import { db } from './assets/js/firebase-config.js';
+   import { updateCartBadge } from "./assets/js/cart.js";
+   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js';
+   import {
+     collection,
+     onSnapshot,
+     query,
+     where,
+     or
+   } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js';
+
+   const auth = getAuth();
+   const ordersArea = document.getElementById('ordersArea');
+   const ordersToolbar = document.getElementById('ordersToolbar');
+   const intro = document.getElementById('ordersIntro');
+   const searchInput = document.getElementById('orderSearchInput');
+   const filterTabs = document.getElementById('filterTabs');
+
+   let masterOrdersList = [];
+   let currentFilter = 'all';
+   let currentSearchQuery = '';
+
+   // Mobile menu drawer
+   const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+   const navLinks = document.getElementById("navLinks");
+   const menuIcon = document.getElementById("menuIcon");
+   if (mobileMenuBtn && navLinks) {
+     mobileMenuBtn.addEventListener("click", () => {
+       navLinks.classList.toggle("active");
+       menuIcon.className = navLinks.classList.contains("active") ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+     });
+   }
+
+   // Profile drop-down auth state
+   const profileGreeting = document.getElementById("profileGreeting");
+   const profileAccountText = document.getElementById("profileAccountText");
+   const profileLoginBtn = document.getElementById("profileLoginBtn");
+   const profileLoginText = document.getElementById("profileLoginText");
+   const profileLogoutBtn = document.getElementById("profileLogoutBtn");
+   const profileDropdown = document.querySelector(".profile-dropdown");
+   const profileOrdersLink = profileDropdown ? profileDropdown.querySelector('a[href="my-orders.html"]') : null;
+
+   function renderProfileMenu(user) {
+     if (!profileGreeting || !profileLoginBtn) return;
+     if (user) {
+       const name = (user.displayName || user.email || "User").split(/[\s@]/)[0];
+       profileGreeting.textContent = `Hi, ${name}!`;
+       profileAccountText.textContent = user.email;
+       profileLoginBtn.href = "profile.html";
+       profileLoginBtn.querySelector("i").className = "fa-solid fa-user";
+       profileLoginText.textContent = "My Profile";
+       profileLogoutBtn.style.display = "flex";
+       if (profileDropdown) {
+         profileDropdown.appendChild(profileLogoutBtn);
+         profileDropdown.appendChild(profileLoginBtn);
+       }
+     } else {
+       profileGreeting.textContent = "Hello, Welcome!";
+       profileAccountText.textContent = "Access your Prizam account";
+       profileLoginBtn.href = "profile.html";
+       profileLoginBtn.querySelector("i").className = "fa-solid fa-right-to-bracket";
+       profileLoginText.textContent = "Login / Sign Up";
+       profileLogoutBtn.style.display = "none";
+       if (profileDropdown && profileOrdersLink) {
+         profileDropdown.insertBefore(profileLoginBtn, profileOrdersLink);
+       }
+     }
+   }
+
+   if (profileLogoutBtn) {
+     profileLogoutBtn.addEventListener("click", async () => {
+       try {
+         await signOut(auth);
+         renderProfileMenu(null);
+       } catch (err) {
+         console.error("Sign out error:", err);
+       }
+     });
+   }
+
+   // Cart Hover Preview Status
+   function updateCartHoverState() {
+     const countEl = document.getElementById("cartCount");
+     const titleEl = document.getElementById("cartHoverTitle");
+     const textEl = document.getElementById("cartHoverText");
+     const iconEl = document.getElementById("cartHoverIcon");
+     const actionEl = document.getElementById("cartHoverAction");
+     if (!countEl || !titleEl) return;
+     const count = Math.max(0, parseInt(countEl.textContent || "0", 10) || 0);
+
+     if (count === 0) {
+       titleEl.textContent = "Your cart is empty";
+       textEl.textContent = "Add products to see them here.";
+       iconEl.innerHTML = '<i class="fa-solid fa-bag-shopping"></i>';
+       actionEl.textContent = "Start Shopping";
+       actionEl.href = "shop.html";
+     } else {
+       titleEl.textContent = `${count} ${count === 1 ? "product" : "products"} in your cart`;
+       textEl.textContent = "Your items are ready for checkout.";
+       iconEl.innerHTML = '<i class="fa-solid fa-check"></i>';
+       actionEl.textContent = "View Cart";
+       actionEl.href = "cart.html";
+     }
+   }
+
+   const esc = (v) => String(v ?? '').replace(/[&<>'"]/g, c => ({
+     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+   }[c]));
+   const money = (v) => '₹' + Number(v || 0).toLocaleString('en-IN');
+
+   function toDate(value) {
+     if (!value) return null;
+     if (typeof value?.toDate === 'function') return value.toDate();
+     if (typeof value?.seconds === 'number') return new Date(value.seconds * 1000);
+     const d = new Date(value);
+     return Number.isNaN(d.getTime()) ? null : d;
+   }
+
+   function getStatusData(statusRaw, placedDate) {
+     const st = String(statusRaw || 'Pending').toLowerCase();
+     switch(st) {
+       case 'delivered':
+         return {
+           label: 'Delivered',
+           class: 'delivered',
+           headline: `Delivered on ${placedDate ? placedDate.toLocaleDateString('en-IN', { day: 'short', month: 'short' }) : 'recently'}`,
+           subtext: 'Your item has been delivered directly to you'
+         };
+       case 'shipped':
+         return {
+           label: 'Shipped',
+           class: 'shipped',
+           headline: 'Arriving soon',
+           subtext: 'Package is in transit with courier partner'
+         };
+       case 'processing':
+       case 'pending':
+         return {
+           label: 'Processing',
+           class: 'processing',
+           headline: 'Order Confirmed',
+           subtext: 'Preparing for dispatch from Rajkot Hub'
+         };
+       case 'cancelled':
+         return {
+           label: 'Cancelled',
+           class: 'cancelled',
+           headline: 'Cancelled',
+           subtext: 'Refund processed to original payment method'
+         };
+       default:
+         return {
+           label: statusRaw,
+           class: 'default',
+           headline: statusRaw,
+           subtext: 'Status updated'
+         };
+     }
+   }
+
+   function renderOrderCard(order) {
+     const orderNumber = order.orderId || order.id;
+     const placedAt = toDate(order.createdAt);
+     const statusInfo = getStatusData(order.status, placedAt);
+     const customer = order.customer || {};
+     const recipient = `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'Customer';
+     const total = Number(order.totalAmount) || 0;
+     const items = Array.isArray(order.items) && order.items.length ? order.items : [
+       { title: 'Prizam Stainless Steel Fixture', price: total, quantity: 1, imageUrl: '' }
+     ];
+
+     const itemsHtml = items.map(item => {
+       const qty = Number(item.quantity) || 1;
+       const price = Number(item.price) || 0;
+       return `
+         <div class="order-item-row">
+           <div class="item-col-product">
+             <div class="item-thumb-box">
+               ${item.imageUrl 
+                 ? `<img src="${esc(item.imageUrl)}" alt="${esc(item.title)}" loading="lazy" />` 
+                 : `<i class="fa-solid fa-box-open"></i>`}
+             </div>
+             <div class="item-details-body">
+               <h3 class="item-name">${esc(item.title || 'Architectural Drain Fitting')}</h3>
+               <div class="item-specs">Quantity: ${qty} • Grade 304 Steel</div>
+               <div class="item-price-tag">${money(price * qty)}</div>
+             </div>
+           </div>
+
+           <div class="item-col-status">
+             <div class="status-indicator-line">
+               <span class="status-dot ${statusInfo.class}"></span>
+               <span>${statusInfo.headline}</span>
+             </div>
+             <div class="status-subtext">${statusInfo.subtext}</div>
+           </div>
+
+           <div class="item-col-actions">
+             <a href="product-details.html?id=${esc(item.id || '')}" class="action-btn action-btn-primary">
+               <i class="fa-solid fa-rotate-right"></i> Buy Again
+             </a>
+             <button type="button" class="action-btn action-btn-secondary" onclick="alert('Order Tracking ID: PRIZAM-${esc(orderNumber)}')">
+               <i class="fa-solid fa-location-dot"></i> Track Item
+             </button>
+           </div>
+         </div>
+       `;
+     }).join('');
+
+     return `
+       <article class="order-card">
+         <div class="order-header-strip">
+           <div class="order-header-meta">
+             <div class="meta-col">
+               <small>Order Placed</small>
+               <strong>${placedAt ? placedAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</strong>
+             </div>
+             <div class="meta-col">
+               <small>Total Amount</small>
+               <strong>${money(total)}</strong>
+             </div>
+             <div class="meta-col">
+               <small>Ship To</small>
+               <strong title="${esc(customer.address || '')}">${esc(recipient)}</strong>
+             </div>
+           </div>
+           <div class="order-header-actions">
+             <span class="order-id-label">Order # </span>
+             <span class="order-id-code">${esc(orderNumber)}</span>
+           </div>
+         </div>
+         <div class="order-items-wrap">
+           ${itemsHtml}
+         </div>
+       </article>
+     `;
+   }
+
+   function applyFiltersAndRender() {
+     let filtered = [...masterOrdersList];
+
+     // Status Tab Filtering
+     if (currentFilter === 'active') {
+       filtered = filtered.filter(o => ['pending', 'processing', 'shipped'].includes(String(o.status || '').toLowerCase()));
+     } else if (currentFilter === 'delivered') {
+       filtered = filtered.filter(o => String(o.status || '').toLowerCase() === 'delivered');
+     } else if (currentFilter === 'cancelled') {
+       filtered = filtered.filter(o => String(o.status || '').toLowerCase() === 'cancelled');
+     }
+
+     // Search Filtering (by title or order ID)
+     if (currentSearchQuery.trim()) {
+       const q = currentSearchQuery.trim().toLowerCase();
+       filtered = filtered.filter(o => {
+         const orderIdMatch = String(o.orderId || o.id || '').toLowerCase().includes(q);
+         const itemMatch = Array.isArray(o.items) && o.items.some(it => String(it.title || '').toLowerCase().includes(q));
+         return orderIdMatch || itemMatch;
+       });
+     }
+
+     if (!filtered.length) {
+       ordersArea.innerHTML = `
+         <div class="state">
+           <i class="fa-solid fa-magnifying-glass"></i>
+           <h3>No matching orders found</h3>
+           <p>Try clearing your search query or switching tabs.</p>
+         </div>
+       `;
+       return;
+     }
+
+     ordersArea.innerHTML = filtered.map(renderOrderCard).join('');
+   }
+
+   // Attach Filter Tab Click Handlers
+   filterTabs?.addEventListener('click', (e) => {
+     const btn = e.target.closest('.filter-tab');
+     if (!btn) return;
+     filterTabs.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+     btn.classList.add('active');
+     currentFilter = btn.dataset.filter;
+     applyFiltersAndRender();
+   });
+
+   // Search input listener
+   searchInput?.addEventListener('input', (e) => {
+     currentSearchQuery = e.target.value;
+     applyFiltersAndRender();
+   });
+
+   let unsubscribeOrders = null;
+   function startUserOrderListener(user) {
+     renderProfileMenu(user);
+     if (unsubscribeOrders) {
+       unsubscribeOrders();
+       unsubscribeOrders = null;
+     }
+
+     if (!user) {
+       ordersToolbar.style.display = 'none';
+       intro.textContent = 'Please sign in to access your order history.';
+       ordersArea.innerHTML = `
+         <div class="state">
+           <i class="fa-solid fa-user-lock"></i>
+           <h3>Sign in to view your orders</h3>
+           <p>Track shipments, manage returns, and check invoices.</p>
+           <a class="btn-start" href="profile.html">
+             <i class="fa-solid fa-right-to-bracket"></i> Sign In to Prizam
+           </a>
+         </div>
+       `;
+       return;
+     }
+
+     intro.textContent = `Showing verified orders for ${user.email}.`;
+
+     const ordersQuery = query(
+       collection(db, 'orders'),
+       or(
+         where('userId', '==', user.uid),
+         where('userUid', '==', user.uid)
+       )
+     );
+
+     unsubscribeOrders = onSnapshot(ordersQuery, (snapshot) => {
+       masterOrdersList = snapshot.docs
+         .map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
+         .sort((a, b) => (toDate(b.createdAt)?.getTime() || 0) - (toDate(a.createdAt)?.getTime() || 0));
+
+       if (!masterOrdersList.length) {
+         ordersToolbar.style.display = 'none';
+         ordersArea.innerHTML = `
+           <div class="state">
+             <i class="fa-solid fa-box-open"></i>
+             <h3>You have no orders yet</h3>
+             <p>When you purchase products from Prizam, they will show up here.</p>
+             <a class="btn-start" href="shop.html">
+               <i class="fa-solid fa-arrow-right"></i> Explore Catalog
+             </a>
+           </div>
+         `;
+         return;
+       }
+
+       ordersToolbar.style.display = 'flex';
+       applyFiltersAndRender();
+     }, (err) => {
+       console.error("Firestore user orders query error:", err);
+       ordersToolbar.style.display = 'none';
+       ordersArea.innerHTML = `
+         <div class="state">
+           <i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i>
+           <h3>Unable to fetch your orders</h3>
+           <p>${esc(err.message || 'Permission denied')}. Check Firestore security rules.</p>
+         </div>
+       `;
+     });
+   }
+
+   onAuthStateChanged(auth, startUserOrderListener);
+
+   document.addEventListener("DOMContentLoaded", () => {
+     if (typeof updateCartBadge === 'function') updateCartBadge();
+     updateCartHoverState();
+     const cartCount = document.getElementById("cartCount");
+     if (cartCount) {
+       new MutationObserver(updateCartHoverState).observe(cartCount, { childList: true, characterData: true, subtree: true });
+     }
+   });
+  </script>
+ </body>
+</html>

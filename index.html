@@ -384,6 +384,39 @@
       color: #ffffff;
     }
 
+    .profile-logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.72rem 1rem;
+      margin: 0.15rem 0 0;
+      border: 0;
+      border-top: 1px solid #eef0f3;
+      background: transparent;
+      color: #b42318;
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    }
+
+    .profile-logout-btn i {
+      width: 18px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .profile-logout-btn:hover,
+    .profile-logout-btn:focus-visible {
+      background: #fff5f4;
+      color: #8f1d14;
+      padding-left: 1.15rem;
+      outline: none;
+    }
+
     @media (min-width: 900px) {
       .profile-menu {
         display: block;
@@ -400,8 +433,145 @@
       }
     }
 
+    .cart-menu {
+      position: relative;
+    }
+
     .cart-badge-wrapper {
       position: relative;
+      display: inline-flex;
+    }
+
+    .cart-menu::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: -22px;
+      width: 300px;
+      height: 18px;
+      background: transparent;
+      z-index: 1099;
+    }
+
+    .cart-hover-card {
+      position: absolute;
+      top: calc(100% + 7px);
+      right: -18px;
+      width: 285px;
+      background: #ffffff;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+      z-index: 1100;
+    }
+
+    .cart-hover-card::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      right: 18px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 1px solid rgba(17, 24, 39, 0.08);
+      border-top: 1px solid rgba(17, 24, 39, 0.08);
+      transform: rotate(45deg);
+    }
+
+    .cart-menu:hover .cart-hover-card,
+    .cart-menu:focus-within .cart-hover-card {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .cart-hover-title {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: #111827;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 0.85rem;
+    }
+
+    .cart-hover-title i {
+      font-size: 0.95rem;
+    }
+
+    .cart-hover-status {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.8rem;
+      border-radius: 9px;
+      background: #f7f8fa;
+      border: 1px solid #eef0f3;
+      margin-bottom: 0.85rem;
+    }
+
+    .cart-hover-status-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      color: #111827;
+      flex-shrink: 0;
+      border: 1px solid #e5e7eb;
+    }
+
+    .cart-hover-status strong {
+      display: block;
+      color: #111827;
+      font-size: 0.82rem;
+      line-height: 1.3;
+    }
+
+    .cart-hover-status span {
+      display: block;
+      color: #6b7280;
+      font-size: 0.74rem;
+      margin-top: 0.15rem;
+    }
+
+    .cart-hover-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 40px;
+      border-radius: 8px;
+      background: #121212;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .cart-hover-action:hover,
+    .cart-hover-action:focus-visible {
+      background: #2a2a2a;
+      color: #ffffff;
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    @media (max-width: 899px) {
+      .cart-hover-card,
+      .cart-menu::after {
+        display: none;
+      }
     }
 
     .cart-badge {
@@ -991,16 +1161,11 @@
 
             <div class="profile-dropdown">
               <div class="profile-dropdown-header">
-                <strong>Hello, Welcome!</strong>
-                <span>Access your Prizam account</span>
+                <strong id="profileGreeting">Hello, Welcome!</strong>
+                <span id="profileAccountText">Access your Prizam account</span>
               </div>
 
-              <a href="profile.html" class="profile-login-btn">
-                <i class="fa-solid fa-right-to-bracket"></i>
-                <span>Login / Sign Up</span>
-              </a>
-
-              <a href="profile.html#orders">
+              <a href="order.html#orders">
                 <i class="fa-solid fa-box"></i>
                 <span>My Orders</span>
               </a>
@@ -1019,16 +1184,47 @@
                 <i class="fa-solid fa-gear"></i>
                 <span>Account Settings</span>
               </a>
+
+              <button type="button" class="profile-logout-btn" id="profileLogoutBtn" style="display:none;">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Logout</span>
+              </button>
+
+              <a href="profile.html" class="profile-login-btn" id="profileLoginBtn">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span id="profileLoginText">Login / Sign Up</span>
+              </a>
             </div>
           </div>
 
           <a href="profile.html" class="icon-btn mobile-profile-icon" aria-label="My Profile">
             <i class="fa-solid fa-user"></i>
           </a>
-        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
-          <i class="fa-solid fa-bag-shopping"></i>
-          <span class="cart-badge" id="cartCount">0</span>
-        </a>
+
+        <div class="cart-menu">
+          <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="cart-badge" id="cartCount">0</span>
+          </a>
+
+          <div class="cart-hover-card" role="status" aria-live="polite">
+            <div class="cart-hover-title">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <span>Shopping Cart</span>
+            </div>
+            <div class="cart-hover-status">
+              <div class="cart-hover-status-icon" id="cartHoverIcon">
+                <i class="fa-solid fa-bag-shopping"></i>
+              </div>
+              <div>
+                <strong id="cartHoverTitle">Your cart is empty</strong>
+                <span id="cartHoverText">Add products to see them here.</span>
+              </div>
+            </div>
+            <a href="cart.html" class="cart-hover-action" id="cartHoverAction">View Cart</a>
+          </div>
+        </div>
+
         <a href="profile.html#settings" class="icon-btn" title="User Settings" aria-label="User Settings"><i class="fa-solid fa-gear"></i></a>
       </div>
     </div>
@@ -1208,11 +1404,77 @@
   <script type="module">
     import { db } from "./assets/js/firebase-config.js";
     import { addToCart, updateCartBadge } from "./assets/js/cart.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
     import { 
       collection, 
       onSnapshot, 
       doc 
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+    // Profile Hover: keep the dropdown synchronized with Firebase login state
+    const auth = getAuth();
+    const profileGreeting = document.getElementById("profileGreeting");
+    const profileAccountText = document.getElementById("profileAccountText");
+    const profileLoginBtn = document.getElementById("profileLoginBtn");
+    const profileLoginText = document.getElementById("profileLoginText");
+    const profileLogoutBtn = document.getElementById("profileLogoutBtn");
+    const profileDropdown = document.querySelector(".profile-dropdown");
+    const profileOrdersLink = profileDropdown ? profileDropdown.querySelector('a[href="profile.html#orders"]') : null;
+
+    function getSafeDisplayName(user) {
+      if (!user) return "";
+      const name = (user.displayName || "").trim();
+      if (name) return name.split(/\s+/)[0];
+      const emailName = (user.email || "").split("@")[0].trim();
+      return emailName || "User";
+    }
+
+    function renderProfileMenu(user) {
+      if (!profileGreeting || !profileAccountText || !profileLoginBtn || !profileLoginText || !profileLogoutBtn) return;
+
+      if (user) {
+        const firstName = getSafeDisplayName(user);
+        profileGreeting.textContent = `Hi, ${firstName}!`;
+        profileAccountText.textContent = user.email || "Your Prizam account";
+        profileLoginBtn.href = "profile.html";
+        profileLoginBtn.querySelector("i").className = "fa-solid fa-user";
+        profileLoginText.textContent = "My Profile";
+        profileLogoutBtn.style.display = "flex";
+
+        // Logged-in layout: Logout first, then My Profile.
+        if (profileDropdown) {
+          profileDropdown.appendChild(profileLogoutBtn);
+          profileDropdown.appendChild(profileLoginBtn);
+        }
+      } else {
+        profileGreeting.textContent = "Hello, Welcome!";
+        profileAccountText.textContent = "Access your Prizam account";
+        profileLoginBtn.href = "profile.html";
+        profileLoginBtn.querySelector("i").className = "fa-solid fa-right-to-bracket";
+        profileLoginText.textContent = "Login / Sign Up";
+        profileLogoutBtn.style.display = "none";
+
+        // Logged-out layout: Login / Sign Up stays at the top.
+        if (profileDropdown && profileOrdersLink) {
+          profileDropdown.insertBefore(profileLoginBtn, profileOrdersLink);
+        }
+      }
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      renderProfileMenu(user);
+    });
+
+    if (profileLogoutBtn) {
+      profileLogoutBtn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+          renderProfileMenu(null);
+        } catch (error) {
+          console.error("Prizam logout failed:", error);
+        }
+      });
+    }
 
     // Mobile Hamburger Menu Toggle
     const mobileMenuBtn = document.getElementById("mobileMenuBtn");
@@ -1350,11 +1612,46 @@
       });
     }
 
+    function updateCartHoverState() {
+      const countEl = document.getElementById("cartCount");
+      const titleEl = document.getElementById("cartHoverTitle");
+      const textEl = document.getElementById("cartHoverText");
+      const iconEl = document.getElementById("cartHoverIcon");
+      const actionEl = document.getElementById("cartHoverAction");
+
+      if (!countEl || !titleEl || !textEl || !iconEl || !actionEl) return;
+
+      const count = Math.max(0, parseInt(countEl.textContent || "0", 10) || 0);
+
+      if (count === 0) {
+        titleEl.textContent = "Your cart is empty";
+        textEl.textContent = "Add products to see them here.";
+        iconEl.innerHTML = '<i class="fa-solid fa-bag-shopping"></i>';
+        actionEl.textContent = "Start Shopping";
+        actionEl.href = "shop.html";
+      } else {
+        titleEl.textContent = `${count} ${count === 1 ? "product" : "products"} in your cart`;
+        textEl.textContent = "Your selected products are ready to view.";
+        iconEl.innerHTML = '<i class="fa-solid fa-check"></i>';
+        actionEl.textContent = "View Cart";
+        actionEl.href = "cart.html";
+      }
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       updateCartBadge();
+      updateCartHoverState();
+
+      const cartCount = document.getElementById("cartCount");
+      if (cartCount) {
+        const observer = new MutationObserver(updateCartHoverState);
+        observer.observe(cartCount, { childList: true, characterData: true, subtree: true });
+      }
+
+      window.addEventListener("storage", updateCartHoverState);
+      window.addEventListener("cartUpdated", updateCartHoverState);
     });
   </script>
   <script src="assets/js/animations.js"></script>
 </body>
 </html>
-
