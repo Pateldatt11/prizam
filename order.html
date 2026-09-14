@@ -17,11 +17,11 @@
     --page: #f1f3f6;
     --card: #ffffff;
     --green: #15803d;
+    --green-bg: #dcfce7;
     --orange: #c2410c;
     --red: #b91c1c;
     --blue: #2563eb;
-    --btn-secondary: #f3f4f6;
-    --transition-smooth: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    --transition-smooth: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
   }
   * {
     box-sizing: border-box;
@@ -121,18 +121,10 @@
     transform: translateY(-2px);
   }
 
-  /* Desktop Profile Hover Menu */
-  .profile-menu {
-    position: relative;
-    display: block;
-  }
-  .profile-trigger {
-    display: inline-flex;
-    align-items: center;
-  }
-  .mobile-profile-icon {
-    display: none;
-  }
+  /* Desktop Profile Hover Dropdown */
+  .profile-menu { position: relative; display: block; }
+  .profile-trigger { display: inline-flex; align-items: center; }
+  .mobile-profile-icon { display: none; }
   .profile-menu::after {
     content: "";
     position: absolute;
@@ -157,7 +149,7 @@
     visibility: hidden;
     pointer-events: none;
     transform: translateY(-8px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease;
     z-index: 1100;
   }
   .profile-dropdown::before {
@@ -225,9 +217,7 @@
     font-weight: 700;
     padding: 0.65rem 0.9rem;
   }
-  .profile-dropdown .profile-login-btn i {
-    color: #ffffff;
-  }
+  .profile-dropdown .profile-login-btn i { color: #ffffff; }
   .profile-logout-btn {
     display: flex;
     align-items: center;
@@ -323,18 +313,12 @@
     align-items: center;
     justify-content: center;
     background: #ffffff;
+    color: #111827;
+    flex-shrink: 0;
     border: 1px solid #e5e7eb;
   }
-  .cart-hover-status strong {
-    display: block;
-    color: #111827;
-    font-size: 0.82rem;
-  }
-  .cart-hover-status span {
-    display: block;
-    color: #6b7280;
-    font-size: 0.74rem;
-  }
+  .cart-hover-status strong { display: block; color: #111827; font-size: 0.82rem; }
+  .cart-hover-status span { display: block; color: #6b7280; font-size: 0.74rem; }
   .cart-hover-action {
     display: flex;
     align-items: center;
@@ -349,7 +333,7 @@
     font-weight: 700;
   }
 
-  /* Page Header & Toolbar */
+  /* Header & Filter Toolbar */
   .orders-header {
     padding: 24px 0 16px;
     display: flex;
@@ -368,8 +352,6 @@
     color: var(--muted);
     margin-top: 2px;
   }
-
-  /* Flipkart / Amazon Style Toolbar (Search & Filter Tabs) */
   .orders-toolbar {
     background: #ffffff;
     border: 1px solid var(--line);
@@ -381,7 +363,6 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
   }
   .orders-search-box {
     position: relative;
@@ -426,16 +407,14 @@
     white-space: nowrap;
     transition: all 0.2s ease;
   }
-  .filter-tab:hover {
-    background: #f3f4f6;
-  }
+  .filter-tab:hover { background: #f3f4f6; }
   .filter-tab.active {
     background: #111827;
     color: #ffffff;
     border-color: #111827;
   }
 
-  /* Amazon / Flipkart Combined Order Card */
+  /* Order Cards */
   .orders-feed {
     padding-bottom: 60px;
     display: flex;
@@ -448,13 +427,7 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    transition: box-shadow 0.2s ease;
   }
-  .order-card:hover {
-    box-shadow: 0 6px 16px rgba(0,0,0,0.05);
-  }
-
-  /* Amazon-style Card Header */
   .order-header-strip {
     background: var(--card-header-bg);
     border-bottom: 1px solid var(--line);
@@ -485,20 +458,16 @@
     font-size: 13px;
   }
   .order-header-actions {
-    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  .order-id-label {
-    color: var(--muted);
-    font-size: 11px;
-  }
-  .order-id-code {
-    font-weight: 700;
-    color: #111827;
-  }
+  .order-id-label { color: var(--muted); font-size: 11px; }
+  .order-id-code { font-weight: 700; color: #111827; }
 
-  /* Flipkart-style Product Items & Tracking Grid */
+  /* Product Items Row */
   .order-items-wrap {
-    padding: 6px 18px;
+    padding: 4px 18px;
   }
   .order-item-row {
     display: grid;
@@ -511,8 +480,6 @@
   .order-item-row:last-child {
     border-bottom: none;
   }
-
-  /* Col 1: Product info */
   .item-col-product {
     display: flex;
     gap: 16px;
@@ -565,7 +532,7 @@
     color: #111827;
   }
 
-  /* Col 2: Flipkart Status & Tracking Dot */
+  /* Status Indicator */
   .item-col-status {
     display: flex;
     flex-direction: column;
@@ -591,14 +558,13 @@
   .status-dot.pending { background: #f59e0b; }
   .status-dot.cancelled { background: #dc2626; }
   .status-dot.default { background: #64748b; }
-
   .status-subtext {
     font-size: 11px;
     color: var(--muted);
     padding-left: 18px;
   }
 
-  /* Col 3: Quick Action Buttons */
+  /* Action Buttons */
   .item-col-actions {
     display: flex;
     flex-direction: column;
@@ -619,26 +585,158 @@
     width: 140px;
     text-align: center;
     transition: var(--transition-smooth);
+    border: 1px solid transparent;
   }
   .action-btn-primary {
     background: #111827;
     color: #ffffff;
-    border: 1px solid #111827;
   }
-  .action-btn-primary:hover {
-    background: #2a2a2a;
-  }
+  .action-btn-primary:hover { background: #2a2a2a; }
   .action-btn-secondary {
     background: #ffffff;
     color: #374151;
-    border: 1px solid var(--line);
+    border-color: var(--line);
   }
   .action-btn-secondary:hover {
     background: #f8fafc;
     border-color: #cbd5e1;
   }
+  .action-btn-secondary.active {
+    background: #e0f2fe;
+    color: #0369a1;
+    border-color: #bae6fd;
+  }
 
-  /* State feedback boxes */
+  /* Single Tracking Drawer per Order */
+  .tracking-drawer {
+    display: none;
+    background: #f8fafc;
+    border-top: 1px solid var(--line);
+    padding: 20px 24px;
+    animation: fadeIn 0.25s ease;
+  }
+  .tracking-drawer.open {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .tracking-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 12px;
+  }
+  .tracking-courier-pill {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    color: #374151;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Stepper Progress Bar (Bounded between first and last node) */
+  .tracking-stepper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0;
+  }
+  .tracking-step {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Segment Line: Stops at the center of each step node; Never goes past Delivered */
+  .tracking-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    width: 100%;
+    height: 4px;
+    background: #e2e8f0;
+    z-index: 1;
+    transition: background 0.3s ease;
+  }
+  .tracking-step.completed:not(:last-child)::after {
+    background: #16a34a;
+  }
+
+  .step-node {
+    position: relative;
+    z-index: 2;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #cbd5e1;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-bottom: 8px;
+    transition: var(--transition-smooth);
+  }
+  .step-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    line-height: 1.3;
+  }
+  .step-time {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  /* Stepper Status States */
+  .tracking-step.completed .step-node {
+    background: #16a34a;
+    border-color: #16a34a;
+    color: #ffffff;
+  }
+  .tracking-step.completed .step-label {
+    color: #16a34a;
+  }
+  .tracking-step.active .step-node {
+    background: #ffffff;
+    border-color: #2563eb;
+    color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+  }
+  .tracking-step.active .step-label {
+    color: #2563eb;
+  }
+
+  /* Cancelled State */
+  .tracking-drawer.is-cancelled .tracking-step.completed:not(:last-child)::after {
+    background: #dc2626;
+  }
+  .tracking-step.cancelled .step-node {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #ffffff;
+  }
+  .tracking-step.cancelled .step-label {
+    color: #dc2626;
+  }
+
+  /* Empty State & Skeletons */
   .state {
     padding: 40px 20px;
     background: #fff;
@@ -684,7 +782,6 @@
     to { background-position: -200% 0; }
   }
 
-  /* Responsive styling */
   @media (max-width: 899px) {
     .profile-menu { display: none; }
     .mobile-profile-icon { display: inline-flex; }
@@ -722,6 +819,28 @@
       width: auto;
       flex: 1;
     }
+    .tracking-stepper {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+      padding-left: 10px;
+    }
+    .tracking-step {
+      flex-direction: row;
+      text-align: left;
+      width: 100%;
+      gap: 14px;
+    }
+    .tracking-step:not(:last-child)::after {
+      top: 38px;
+      left: 17px;
+      width: 4px;
+      height: calc(100% + 20px);
+    }
+    .step-node {
+      flex-shrink: 0;
+      margin-bottom: 0;
+    }
   }
   </style>
  </head>
@@ -745,7 +864,7 @@
     </nav>
 
     <div class="nav-actions">
-      <!-- Desktop Profile Hover Dropdown -->
+      <!-- Profile dropdown -->
       <div class="profile-menu">
         <a href="profile.html" class="icon-btn profile-trigger" aria-label="My Profile">
           <i class="fa-solid fa-user"></i>
@@ -786,7 +905,7 @@
         <i class="fa-solid fa-user"></i>
       </a>
 
-      <!-- Cart with Hover Card -->
+      <!-- Cart menu -->
       <div class="cart-menu">
         <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
           <i class="fa-solid fa-bag-shopping"></i>
@@ -825,7 +944,7 @@
      </div>
    </div>
 
-   <!-- Toolbar: Search Orders & Filter Tabs -->
+   <!-- Search & Filter Bar -->
    <section class="orders-toolbar" id="ordersToolbar" style="display:none;">
      <div class="orders-search-box">
        <i class="fa-solid fa-magnifying-glass"></i>
@@ -869,7 +988,7 @@
    let currentFilter = 'all';
    let currentSearchQuery = '';
 
-   // Mobile menu drawer
+   // Mobile Nav Drawer Toggle
    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
    const navLinks = document.getElementById("navLinks");
    const menuIcon = document.getElementById("menuIcon");
@@ -880,7 +999,7 @@
      });
    }
 
-   // Profile drop-down auth state
+   // Profile Menu State Sync
    const profileGreeting = document.getElementById("profileGreeting");
    const profileAccountText = document.getElementById("profileAccountText");
    const profileLoginBtn = document.getElementById("profileLoginBtn");
@@ -965,62 +1084,161 @@
      return Number.isNaN(d.getTime()) ? null : d;
    }
 
-   function getStatusData(statusRaw, placedDate) {
-     const st = String(statusRaw || 'Pending').toLowerCase();
+   function formatSafeDate(d, opts) {
+     if (!d) return '';
+     try {
+       return d.toLocaleDateString('en-IN', opts || { day: 'numeric', month: 'short' });
+     } catch (err) {
+       return `${d.getDate()}/${d.getMonth() + 1}`;
+     }
+   }
+
+   function getStatusData(statusRaw, placedDate, deliveredDate) {
+     const st = String(statusRaw || 'Pending').trim().toLowerCase();
+     
+     if (['delivered', 'completed', 'done'].includes(st)) {
+       const effectiveDate = deliveredDate || placedDate;
+       const dateString = effectiveDate ? formatSafeDate(effectiveDate, { day: 'numeric', month: 'short' }) : 'recently';
+       return {
+         label: 'Delivered',
+         class: 'delivered',
+         headline: `Delivered on ${dateString}`,
+         subtext: 'Package handed directly to resident',
+         stepIndex: 4
+       };
+     }
+
      switch(st) {
-       case 'delivered':
-         return {
-           label: 'Delivered',
-           class: 'delivered',
-           headline: `Delivered on ${placedDate ? placedDate.toLocaleDateString('en-IN', { day: 'short', month: 'short' }) : 'recently'}`,
-           subtext: 'Your item has been delivered directly to you'
-         };
        case 'shipped':
          return {
            label: 'Shipped',
            class: 'shipped',
-           headline: 'Arriving soon',
-           subtext: 'Package is in transit with courier partner'
+           headline: 'In Transit',
+           subtext: 'Dispatched via Prizam Express Logistics',
+           stepIndex: 2
          };
        case 'processing':
-       case 'pending':
          return {
            label: 'Processing',
            class: 'processing',
            headline: 'Order Confirmed',
-           subtext: 'Preparing for dispatch from Rajkot Hub'
+           subtext: 'Packaging and quality inspection in Rajkot',
+           stepIndex: 1
+         };
+       case 'pending':
+         return {
+           label: 'Pending',
+           class: 'pending',
+           headline: 'Order Placed',
+           subtext: 'Payment received, waiting for dispatch',
+           stepIndex: 0
          };
        case 'cancelled':
          return {
            label: 'Cancelled',
            class: 'cancelled',
-           headline: 'Cancelled',
-           subtext: 'Refund processed to original payment method'
+           headline: 'Order Cancelled',
+           subtext: 'Refund processed to original payment method',
+           stepIndex: -1
          };
        default:
          return {
-           label: statusRaw,
+           label: statusRaw || 'Active',
            class: 'default',
-           headline: statusRaw,
-           subtext: 'Status updated'
+           headline: statusRaw || 'Status Updated',
+           subtext: 'Order updated from management hub',
+           stepIndex: 1
          };
      }
+   }
+
+   // Single Unified Tracking Stepper per Order
+   function renderUnifiedTrackingStepper(order, statusInfo, placedDate, deliveredDate) {
+     const orderNumber = order.orderId || order.id;
+     const trackingNumber = order.trackingNumber || order.trackingId || `PRZ-${String(orderNumber).replace(/[^a-zA-Z0-9]/g, '').slice(-8).toUpperCase()}`;
+     const placedDateStr = placedDate ? formatSafeDate(placedDate, { day: 'numeric', month: 'short' }) : 'Today';
+     const deliveredDateStr = deliveredDate ? formatSafeDate(deliveredDate, { day: 'numeric', month: 'short' }) : 'Completed';
+
+     if (statusInfo.class === 'cancelled') {
+       return `
+         <div class="tracking-drawer is-cancelled" id="tracker-${esc(orderNumber)}">
+           <div class="tracking-drawer-header">
+             <span class="tracking-courier-pill"><i class="fa-solid fa-ban"></i> Shipment Cancelled</span>
+             <span style="color:var(--red); font-weight:700;">No package in transit</span>
+           </div>
+           <div style="padding:10px 0 6px; text-align:center; color:var(--red); font-size:13px; font-weight:600;">
+             This entire shipment was cancelled. No delivery will be attempted.
+           </div>
+         </div>
+       `;
+     }
+
+     const idx = statusInfo.stepIndex;
+
+     const getStepClass = (stepNum) => {
+       if (idx > stepNum) return 'completed';
+       if (idx === stepNum) return 'active';
+       return '';
+     };
+
+     return `
+       <div class="tracking-drawer" id="tracker-${esc(orderNumber)}">
+         <div class="tracking-drawer-header">
+           <span class="tracking-courier-pill">
+             <i class="fa-solid fa-truck-fast"></i> Prizam Express Logistics
+           </span>
+           <span style="color:var(--muted)">Tracking ID: <strong style="color:#111827;">${esc(trackingNumber)}</strong></span>
+         </div>
+
+         <div class="tracking-stepper">
+           <!-- Step 1 -->
+           <div class="tracking-step ${getStepClass(0)}">
+             <div class="step-node"><i class="fa-solid fa-file-lines"></i></div>
+             <span class="step-label">Order Placed</span>
+             <span class="step-time">${placedDateStr}</span>
+           </div>
+
+           <!-- Step 2 -->
+           <div class="tracking-step ${getStepClass(1)}">
+             <div class="step-node"><i class="fa-solid fa-box"></i></div>
+             <span class="step-label">Packed &amp; Verified</span>
+             <span class="step-time">Rajkot Hub</span>
+           </div>
+
+           <!-- Step 3 -->
+           <div class="tracking-step ${getStepClass(2)}">
+             <div class="step-node"><i class="fa-solid fa-truck"></i></div>
+             <span class="step-label">Shipped</span>
+             <span class="step-time">In Transit</span>
+           </div>
+
+           <!-- Step 4 (Final step, no following line) -->
+           <div class="tracking-step ${getStepClass(3)}">
+             <div class="step-node"><i class="fa-solid fa-house-chimney"></i></div>
+             <span class="step-label">Delivered</span>
+             <span class="step-time">${idx === 4 ? deliveredDateStr : 'Expected soon'}</span>
+           </div>
+         </div>
+       </div>
+     `;
    }
 
    function renderOrderCard(order) {
      const orderNumber = order.orderId || order.id;
      const placedAt = toDate(order.createdAt);
-     const statusInfo = getStatusData(order.status, placedAt);
+     const deliveredAt = toDate(order.deliveredAt || order.updatedAt);
+     const statusInfo = getStatusData(order.status, placedAt, deliveredAt);
      const customer = order.customer || {};
      const recipient = `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'Customer';
      const total = Number(order.totalAmount) || 0;
      const items = Array.isArray(order.items) && order.items.length ? order.items : [
-       { title: 'Prizam Stainless Steel Fixture', price: total, quantity: 1, imageUrl: '' }
+       { title: 'Prizam Stainless Steel Drain Fixture', price: total, quantity: 1, imageUrl: '' }
      ];
 
-     const itemsHtml = items.map(item => {
+     const itemsHtml = items.map((item) => {
        const qty = Number(item.quantity) || 1;
        const price = Number(item.price) || 0;
+
        return `
          <div class="order-item-row">
            <div class="item-col-product">
@@ -1031,7 +1249,7 @@
              </div>
              <div class="item-details-body">
                <h3 class="item-name">${esc(item.title || 'Architectural Drain Fitting')}</h3>
-               <div class="item-specs">Quantity: ${qty} • Grade 304 Steel</div>
+               <div class="item-specs">Quantity: ${qty} • Grade 304 Stainless Steel</div>
                <div class="item-price-tag">${money(price * qty)}</div>
              </div>
            </div>
@@ -1048,8 +1266,8 @@
              <a href="product-details.html?id=${esc(item.id || '')}" class="action-btn action-btn-primary">
                <i class="fa-solid fa-rotate-right"></i> Buy Again
              </a>
-             <button type="button" class="action-btn action-btn-secondary" onclick="alert('Order Tracking ID: PRIZAM-${esc(orderNumber)}')">
-               <i class="fa-solid fa-location-dot"></i> Track Item
+             <button type="button" class="action-btn action-btn-secondary track-toggle-btn" data-target="tracker-${esc(orderNumber)}">
+               <i class="fa-solid fa-location-dot"></i> Track Shipment
              </button>
            </div>
          </div>
@@ -1062,7 +1280,7 @@
            <div class="order-header-meta">
              <div class="meta-col">
                <small>Order Placed</small>
-               <strong>${placedAt ? placedAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</strong>
+               <strong>${placedAt ? formatSafeDate(placedAt, { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</strong>
              </div>
              <div class="meta-col">
                <small>Total Amount</small>
@@ -1072,56 +1290,93 @@
                <small>Ship To</small>
                <strong title="${esc(customer.address || '')}">${esc(recipient)}</strong>
              </div>
+             <div class="meta-col">
+               <small>Items</small>
+               <strong>${items.length} ${items.length === 1 ? 'Product' : 'Products'}</strong>
+             </div>
            </div>
            <div class="order-header-actions">
-             <span class="order-id-label">Order # </span>
-             <span class="order-id-code">${esc(orderNumber)}</span>
+             <div>
+               <span class="order-id-label">Order # </span>
+               <span class="order-id-code">${esc(orderNumber)}</span>
+             </div>
+             <button type="button" class="action-btn action-btn-secondary track-toggle-btn" data-target="tracker-${esc(orderNumber)}" style="width:auto; padding:5px 12px;">
+               <i class="fa-solid fa-truck"></i> Track Package
+             </button>
            </div>
          </div>
+
+         <!-- Items List -->
          <div class="order-items-wrap">
            ${itemsHtml}
          </div>
+
+         <!-- Single Shared Live Tracking Stepper for the whole order -->
+         ${renderUnifiedTrackingStepper(order, statusInfo, placedAt, deliveredAt)}
        </article>
      `;
    }
 
    function applyFiltersAndRender() {
-     let filtered = [...masterOrdersList];
+     try {
+       let filtered = [...masterOrdersList];
 
-     // Status Tab Filtering
-     if (currentFilter === 'active') {
-       filtered = filtered.filter(o => ['pending', 'processing', 'shipped'].includes(String(o.status || '').toLowerCase()));
-     } else if (currentFilter === 'delivered') {
-       filtered = filtered.filter(o => String(o.status || '').toLowerCase() === 'delivered');
-     } else if (currentFilter === 'cancelled') {
-       filtered = filtered.filter(o => String(o.status || '').toLowerCase() === 'cancelled');
-     }
+       if (currentFilter === 'active') {
+         filtered = filtered.filter(o => ['pending', 'processing', 'shipped'].includes(String(o.status || '').toLowerCase()));
+       } else if (currentFilter === 'delivered') {
+         filtered = filtered.filter(o => ['delivered', 'completed', 'done'].includes(String(o.status || '').toLowerCase()));
+       } else if (currentFilter === 'cancelled') {
+         filtered = filtered.filter(o => String(o.status || '').toLowerCase() === 'cancelled');
+       }
 
-     // Search Filtering (by title or order ID)
-     if (currentSearchQuery.trim()) {
-       const q = currentSearchQuery.trim().toLowerCase();
-       filtered = filtered.filter(o => {
-         const orderIdMatch = String(o.orderId || o.id || '').toLowerCase().includes(q);
-         const itemMatch = Array.isArray(o.items) && o.items.some(it => String(it.title || '').toLowerCase().includes(q));
-         return orderIdMatch || itemMatch;
+       if (currentSearchQuery.trim()) {
+         const q = currentSearchQuery.trim().toLowerCase();
+         filtered = filtered.filter(o => {
+           const orderIdMatch = String(o.orderId || o.id || '').toLowerCase().includes(q);
+           const itemMatch = Array.isArray(o.items) && o.items.some(it => String(it.title || '').toLowerCase().includes(q));
+           return orderIdMatch || itemMatch;
+         });
+       }
+
+       if (!filtered.length) {
+         ordersArea.innerHTML = `
+           <div class="state">
+             <i class="fa-solid fa-magnifying-glass"></i>
+             <h3>No matching orders found</h3>
+             <p>Try clearing your search query or switching tabs.</p>
+           </div>
+         `;
+         return;
+       }
+
+       ordersArea.innerHTML = filtered.map(renderOrderCard).join('');
+
+       // Bind toggle buttons to open/close the unified order tracking drawer
+       document.querySelectorAll('.track-toggle-btn').forEach(btn => {
+         btn.addEventListener('click', (e) => {
+           e.stopPropagation();
+           const targetId = btn.getAttribute('data-target');
+           const drawer = document.getElementById(targetId);
+           if (drawer) {
+             const isOpen = drawer.classList.toggle('open');
+             document.querySelectorAll(`.track-toggle-btn[data-target="${targetId}"]`).forEach(b => {
+               b.classList.toggle('active', isOpen);
+             });
+           }
+         });
        });
-     }
-
-     if (!filtered.length) {
+     } catch (renderError) {
+       console.error("Order rendering error:", renderError);
        ordersArea.innerHTML = `
          <div class="state">
-           <i class="fa-solid fa-magnifying-glass"></i>
-           <h3>No matching orders found</h3>
-           <p>Try clearing your search query or switching tabs.</p>
+           <i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i>
+           <h3>Error rendering orders</h3>
+           <p>An unexpected formatting error occurred. Please refresh the page.</p>
          </div>
        `;
-       return;
      }
-
-     ordersArea.innerHTML = filtered.map(renderOrderCard).join('');
    }
 
-   // Attach Filter Tab Click Handlers
    filterTabs?.addEventListener('click', (e) => {
      const btn = e.target.closest('.filter-tab');
      if (!btn) return;
@@ -1131,7 +1386,6 @@
      applyFiltersAndRender();
    });
 
-   // Search input listener
    searchInput?.addEventListener('input', (e) => {
      currentSearchQuery = e.target.value;
      applyFiltersAndRender();
