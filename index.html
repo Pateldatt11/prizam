@@ -241,6 +241,165 @@
       transform: translateY(-2px);
     }
 
+
+    /* Desktop Profile Hover Menu */
+    .profile-menu {
+      position: relative;
+      display: none;
+    }
+
+    .profile-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-profile-icon {
+      display: none;
+    }
+
+    .profile-menu::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: -24px;
+      width: 320px;
+      height: 18px;
+      background: transparent;
+      z-index: 1099;
+    }
+
+    .profile-dropdown {
+      position: absolute;
+      top: calc(100% + 7px);
+      right: -18px;
+      width: 270px;
+      background: #ffffff;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+      padding: 0.75rem 0;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+      z-index: 1100;
+    }
+
+    .profile-dropdown::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      right: 20px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 1px solid rgba(17, 24, 39, 0.08);
+      border-top: 1px solid rgba(17, 24, 39, 0.08);
+      transform: rotate(45deg);
+    }
+
+    .profile-menu:hover .profile-dropdown,
+    .profile-menu:focus-within .profile-dropdown {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .profile-dropdown-header {
+      padding: 0.7rem 1rem 0.85rem;
+      border-bottom: 1px solid #eef0f3;
+    }
+
+    .profile-dropdown-header strong {
+      display: block;
+      color: #111827;
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    .profile-dropdown-header span {
+      display: block;
+      color: #6b7280;
+      font-size: 0.76rem;
+      margin-top: 0.18rem;
+    }
+
+    .profile-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.72rem 1rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      z-index: 1101;
+      transition: background 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    }
+
+    .profile-dropdown a i {
+      width: 18px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .profile-dropdown a:hover,
+    .profile-dropdown a:focus-visible {
+      background: #f7f8fa;
+      color: #111827;
+      padding-left: 1.15rem;
+      outline: none;
+    }
+
+    .profile-dropdown a:hover i {
+      color: #111827;
+    }
+
+    .profile-dropdown .profile-login-btn {
+      margin: 0.3rem 0.75rem 0.15rem;
+      width: calc(100% - 1.5rem);
+      justify-content: center;
+      border-radius: 8px;
+      background: #121212;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 0.65rem 0.9rem;
+    }
+
+    .profile-dropdown .profile-login-btn i {
+      color: #ffffff;
+    }
+
+    .profile-dropdown .profile-login-btn:hover,
+    .profile-dropdown .profile-login-btn:hover i {
+      background: #2a2a2a;
+      color: #ffffff;
+    }
+
+    @media (min-width: 900px) {
+      .profile-menu {
+        display: block;
+      }
+    }
+
+    @media (max-width: 899px) {
+      .profile-menu {
+        display: none;
+      }
+
+      .mobile-profile-icon {
+        display: inline-flex;
+      }
+    }
+
     .cart-badge-wrapper {
       position: relative;
     }
@@ -825,7 +984,47 @@
           <input type="search" name="search" placeholder="Search products" aria-label="Search products" />
           <button type="submit" aria-label="Submit product search"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
-        <a href="profile.html" class="icon-btn" aria-label="My Profile"><i class="fa-solid fa-user"></i></a>
+        <div class="profile-menu">
+            <a href="profile.html" class="icon-btn profile-trigger" aria-label="My Profile">
+              <i class="fa-solid fa-user"></i>
+            </a>
+
+            <div class="profile-dropdown">
+              <div class="profile-dropdown-header">
+                <strong>Hello, Welcome!</strong>
+                <span>Access your Prizam account</span>
+              </div>
+
+              <a href="profile.html" class="profile-login-btn">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Login / Sign Up</span>
+              </a>
+
+              <a href="profile.html#orders">
+                <i class="fa-solid fa-box"></i>
+                <span>My Orders</span>
+              </a>
+
+              <a href="profile.html#wishlist">
+                <i class="fa-regular fa-heart"></i>
+                <span>Wishlist</span>
+              </a>
+
+              <a href="profile.html#rewards">
+                <i class="fa-solid fa-star"></i>
+                <span>Rewards &amp; Offers</span>
+              </a>
+
+              <a href="profile.html#settings">
+                <i class="fa-solid fa-gear"></i>
+                <span>Account Settings</span>
+              </a>
+            </div>
+          </div>
+
+          <a href="profile.html" class="icon-btn mobile-profile-icon" aria-label="My Profile">
+            <i class="fa-solid fa-user"></i>
+          </a>
         <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
           <i class="fa-solid fa-bag-shopping"></i>
           <span class="cart-badge" id="cartCount">0</span>
@@ -1158,3 +1357,4 @@
   <script src="assets/js/animations.js"></script>
 </body>
 </html>
+
