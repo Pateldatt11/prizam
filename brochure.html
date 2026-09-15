@@ -14,6 +14,8 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="assets/css/main.css" />
   <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+  <script type="module" src="assets/js/navbar-search.js"></script>
 
   <style>
     :root {
@@ -26,8 +28,10 @@
       --text-main: #0f172a;
       --text-muted: #64748b;
       --success: #16a34a;
+      --danger: #ef4444;
       --radius: 12px;
-      --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      --radius-sm: 8px;
+      --transition-smooth: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     * {
@@ -52,16 +56,18 @@
     .container {
       max-width: 1240px;
       margin: 0 auto;
-      padding: 0 1.5rem;
+      padding: 0 1.25rem;
       width: 100%;
     }
 
-    /* Navbar & Mobile Drawer */
+    /* ==========================================================================
+       Navigation Bar & Dropdown Menus
+       ========================================================================== */
     .navbar {
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
@@ -117,13 +123,13 @@
       align-items: flex-start !important;
       padding: 5rem 2rem 2rem;
       gap: 1.5rem !important;
-      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.12);
       transform: translateX(-100%);
-      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
       z-index: 999;
       display: flex;
-      border-top-right-radius: 24px;
-      border-bottom-right-radius: 24px;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
     }
 
     .nav-links.active {
@@ -133,12 +139,11 @@
     .nav-links a {
       text-decoration: none;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
       transition: var(--transition-smooth);
       position: relative;
-      width: 100%;
-      display: block;
+      width: fit-content;
     }
 
     .nav-links a:hover,
@@ -167,7 +172,6 @@
       .nav-links a {
         font-size: 0.95rem;
         font-weight: 500;
-        width: fit-content;
       }
     }
 
@@ -175,6 +179,42 @@
       display: flex;
       align-items: center;
       gap: 1.1rem;
+    }
+
+    .navbar-search {
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: #f1f5f9;
+      border-radius: 20px;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--border);
+    }
+
+    .navbar-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      width: 160px;
+      padding-right: 0.5rem;
+    }
+
+    .navbar-search button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    @media (max-width: 680px) {
+      .navbar-search {
+        display: none;
+      }
     }
 
     .icon-btn {
@@ -187,14 +227,162 @@
       position: relative;
       padding: 0.2rem;
       transition: transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .icon-btn:hover {
       transform: translateY(-2px);
     }
 
+    /* Desktop Profile Hover Dropdown */
+    .profile-menu {
+      position: relative;
+      display: block;
+    }
+
+    .profile-trigger {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .mobile-profile-icon {
+      display: none;
+    }
+
+    .profile-menu::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: -24px;
+      width: 320px;
+      height: 18px;
+      background: transparent;
+      z-index: 1099;
+    }
+
+    .profile-dropdown {
+      position: absolute;
+      top: calc(100% + 7px);
+      right: -18px;
+      width: 270px;
+      background: #ffffff;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+      padding: 0.75rem 0;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1100;
+    }
+
+    .profile-dropdown::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      right: 20px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 1px solid rgba(17, 24, 39, 0.08);
+      border-top: 1px solid rgba(17, 24, 39, 0.08);
+      transform: rotate(45deg);
+    }
+
+    .profile-menu:hover .profile-dropdown,
+    .profile-menu:focus-within .profile-dropdown {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .profile-dropdown-header {
+      padding: 0.7rem 1rem 0.85rem;
+      border-bottom: 1px solid #eef0f3;
+    }
+
+    .profile-dropdown-header strong {
+      display: block;
+      color: #111827;
+      font-size: 0.92rem;
+    }
+
+    .profile-dropdown-header span {
+      display: block;
+      color: #6b7280;
+      font-size: 0.76rem;
+      margin-top: 0.18rem;
+    }
+
+    .profile-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.72rem 1rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+
+    .profile-dropdown a i {
+      width: 18px;
+      text-align: center;
+      color: #6b7280;
+    }
+
+    .profile-dropdown a:hover {
+      background: #f7f8fa;
+      color: #111827;
+    }
+
+    .profile-dropdown .profile-login-btn {
+      margin: 0.3rem 0.75rem 0.15rem;
+      width: calc(100% - 1.5rem);
+      justify-content: center;
+      border-radius: 8px;
+      background: #121212;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 0.65rem 0.9rem;
+    }
+
+    .profile-dropdown .profile-login-btn i {
+      color: #ffffff;
+    }
+
+    .profile-logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.72rem 1rem;
+      margin: 0.15rem 0 0;
+      border: 0;
+      border-top: 1px solid #eef0f3;
+      background: transparent;
+      color: #b42318;
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Cart Hover Card */
+    .cart-menu {
+      position: relative;
+    }
+
     .cart-badge-wrapper {
       position: relative;
+      display: inline-flex;
     }
 
     .cart-badge {
@@ -202,7 +390,7 @@
       top: -6px;
       right: -10px;
       background: var(--primary);
-      color: #fff;
+      color: #ffffff;
       font-size: 0.65rem;
       font-weight: 700;
       border-radius: 50%;
@@ -213,7 +401,132 @@
       justify-content: center;
     }
 
-    /* Immersive Header Banner */
+    .cart-menu::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: -22px;
+      width: 300px;
+      height: 18px;
+      background: transparent;
+      z-index: 1099;
+    }
+
+    .cart-hover-card {
+      position: absolute;
+      top: calc(100% + 7px);
+      right: -18px;
+      width: 285px;
+      background: #ffffff;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1100;
+    }
+
+    .cart-hover-card::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      right: 18px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 1px solid rgba(17, 24, 39, 0.08);
+      border-top: 1px solid rgba(17, 24, 39, 0.08);
+      transform: rotate(45deg);
+    }
+
+    .cart-menu:hover .cart-hover-card,
+    .cart-menu:focus-within .cart-hover-card {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .cart-hover-title {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: #111827;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 0.85rem;
+    }
+
+    .cart-hover-status {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.8rem;
+      border-radius: 9px;
+      background: #f7f8fa;
+      border: 1px solid #eef0f3;
+      margin-bottom: 0.85rem;
+    }
+
+    .cart-hover-status-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      color: #111827;
+      flex-shrink: 0;
+      border: 1px solid #e5e7eb;
+    }
+
+    .cart-hover-status strong {
+      display: block;
+      color: #111827;
+      font-size: 0.82rem;
+    }
+
+    .cart-hover-status span {
+      display: block;
+      color: #6b7280;
+      font-size: 0.74rem;
+    }
+
+    .cart-hover-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 38px;
+      border-radius: 8px;
+      background: #121212;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 899px) {
+      .profile-menu {
+        display: none;
+      }
+      .mobile-profile-icon {
+        display: inline-flex;
+      }
+      .cart-hover-card,
+      .cart-menu::after {
+        display: none;
+      }
+    }
+
+    /* ==========================================================================
+       Brochures Banner & Toolbar
+       ========================================================================== */
     .brochures-header-banner {
       background: linear-gradient(rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.78)),
                   url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
@@ -221,7 +534,7 @@
       padding: 4.5rem 2rem;
       border-radius: var(--radius);
       margin-top: 1.5rem;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
       text-align: center;
     }
@@ -241,7 +554,6 @@
       line-height: 1.6;
     }
 
-    /* Toolbar */
     .brochures-toolbar {
       display: flex;
       justify-content: space-between;
@@ -255,10 +567,37 @@
       gap: 1rem;
     }
 
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
     .brochures-count {
       font-size: 0.92rem;
       font-weight: 700;
       color: var(--text-muted);
+    }
+
+    .btn-admin-add {
+      display: none; /* Shown dynamically if current user is admin */
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 0.55rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-admin-add:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
     }
 
     .brochure-search-input {
@@ -269,14 +608,16 @@
       outline: none;
       width: 280px;
       background: #ffffff;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s ease;
     }
 
     .brochure-search-input:focus {
-      border-color: var(--primary);
+      border-color: var(--accent);
     }
 
-    /* Brochures Grid */
+    /* ==========================================================================
+       Brochures Grid & Thumbnail Cards
+       ========================================================================== */
     .brochures-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -288,7 +629,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 2rem;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
@@ -302,37 +643,109 @@
       border-color: #cbd5e1;
     }
 
-    .brochure-card-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 1.25rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .pdf-icon-box {
-      width: 54px;
-      height: 54px;
-      border-radius: 12px;
-      background: #fee2e2;
-      color: #dc2626;
+    /* Card Thumbnail Cover Image */
+    .brochure-thumb-cover {
+      width: 100%;
+      height: 180px;
+      background: #f1f5f9;
+      position: relative;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.7rem;
-      flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+      border-bottom: 1px solid var(--border);
     }
 
-    .brochure-meta h3 {
+    .brochure-thumb-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .brochure-card:hover .brochure-thumb-cover img {
+      transform: scale(1.05);
+    }
+
+    .brochure-thumb-fallback {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #94a3b8;
+    }
+
+    .brochure-thumb-fallback i {
+      font-size: 2.75rem;
+      color: #dc2626;
+    }
+
+    .brochure-thumb-fallback span {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .brochure-pill-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-card-admin-edit {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ffffff;
+      color: var(--primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 9px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      display: none; /* Shown dynamically to admin */
+      align-items: center;
+      gap: 5px;
+      z-index: 5;
+    }
+
+    .btn-card-admin-edit:hover {
+      background: #f8fafc;
+      color: var(--accent);
+    }
+
+    .brochure-card-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .brochure-meta-header {
+      margin-bottom: 0.75rem;
+    }
+
+    .brochure-meta-header h3 {
       font-size: 1.15rem;
       font-weight: 800;
       color: var(--text-main);
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.25rem;
       line-height: 1.35;
     }
 
-    .brochure-meta span {
-      font-size: 0.8rem;
+    .brochure-meta-header span {
+      font-size: 0.76rem;
       color: var(--text-muted);
       font-weight: 700;
       text-transform: uppercase;
@@ -340,29 +753,28 @@
     }
 
     .brochure-desc {
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       color: #475569;
-      line-height: 1.65;
-      margin-bottom: 1.75rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
       flex-grow: 1;
     }
 
     .btn-download {
       width: 100%;
-      padding: 0.9rem;
+      padding: 0.85rem;
       background: var(--primary);
       color: #ffffff;
       border: none;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.6rem;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
       cursor: pointer;
     }
 
@@ -371,95 +783,177 @@
       transform: translateY(-1px);
     }
 
+    /* ==========================================================================
+       Admin Modal for Adding / Editing Brochures with Thumbnails
+       ========================================================================== */
+    .admin-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .admin-modal-overlay.active {
+      display: flex;
+    }
+
+    .admin-modal-card {
+      background: #ffffff;
+      border-radius: var(--radius);
+      max-width: 540px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      animation: modalSlide 0.25s ease-out;
+    }
+
+    @keyframes modalSlide {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .modal-header h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .btn-close-modal {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .modal-form-group {
+      margin-bottom: 1.15rem;
+    }
+
+    .modal-form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: #374151;
+    }
+
+    .modal-form-group input,
+    .modal-form-group textarea {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .modal-form-group input:focus,
+    .modal-form-group textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .thumb-preview-box {
+      width: 100%;
+      height: 140px;
+      border-radius: var(--radius-sm);
+      border: 1px dashed var(--border);
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .thumb-preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-save-modal {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1.4rem;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    .btn-save-modal:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-delete-modal {
+      background: #fef2f2;
+      color: var(--danger);
+      border: 1px solid #fecaca;
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+
+    .btn-delete-modal:hover {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
     /* Toast */
     .brochure-toast {
       position: fixed;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
+      bottom: 2rem;
+      right: 2rem;
       background: var(--primary);
       color: #ffffff;
-      padding: 0.85rem 1.5rem;
+      padding: 0.85rem 1.25rem;
       border-radius: 8px;
       font-size: 0.88rem;
       font-weight: 600;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transform: translateY(100px);
       opacity: 0;
       transition: all 0.3s ease;
       z-index: 10000;
-      white-space: nowrap;
     }
 
     .brochure-toast.show {
-      transform: translateX(-50%) translateY(0);
+      transform: translateY(0);
       opacity: 1;
-    }
-
-    /* Footer */
-    .footer {
-      background: #111;
-      color: #fff;
-      padding: 3rem 0 2rem;
-      margin-top: auto;
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2.25rem;
-    }
-
-    .footer-logo {
-      color: #fff;
-      margin-bottom: 0.75rem;
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    .footer-desc {
-      color: #9ca3af;
-      font-size: 0.875rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .copyright {
-      color: #6b7280;
-      font-size: 0.78rem;
-    }
-
-    .footer-links h4 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
-    .footer-links a {
-      display: block;
-      color: #9ca3af;
-      text-decoration: none;
-      font-size: 0.875rem;
-      margin-bottom: 0.6rem;
-      transition: color 0.2s ease;
-    }
-
-    .footer-links a:hover {
-      color: #ffffff;
-    }
-
-    @media (min-width: 576px) {
-      .footer-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .footer {
-        padding: 4.5rem 0 2.5rem;
-      }
-      .footer-grid {
-        grid-template-columns: 2fr 1fr 1fr 1fr;
-        gap: 3rem;
-      }
     }
 
     @media (max-width: 768px) {
@@ -467,7 +961,7 @@
         grid-template-columns: 1fr;
       }
       .brochures-header-banner h1 {
-        font-size: 2.2rem;
+        font-size: 2.1rem;
       }
       .brochures-toolbar {
         flex-direction: column;
@@ -478,8 +972,6 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="assets/css/responsive.css" />
-  <script type="module" src="assets/js/navbar-search.js"></script>
 </head>
 <body>
 
@@ -499,21 +991,85 @@
         <a href="shop.html">Products</a>
         <a href="index.html#top-picks">Top Picks</a>
         <a href="blog.html">Blog</a>
-        <a href="contact.html">Contact</a>
         <a href="brochure.html" class="active">Brochures</a>
+        <a href="contact.html">Contact</a>
       </nav>
 
       <div class="nav-actions">
         <form class="navbar-search" action="shop.html" method="get" role="search">
-          <input type="search" name="search" placeholder="Search products" aria-label="Search products" />
+          <input type="search" name="search" placeholder="Search products..." aria-label="Search products" />
           <button type="submit" aria-label="Submit product search"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
-        <a href="profile.html" class="icon-btn" aria-label="My Profile"><i class="fa-solid fa-user"></i></a>
-        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
-          <i class="fa-solid fa-bag-shopping"></i>
-          <span class="cart-badge" id="cartCount">0</span>
+
+        <!-- Desktop Profile Hover Dropdown -->
+        <div class="profile-menu">
+          <a href="profile.html" class="icon-btn profile-trigger" aria-label="My Profile">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          <div class="profile-dropdown">
+            <div class="profile-dropdown-header">
+              <strong id="profileGreeting">Hello, Welcome!</strong>
+              <span id="profileAccountText">Access your Prizam account</span>
+            </div>
+            <a href="my-orders.html">
+              <i class="fa-solid fa-box"></i>
+              <span>My Orders</span>
+            </a>
+            <a href="wishlist.html">
+              <i class="fa-regular fa-heart"></i>
+              <span>Wishlist</span>
+            </a>
+            <a href="profile.html#rewards">
+              <i class="fa-solid fa-star"></i>
+              <span>Rewards &amp; Offers</span>
+            </a>
+            <a href="profile.html#preferences">
+              <i class="fa-solid fa-gear"></i>
+              <span>Account Settings</span>
+            </a>
+            <button type="button" class="profile-logout-btn" id="profileLogoutBtn" style="display:none;">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              <span>Logout</span>
+            </button>
+            <a href="profile.html" class="profile-login-btn" id="profileLoginBtn">
+              <i class="fa-solid fa-right-to-bracket"></i>
+              <span id="profileLoginText">Login / Sign Up</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Fallback Profile Icon for Mobile -->
+        <a href="profile.html" class="icon-btn mobile-profile-icon" aria-label="My Profile">
+          <i class="fa-solid fa-user"></i>
         </a>
-        <a href="profile.html#settings" class="icon-btn" title="User Settings" aria-label="User Settings"><i class="fa-solid fa-gear"></i></a>
+
+        <!-- Cart Menu with Hover Preview Status -->
+        <div class="cart-menu">
+          <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="cart-badge" id="cartCount">0</span>
+          </a>
+          <div class="cart-hover-card" role="status">
+            <div class="cart-hover-title">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <span>Shopping Cart</span>
+            </div>
+            <div class="cart-hover-status">
+              <div class="cart-hover-status-icon" id="cartHoverIcon">
+                <i class="fa-solid fa-bag-shopping"></i>
+              </div>
+              <div>
+                <strong id="cartHoverTitle">Your cart is empty</strong>
+                <span id="cartHoverText">Add products to see them here.</span>
+              </div>
+            </div>
+            <a href="cart.html" class="cart-hover-action" id="cartHoverAction">View Cart</a>
+          </div>
+        </div>
+
+        <a href="profile.html#preferences" class="icon-btn" title="User Settings" aria-label="User Settings">
+          <i class="fa-solid fa-gear"></i>
+        </a>
       </div>
     </div>
   </header>
@@ -525,19 +1081,77 @@
       <p>Download official Prizam architectural drain catalogs, Grade 304 specification sheets, and installation manuals directly from our Rajkot manufacturing plant.</p>
     </div>
 
-    <!-- Toolbar with counter and search -->
+    <!-- Toolbar with counter, Admin "+ Add" Button, and search -->
     <div class="brochures-toolbar">
-      <div class="brochures-count" id="brochuresCountLabel">Streaming technical documentation from Firestore...</div>
+      <div class="toolbar-left">
+        <div class="brochures-count" id="brochuresCountLabel">Streaming technical documentation from Firestore...</div>
+        <button type="button" class="btn-admin-add" id="adminAddBrochureBtn">
+          <i class="fa-solid fa-plus"></i> Add Brochure
+        </button>
+      </div>
       <input type="text" id="brochureSearchInput" class="brochure-search-input" placeholder="Search brochures, CAD, or specs..." />
     </div>
 
     <!-- Brochures Grid Container -->
     <div class="brochures-grid" id="brochuresGrid">
-      <div class="skeleton-card" style="height: 280px; border-radius: 12px; background: #eee;"></div>
-      <div class="skeleton-card" style="height: 280px; border-radius: 12px; background: #eee;"></div>
-      <div class="skeleton-card" style="height: 280px; border-radius: 12px; background: #eee;"></div>
+      <div class="skeleton-card" style="height: 340px; border-radius: 12px; background: #eee;"></div>
+      <div class="skeleton-card" style="height: 340px; border-radius: 12px; background: #eee;"></div>
+      <div class="skeleton-card" style="height: 340px; border-radius: 12px; background: #eee;"></div>
     </div>
   </main>
+
+  <!-- Admin Add / Edit Brochure Modal -->
+  <div class="admin-modal-overlay" id="adminBrochureModal">
+    <div class="admin-modal-card">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add Technical Brochure</h2>
+        <button type="button" class="btn-close-modal" id="closeModalBtn">&times;</button>
+      </div>
+
+      <form id="adminBrochureForm">
+        <input type="hidden" id="modalBrochureId" />
+
+        <div class="modal-form-group">
+          <label for="modalBrochureTitle">Brochure Title *</label>
+          <input type="text" id="modalBrochureTitle" placeholder="e.g. Linear Floor Drains Architectural Catalog 2026" required />
+        </div>
+
+        <div class="modal-form-group">
+          <label for="modalThumbUrl">Cover / Thumbnail Image URL</label>
+          <input type="url" id="modalThumbUrl" placeholder="https://images.unsplash.com/... or direct image link" />
+          <div class="thumb-preview-box" id="modalThumbPreview">
+            <span style="font-size:0.8rem; color:#94a3b8;">Thumbnail Preview</span>
+          </div>
+        </div>
+
+        <div class="modal-form-group">
+          <label for="modalDownloadUrl">PDF Document Download URL *</label>
+          <input type="url" id="modalDownloadUrl" placeholder="https://... (Direct link to hosted PDF file)" required />
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div class="modal-form-group">
+            <label for="modalFileSize">File Size</label>
+            <input type="text" id="modalFileSize" placeholder="e.g. 4.8 MB" />
+          </div>
+          <div class="modal-form-group">
+            <label for="modalUpdatedAt">Edition / Date</label>
+            <input type="text" id="modalUpdatedAt" placeholder="e.g. Sept 2026" />
+          </div>
+        </div>
+
+        <div class="modal-form-group">
+          <label for="modalBrochureDesc">Description</label>
+          <textarea id="modalBrochureDesc" rows="3" placeholder="Summary of specifications, engineering load ratings, and technical scope..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-delete-modal" id="deleteBrochureBtn" style="display:none;">Delete</button>
+          <button type="submit" class="btn-save-modal">Save Brochure</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -551,7 +1165,7 @@
         <h4>Quick Links</h4>
         <a href="index.html">Home</a>
         <a href="shop.html">Shop Catalog</a>
-        <a href="blog.html">Architectural Blog</a>
+        <a href="wishlist.html">My Wishlist</a>
         <a href="contact.html">Contact Rajkot Hub</a>
       </div>
       <div class="footer-links">
@@ -563,7 +1177,7 @@
       </div>
       <div class="footer-links">
         <h4>Support</h4>
-        <a href="brochure.html">Brochures & Manuals</a>
+        <a href="brochure.html">Brochures &amp; Manuals</a>
         <a href="#">Shipping Guidelines</a>
         <a href="#">Installation Guide</a>
         <a href="admin/login.html">Admin Portal</a>
@@ -571,15 +1185,19 @@
     </div>
   </footer>
 
-  <div class="brochure-toast" id="brochureToast">Download initiated</div>
+  <div class="brochure-toast" id="brochureToast">Action completed</div>
 
-  <!-- Real-Time Cloud Firestore Sync Controller -->
+  <!-- Real-Time Cloud Firestore Sync & Admin Controller -->
   <script type="module">
     import { db } from "./assets/js/firebase-config.js";
     import { updateCartBadge } from "./assets/js/cart.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
     import { 
       collection, 
-      onSnapshot 
+      onSnapshot,
+      doc,
+      setDoc,
+      deleteDoc
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
     // Mobile Drawer Logic
@@ -603,10 +1221,78 @@
       setTimeout(() => toast.classList.remove("show"), 2500);
     }
 
+    // =========================================================================
+    // Firebase Auth, Admin Role & Profile Dropdown
+    // =========================================================================
+    const auth = getAuth();
+    let isCurrentAdmin = false;
+
+    const profileGreeting = document.getElementById("profileGreeting");
+    const profileAccountText = document.getElementById("profileAccountText");
+    const profileLoginBtn = document.getElementById("profileLoginBtn");
+    const profileLoginText = document.getElementById("profileLoginText");
+    const profileLogoutBtn = document.getElementById("profileLogoutBtn");
+    const profileDropdown = document.querySelector(".profile-dropdown");
+    const profileOrdersLink = profileDropdown ? profileDropdown.querySelector('a[href="my-orders.html"]') : null;
+    const adminAddBrochureBtn = document.getElementById("adminAddBrochureBtn");
+
+    function renderProfileMenu(user) {
+      if (!profileGreeting || !profileLoginBtn) return;
+      isCurrentAdmin = Boolean(user && user.email === "admin@prizam.com");
+
+      if (adminAddBrochureBtn) {
+        adminAddBrochureBtn.style.display = isCurrentAdmin ? "inline-flex" : "none";
+      }
+
+      if (user) {
+        const name = (user.displayName || user.email || "User").split(/[\s@]/)[0];
+        profileGreeting.textContent = isCurrentAdmin ? "Admin Access" : `Hi, ${name}!`;
+        profileAccountText.textContent = user.email;
+        profileLoginBtn.href = "profile.html";
+        profileLoginBtn.querySelector("i").className = "fa-solid fa-user";
+        profileLoginText.textContent = "My Profile";
+        profileLogoutBtn.style.display = "flex";
+        if (profileDropdown) {
+          profileDropdown.appendChild(profileLogoutBtn);
+          profileDropdown.appendChild(profileLoginBtn);
+        }
+      } else {
+        profileGreeting.textContent = "Hello, Welcome!";
+        profileAccountText.textContent = "Access your Prizam account";
+        profileLoginBtn.href = "profile.html";
+        profileLoginBtn.querySelector("i").className = "fa-solid fa-right-to-bracket";
+        profileLoginText.textContent = "Login / Sign Up";
+        profileLogoutBtn.style.display = "none";
+        if (profileDropdown && profileOrdersLink) {
+          profileDropdown.insertBefore(profileLoginBtn, profileOrdersLink);
+        }
+      }
+
+      // Re-render cards to show/hide admin edit badges
+      applyFilterAndRender();
+    }
+
+    if (profileLogoutBtn) {
+      profileLogoutBtn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+          renderProfileMenu(null);
+        } catch (err) {
+          console.error("Sign out error:", err);
+        }
+      });
+    }
+
+    onAuthStateChanged(auth, renderProfileMenu);
+
+    // =========================================================================
+    // Brochures Data & Real-Time Sync
+    // =========================================================================
     const defaultBrochures = [
       {
         id: "b1",
         title: "Linear Shower Drains Catalog 2026",
+        thumbnailUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
         fileSize: "4.8 MB",
         updatedAt: "April 2026",
         description: "Complete architectural specifications, flow rate charts, and dimensional drawings for all SS304 linear floor drains.",
@@ -615,6 +1301,7 @@
       {
         id: "b2",
         title: "Tile-Insert Concealed Grates Manual",
+        thumbnailUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80",
         fileSize: "3.2 MB",
         updatedAt: "March 2026",
         description: "Installation guidelines, single-slope tile formatting guides, and invisible perimeter frame specifications.",
@@ -623,6 +1310,7 @@
       {
         id: "b3",
         title: "Outdoor Trench & Patio Drains",
+        thumbnailUrl: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80",
         fileSize: "5.1 MB",
         updatedAt: "February 2026",
         description: "Heavy-duty load capacity charts, monsoon hydraulic discharge metrics, and corrosion-resistant grates specification guide.",
@@ -631,6 +1319,7 @@
       {
         id: "b4",
         title: "Commercial Kitchen Grease & Waste Traps",
+        thumbnailUrl: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80",
         fileSize: "6.0 MB",
         updatedAt: "January 2026",
         description: "Industrial wastewater management fixtures, sediment basket maintenance intervals, and stainless steel cleanout access specs.",
@@ -641,7 +1330,6 @@
     let allBrochures = [];
     let currentSearchQuery = "";
 
-    // Real-Time Listener on Firestore "brochures"
     onSnapshot(collection(db, "brochures"), (snapshot) => {
       allBrochures = [];
       snapshot.forEach(docSnap => {
@@ -649,12 +1337,10 @@
       });
 
       if (allBrochures.length === 0) {
-        // Fallback to local storage or defaults if collection not populated yet
         const local = JSON.parse(localStorage.getItem("prizam_local_brochures") || "[]");
         allBrochures = local.length > 0 ? local : defaultBrochures;
       }
 
-      // Mirror locally for resilient caching
       try {
         localStorage.setItem("prizam_local_brochures", JSON.stringify(allBrochures));
       } catch (e) {}
@@ -699,26 +1385,47 @@
       list.forEach(item => {
         const card = document.createElement("div");
         card.className = "brochure-card";
+
+        // Render Cover Thumbnail Image (or sleek PDF fallback)
+        const coverHtml = item.thumbnailUrl 
+          ? `<img src="${item.thumbnailUrl}" alt="${item.title}" loading="lazy" />`
+          : `<div class="brochure-thumb-fallback">
+               <i class="fa-solid fa-file-pdf"></i>
+               <span>Technical Documentation</span>
+             </div>`;
+
         card.innerHTML = `
-          <div class="brochure-card-header">
-            <div class="pdf-icon-box"><i class="fa-solid fa-file-pdf"></i></div>
-            <div class="brochure-meta">
-              <h3>${item.title}</h3>
-              <span>PDF • ${item.fileSize || '3.5 MB'} • ${item.updatedAt || '2026'}</span>
-            </div>
+          <div class="brochure-thumb-cover">
+            ${coverHtml}
+            <span class="brochure-pill-badge">PDF • ${item.fileSize || '3.5 MB'}</span>
+            <button type="button" class="btn-card-admin-edit" data-id="${item.id}" style="${isCurrentAdmin ? 'display:inline-flex;' : 'display:none;'}">
+              <i class="fa-solid fa-pen-to-square"></i> Edit
+            </button>
           </div>
-          <p class="brochure-desc">${item.description || 'Official Prizam architectural drainage specifications and installation manual.'}</p>
-          <a href="${item.downloadUrl && item.downloadUrl !== '#' ? item.downloadUrl : 'javascript:void(0)'}" 
-             class="btn-download" 
-             data-title="${item.title}" 
-             ${item.downloadUrl && item.downloadUrl !== '#' ? 'target="_blank" download' : ''}>
-            <i class="fa-solid fa-download"></i> Download Brochure
-          </a>
+          <div class="brochure-card-body">
+            <div class="brochure-meta-header">
+              <h3>${item.title}</h3>
+              <span>Updated ${item.updatedAt || '2026'} • Metoda GIDC</span>
+            </div>
+            <p class="brochure-desc">${item.description || 'Official Prizam architectural drainage specifications and installation manual.'}</p>
+            <a href="${item.downloadUrl && item.downloadUrl !== '#' ? item.downloadUrl : 'javascript:void(0)'}" 
+               class="btn-download" 
+               data-title="${item.title}" 
+               ${item.downloadUrl && item.downloadUrl !== '#' ? 'target="_blank" download' : ''}>
+              <i class="fa-solid fa-download"></i> Download Brochure
+            </a>
+          </div>
         `;
 
         card.querySelector(".btn-download").addEventListener("click", () => {
           showToast(`Downloading "${item.title}"...`);
         });
+
+        // Bind Admin Edit Button
+        const editBtn = card.querySelector(".btn-card-admin-edit");
+        if (editBtn) {
+          editBtn.addEventListener("click", () => openBrochureModal(item));
+        }
 
         grid.appendChild(card);
       });
@@ -730,8 +1437,114 @@
       applyFilterAndRender();
     });
 
+    // =========================================================================
+    // Admin Modal Actions: Create, Edit & Delete Brochures with Thumbnails
+    // =========================================================================
+    const modal = document.getElementById("adminBrochureModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBrochureId = document.getElementById("modalBrochureId");
+    const modalBrochureTitle = document.getElementById("modalBrochureTitle");
+    const modalThumbUrl = document.getElementById("modalThumbUrl");
+    const modalThumbPreview = document.getElementById("modalThumbPreview");
+    const modalDownloadUrl = document.getElementById("modalDownloadUrl");
+    const modalFileSize = document.getElementById("modalFileSize");
+    const modalUpdatedAt = document.getElementById("modalUpdatedAt");
+    const modalBrochureDesc = document.getElementById("modalBrochureDesc");
+    const deleteBtn = document.getElementById("deleteBrochureBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const adminForm = document.getElementById("adminBrochureForm");
+
+    function updateThumbPreview(url) {
+      if (url && url.trim().startsWith("http")) {
+        modalThumbPreview.innerHTML = `<img src="${url.trim()}" alt="Preview" onerror="this.src=''; this.parentElement.innerHTML='<span style=\\'color:#ef4444;font-size:0.78rem;\\'>Invalid Image URL</span>'" />`;
+      } else {
+        modalThumbPreview.innerHTML = `<span style="font-size:0.8rem; color:#94a3b8;">Thumbnail Preview</span>`;
+      }
+    }
+
+    modalThumbUrl.addEventListener("input", (e) => updateThumbPreview(e.target.value));
+
+    function openBrochureModal(item = null) {
+      if (item) {
+        modalTitle.textContent = "Edit Brochure & Thumbnail";
+        modalBrochureId.value = item.id;
+        modalBrochureTitle.value = item.title || "";
+        modalThumbUrl.value = item.thumbnailUrl || "";
+        modalDownloadUrl.value = item.downloadUrl || "";
+        modalFileSize.value = item.fileSize || "4.5 MB";
+        modalUpdatedAt.value = item.updatedAt || "Sept 2026";
+        modalBrochureDesc.value = item.description || "";
+        deleteBtn.style.display = "inline-block";
+        updateThumbPreview(item.thumbnailUrl);
+      } else {
+        modalTitle.textContent = "Add New Brochure & Thumbnail";
+        modalBrochureId.value = "brochure-" + Date.now();
+        modalBrochureTitle.value = "";
+        modalThumbUrl.value = "";
+        modalDownloadUrl.value = "";
+        modalFileSize.value = "4.2 MB";
+        modalUpdatedAt.value = "Sept 2026";
+        modalBrochureDesc.value = "";
+        deleteBtn.style.display = "none";
+        updateThumbPreview("");
+      }
+      modal.classList.add("active");
+    }
+
+    function closeBrochureModal() {
+      modal.classList.remove("active");
+    }
+
+    if (adminAddBrochureBtn) {
+      adminAddBrochureBtn.addEventListener("click", () => openBrochureModal(null));
+    }
+
+    closeModalBtn.addEventListener("click", closeBrochureModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeBrochureModal();
+    });
+
+    // Save brochure to Firestore
+    adminForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = modalBrochureId.value.trim() || ("brochure-" + Date.now());
+      const payload = {
+        title: modalBrochureTitle.value.trim(),
+        thumbnailUrl: modalThumbUrl.value.trim(),
+        downloadUrl: modalDownloadUrl.value.trim(),
+        fileSize: modalFileSize.value.trim() || "3.5 MB",
+        updatedAt: modalUpdatedAt.value.trim() || "2026",
+        description: modalBrochureDesc.value.trim()
+      };
+
+      try {
+        await setDoc(doc(db, "brochures", id), payload, { merge: true });
+        showToast("Brochure & thumbnail saved successfully!");
+        closeBrochureModal();
+      } catch (err) {
+        console.error("Failed to save brochure:", err);
+        showToast("Error saving brochure. Check permissions.");
+      }
+    });
+
+    // Delete brochure from Firestore
+    deleteBtn.addEventListener("click", async () => {
+      const id = modalBrochureId.value;
+      if (!id) return;
+      if (confirm("Are you sure you want to delete this technical brochure?")) {
+        try {
+          await deleteDoc(doc(db, "brochures", id));
+          showToast("Brochure deleted.");
+          closeBrochureModal();
+        } catch (err) {
+          console.error("Failed to delete brochure:", err);
+          showToast("Error deleting brochure.");
+        }
+      }
+    });
+
     document.addEventListener("DOMContentLoaded", () => {
-      updateCartBadge();
+      if (typeof updateCartBadge === 'function') updateCartBadge();
     });
   </script>
 </body>

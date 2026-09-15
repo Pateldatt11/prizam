@@ -524,7 +524,7 @@
   }
 
   /* ==========================================================================
-     Header & Filter Toolbar
+     Header & Filter Toolbar (With Invisible Horizontal Slider)
      ========================================================================== */
   .orders-header {
     padding: 28px 0 16px;
@@ -590,23 +590,38 @@
     border-color: var(--accent);
   }
 
+  /* Seamless, Invisible Horizontal Slider for Filter Tabs */
   .orders-filter-tabs {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE / Edge */
+    padding: 2px 0;
+  }
+
+  /* Hide scrollbar completely on Chrome, Safari & Opera */
+  .orders-filter-tabs::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
   }
 
   .filter-tab {
     background: transparent;
     border: 1px solid var(--border);
-    padding: 7px 14px;
+    padding: 7px 15px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
     color: #4b5563;
     cursor: pointer;
     white-space: nowrap;
+    flex-shrink: 0;
     transition: all 0.2s ease;
   }
 
@@ -618,6 +633,26 @@
     background: var(--primary);
     color: #ffffff;
     border-color: var(--primary);
+  }
+
+  /* Responsive Mobile Tweaks */
+  @media (max-width: 768px) {
+    .orders-toolbar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 12px 14px;
+    }
+
+    .orders-search-box {
+      width: 100%;
+      min-width: 100%;
+    }
+
+    .orders-filter-tabs {
+      width: 100%;
+      padding-bottom: 2px;
+    }
   }
 
   /* ==========================================================================
@@ -886,7 +921,7 @@
     gap: 6px;
   }
 
-  /* Stepper Progress Bar (Segmented from Step 1 to Step 4) */
+  /* Stepper Progress Bar */
   .tracking-stepper {
     display: flex;
     align-items: flex-start;
@@ -1120,7 +1155,7 @@
               <i class="fa-solid fa-box"></i>
               <span>My Orders</span>
             </a>
-            <a href="profile.html#wishlist">
+            <a href="wishlist.html">
               <i class="fa-regular fa-heart"></i>
               <span>Wishlist</span>
             </a>
