@@ -3,189 +3,1246 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Profile | Prizam</title>
+  <title>My Account | Prizam Architectural Systems</title>
+
+  <!-- Typography & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
   <link rel="stylesheet" href="assets/css/responsive.css" />
   <script type="module" src="assets/js/navbar-search.js"></script>
+
   <style>
-    .profile-page { max-width: 760px; margin: 0 auto; padding: 3rem 1rem 5rem; }
-    .profile-card { background:#fff; border:1px solid #e5e7eb; border-radius:14px; padding:2rem; box-shadow:0 10px 25px rgba(15,23,42,.06); }
-    .profile-heading { margin-bottom:1.5rem; }
-    .profile-heading h1 { margin:0; font-size:2rem; }
-    .profile-heading p { margin:.45rem 0 0; color:#6b7280; }
-    .profile-state { display:none; }
-    .profile-state.active { display:block; }
-    .auth-tabs { display:flex; gap:.5rem; border-bottom:1px solid #e5e7eb; margin-bottom:1.25rem; }
-    .auth-tab { border:0; background:none; color:#6b7280; padding:.7rem .85rem; font:inherit; font-weight:700; cursor:pointer; border-bottom:2px solid transparent; }
-    .auth-tab.active { color:#111827; border-bottom-color:#2563eb; }
-    .profile-field { margin-bottom:1rem; }
-    .profile-field label { display:block; margin-bottom:.4rem; color:#374151; font-size:.82rem; font-weight:700; }
-    .profile-field input { width:100%; padding:.8rem .9rem; border:1px solid #e5e7eb; border-radius:8px; font:inherit; }
-    .profile-field input:focus { outline:2px solid rgba(37,99,235,.18); border-color:#2563eb; }
-    .profile-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-    .profile-button { width:100%; border:0; border-radius:8px; padding:.8rem 1rem; background:#0f172a; color:#fff; font:inherit; font-weight:700; cursor:pointer; }
-    .google-button { background:#fff; color:#111827; border:1px solid #e5e7eb; margin-bottom:1rem; }
-    .google-button i { color:#4285f4; margin-right:.45rem; }
-    .auth-divider { display:flex; align-items:center; gap:.75rem; color:#9ca3af; font-size:.78rem; margin:1rem 0; }
-    .auth-divider::before, .auth-divider::after { content:""; height:1px; flex:1; background:#e5e7eb; }
-    .profile-actions { display:flex; gap:.75rem; margin-top:1.25rem; }
-    .profile-actions button { flex:1; }
-    .profile-settings { margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid #e5e7eb; }
-    .profile-settings h2 { margin:0 0 .85rem; font-size:1rem; }
-    .setting-row { display:flex; align-items:center; justify-content:space-between; gap:1rem; color:#374151; font-size:.82rem; }
-    .setting-row input { width:1.1rem; height:1.1rem; accent-color:#2563eb; }
-    .account-provider { margin-top:.75rem; color:#6b7280; font-size:.78rem; }
-    .secondary-button { background:#f1f5f9; color:#111827; }
-    .profile-user { display:flex; align-items:center; gap:1rem; padding-bottom:1.25rem; margin-bottom:1.25rem; border-bottom:1px solid #e5e7eb; }
-    .profile-avatar { width:54px; height:54px; border-radius:50%; object-fit:cover; background:#e2e8f0; display:grid; place-items:center; color:#475569; font-weight:800; font-size:1.2rem; }
-    .profile-user h2 { margin:0; font-size:1.1rem; }
-    .profile-user p { margin:.2rem 0 0; color:#6b7280; font-size:.82rem; }
-    .profile-message { min-height:1.25rem; margin-top:.9rem; color:#64748b; font-size:.82rem; }
-    @media (max-width:560px) { .profile-page { padding-top:2rem; } .profile-card { padding:1.25rem; } .profile-grid { grid-template-columns:1fr; gap:0; } .profile-heading h1 { font-size:1.6rem; } }
+    :root {
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #16a34a;
+      --danger: #ef4444;
+      --radius-sm: 8px;
+      --radius-md: 10px;
+      --radius-lg: 12px;
+      --transition-smooth: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Navbar & Mobile Left-Drawer */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo-mark {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.4rem;
+      z-index: 1001;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 300px;
+      height: 100vh;
+      background: #ffffff;
+      flex-direction: column;
+      padding: 5rem 2rem 2rem;
+      gap: 1.5rem;
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.12);
+      transform: translateX(-100%);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 999;
+      display: flex;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+      position: relative;
+      width: fit-content;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    @media (min-width: 900px) {
+      .mobile-menu-toggle {
+        display: none;
+      }
+      .nav-links {
+        position: static;
+        height: auto;
+        width: auto;
+        max-width: none;
+        background: transparent;
+        flex-direction: row;
+        padding: 0;
+        box-shadow: none;
+        transform: none !important;
+        gap: 2rem;
+        border-radius: 0;
+      }
+      .nav-links a {
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .navbar-search {
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: #f1f5f9;
+      border-radius: 20px;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--border);
+    }
+
+    .navbar-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      width: 170px;
+      padding-right: 0.5rem;
+    }
+
+    .navbar-search button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    @media (max-width: 680px) {
+      .navbar-search {
+        display: none;
+      }
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.15rem;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      padding: 0.2rem;
+      transition: transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .cart-badge-wrapper {
+      position: relative;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Account Wrapper */
+    .account-wrapper {
+      max-width: 1240px;
+      margin: 32px auto 60px;
+      padding: 0 1.25rem;
+      width: 100%;
+      flex-grow: 1;
+    }
+
+    /* Auth Screen (Logged Out) */
+    .auth-container {
+      display: none;
+      max-width: 440px;
+      margin: 40px auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.25rem 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .auth-container.active {
+      display: block;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .auth-header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .auth-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 0.75rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .auth-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .google-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .google-btn:hover {
+      background: #f8fafc;
+    }
+
+    .google-btn i {
+      color: #ea4335;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      margin: 1.25rem 0;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .auth-divider span {
+      padding: 0 10px;
+    }
+
+    .form-group {
+      margin-bottom: 1.15rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: #374151;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-submit:hover {
+      background: var(--primary-hover);
+    }
+
+    /* 2-Column Dashboard Layout */
+    .dashboard-layout {
+      display: none;
+      grid-template-columns: 290px 1fr;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .dashboard-layout.active {
+      display: grid;
+    }
+
+    /* Sidebar User Card */
+    .account-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-user-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .sidebar-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .sidebar-greeting {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .sidebar-greeting small {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .sidebar-greeting strong {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    /* Redesigned Premium Logout Pill Button */
+    .sidebar-logout-btn {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      background: #ffffff;
+      color: var(--danger);
+      border: 1px solid #fee2e2;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(239, 68, 68, 0.08);
+      transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .sidebar-logout-btn i {
+      font-size: 0.8rem;
+      transition: transform 0.2s ease;
+    }
+
+    .sidebar-logout-btn:hover {
+      background: var(--danger);
+      color: #ffffff;
+      border-color: var(--danger);
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .sidebar-logout-btn:hover i {
+      transform: translateX(2px);
+    }
+
+    .sidebar-logout-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
+    }
+
+    /* Sidebar Navigation Tiles */
+    .sidebar-menu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .menu-section {
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .menu-section:last-child {
+      border-bottom: none;
+    }
+
+    .menu-header {
+      padding: 14px 18px 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .menu-header i {
+      font-size: 0.85rem;
+      color: var(--primary);
+      width: 14px;
+    }
+
+    .menu-items a,
+    .menu-items button.menu-tile {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 18px 11px 40px;
+      font-size: 0.86rem;
+      color: #374151;
+      text-decoration: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.15s ease, color 0.15s ease;
+      text-align: left;
+    }
+
+    .menu-items a:hover,
+    .menu-items button.menu-tile:hover {
+      background: #f8fafc;
+      color: var(--primary);
+    }
+
+    .menu-items a.active,
+    .menu-items button.menu-tile.active {
+      background: #eff6ff;
+      color: var(--accent);
+      font-weight: 700;
+      border-left: 3px solid var(--accent);
+      padding-left: 37px;
+    }
+
+    .menu-items a.active i,
+    .menu-items button.menu-tile.active i {
+      color: var(--accent) !important;
+    }
+
+    /* Right Main Panel Container */
+    .account-main {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+      min-height: 480px;
+    }
+
+    /* Dynamic Views */
+    .panel-view {
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .panel-view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .main-section-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+    }
+
+    .main-section-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .input-box {
+      margin-bottom: 16px;
+    }
+
+    .input-box label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #4b5563;
+      margin-bottom: 0.4rem;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-box input:focus {
+      border-color: var(--primary);
+    }
+
+    .input-box input:disabled {
+      background: #f9fafb;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: #374151;
+      cursor: pointer;
+      margin: 12px 0 16px;
+    }
+
+    .checkbox-row input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .save-btn-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .btn-primary {
+      padding: 0.75rem 1.8rem;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .status-msg {
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-top: 12px;
+      min-height: 1.2rem;
+    }
+
+    /* Saved Address Card Preview */
+    .address-card-preview {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 22px;
+      position: relative;
+    }
+
+    .address-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .address-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .address-card-preview strong {
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    .address-card-preview p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .account-main {
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Top Navbar with Left-Drawer Animation -->
   <header class="navbar">
     <div class="nav-container">
-      <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Mobile Menu"><i class="fa-solid fa-bars" id="menuIcon"></i></button>
-      <a href="index.html" class="logo"><span class="logo-mark">●</span> Prizam</a>
+      <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
+      </button>
+
+      <a href="index.html" class="logo">
+        <span class="logo-mark">●</span> Prizam
+      </a>
+
       <nav class="nav-links" id="navLinksMenu">
-        <a href="index.html">Home</a><a href="shop.html">Products</a><a href="index.html#top-picks">Top Picks</a><a href="blog.html">Blog</a><a href="brochure.html">Brochures</a><a href="contact.html">Contact</a>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Products</a>
+        <a href="index.html#top-picks">Top Picks</a>
+        <a href="blog.html">Blog</a>
+        <a href="brochure.html">Brochures</a>
+        <a href="contact.html">Contact</a>
       </nav>
+
       <div class="nav-actions">
-        <form class="navbar-search" action="shop.html" method="get" role="search"><input type="search" name="search" placeholder="Search products" aria-label="Search products" /><button type="submit" aria-label="Submit product search"><i class="fa-solid fa-magnifying-glass"></i></button></form>
+        <form class="navbar-search" action="shop.html" method="get" role="search">
+          <input type="search" name="search" placeholder="Search products" aria-label="Search products" />
+          <button type="submit" aria-label="Submit product search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
         <a href="profile.html" class="icon-btn" aria-label="My Profile"><i class="fa-solid fa-user"></i></a>
-        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart"><i class="fa-solid fa-bag-shopping"></i><span class="cart-badge" id="cartCount">0</span></a>
+        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </a>
+        <a href="profile.html#preferences" class="icon-btn" title="User Settings" aria-label="User Settings"><i class="fa-solid fa-gear"></i></a>
       </div>
     </div>
   </header>
 
-  <main class="profile-page">
-    <div class="profile-heading"><h1>My Profile</h1><p>Sign in to save your details and make checkout faster.</p></div>
-    <section class="profile-card">
-      <div class="profile-state active" id="authState">
-        <div class="auth-tabs"><button class="auth-tab active" id="signInTab" type="button">Sign in</button><button class="auth-tab" id="signUpTab" type="button">Create account</button></div>
-        <button class="profile-button google-button" id="googleButton" type="button"><i class="fa-brands fa-google"></i><span>Continue with Google</span></button>
-        <div class="auth-divider">or use email</div>
-        <form id="authForm">
-          <div class="profile-field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required /></div>
-          <div class="profile-field"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required /></div>
-          <button class="profile-button" id="authSubmit" type="submit">Sign in</button>
-        </form>
-        <div class="profile-message" id="authMessage"></div>
+  <main class="account-wrapper">
+
+    <!-- Logged Out Authentication View -->
+    <div class="auth-container active" id="authState">
+      <div class="auth-header">
+        <h1>Welcome to Prizam</h1>
+        <p>Sign in to access your orders, profile, and fast checkout.</p>
       </div>
 
-      <div class="profile-state" id="userState">
-        <div class="profile-user"><div class="profile-avatar" id="profileAvatar">U</div><div><h2 id="profileName">Customer</h2><p id="profileEmail"></p></div></div>
-        <form id="profileForm">
-          <div class="profile-grid"><div class="profile-field"><label for="profileNameInput">Name</label><input id="profileNameInput" autocomplete="name" /></div><div class="profile-field"><label for="profilePhone">Phone</label><input id="profilePhone" type="tel" autocomplete="tel" /></div></div>
-          <div class="profile-field"><label for="profileAddress">Address</label><input id="profileAddress" autocomplete="street-address" /></div>
-          <div class="profile-grid"><div class="profile-field"><label for="profileCity">City</label><input id="profileCity" autocomplete="address-level2" /></div><div class="profile-field"><label for="profilePincode">Pincode</label><input id="profilePincode" autocomplete="postal-code" /></div></div>
-          <div class="profile-actions"><button class="profile-button" type="submit">Save profile</button><button class="profile-button secondary-button" id="signOutButton" type="button">Sign out</button></div>
-        </form>
-        <section class="profile-settings" id="settings">
-          <h2>User settings</h2>
-          <label class="setting-row" for="emailUpdates"><span>Receive product and order updates</span><input id="emailUpdates" type="checkbox" /></label>
-          <p class="account-provider" id="accountProvider"></p>
-          <button class="profile-button secondary-button" id="saveSettingsButton" type="button">Save settings</button>
-        </section>
-        <div class="profile-message" id="profileMessage"></div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="signInTab" type="button">Sign In</button>
+        <button class="auth-tab" id="signUpTab" type="button">Create Account</button>
       </div>
-    </section>
+
+      <button class="google-btn" id="googleButton" type="button">
+        <i class="fa-brands fa-google"></i>
+        <span>Continue with Google</span>
+      </button>
+
+      <div class="auth-divider">
+        <span>or with email</span>
+      </div>
+
+      <form id="authForm">
+        <div class="form-group">
+          <label for="authEmail">Email Address</label>
+          <input id="authEmail" type="email" placeholder="name@example.com" autocomplete="email" required />
+        </div>
+        <div class="form-group">
+          <label for="authPassword">Password</label>
+          <input id="authPassword" type="password" placeholder="At least 6 characters" autocomplete="current-password" minlength="6" required />
+        </div>
+        <button class="btn-submit" id="authSubmit" type="submit">Sign In</button>
+      </form>
+      <div class="status-msg" id="authMessage"></div>
+    </div>
+
+    <!-- Logged In View (Flipkart / Amazon 2-Column Layout with Dynamic Tabs) -->
+    <div class="dashboard-layout" id="userState">
+      
+      <!-- Left Sidebar Navigation -->
+      <aside class="account-sidebar">
+        <div class="sidebar-user-card">
+          <div class="sidebar-avatar" id="profileAvatar">U</div>
+          <div class="sidebar-greeting">
+            <small>Hello,</small>
+            <strong id="profileGreetingName">Customer</strong>
+          </div>
+          <button type="button" class="sidebar-logout-btn" id="signOutButton" title="Sign out of your account">
+            <span>Log Out</span>
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-menu-card">
+          <!-- Orders Section -->
+          <div class="menu-section">
+            <div class="menu-header">
+              <i class="fa-solid fa-box"></i>
+              <span>Orders</span>
+            </div>
+            <div class="menu-items">
+              <a href="order.html">
+                <span>My Orders</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:#9ca3af;"></i>
+              </a>
+            </div>
+            <div class="menu-items">
+              <a href="wishlist.html">
+                <span>My wishlist</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:#9ca3af;"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Account Settings Section (Dynamic Tiles) -->
+          <div class="menu-section">
+            <div class="menu-header">
+              <i class="fa-solid fa-user"></i>
+              <span>Account Settings</span>
+            </div>
+            <div class="menu-items">
+              <button type="button" class="menu-tile active" data-target="panel-profile">
+                <span>Profile Information</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:#9ca3af;"></i>
+              </button>
+              <button type="button" class="menu-tile" data-target="panel-addresses">
+                <span>Manage Addresses</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:#9ca3af;"></i>
+              </button>
+              <button type="button" class="menu-tile" data-target="panel-preferences">
+                <span>Preferences</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:#9ca3af;"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Main Panel with Dynamic Tab Views -->
+      <section class="account-main">
+
+        <!-- Tab 1: Profile Information -->
+        <div class="panel-view active" id="panel-profile">
+          <h2 class="main-section-title">Personal Information</h2>
+          <p class="main-section-subtitle">Manage your verified name, primary contact, and email registration.</p>
+
+          <form id="profileInfoForm">
+            <div class="form-grid">
+              <div class="input-box">
+                <label for="profileNameInput">Full Name</label>
+                <input id="profileNameInput" type="text" placeholder="Your full name" autocomplete="name" required />
+              </div>
+              <div class="input-box">
+                <label for="profilePhone">Phone Number</label>
+                <input id="profilePhone" type="tel" placeholder="10-digit mobile number" autocomplete="tel" />
+              </div>
+              <div class="input-box full-width">
+                <label for="profileEmailDisplay">Registered Email Address (Linked)</label>
+                <input id="profileEmailDisplay" type="email" disabled />
+              </div>
+            </div>
+            <div class="save-btn-bar">
+              <button class="btn-primary" type="submit">Save Changes</button>
+            </div>
+            <div class="status-msg" id="profileMsg"></div>
+          </form>
+        </div>
+
+        <!-- Tab 2: Manage Addresses -->
+        <div class="panel-view" id="panel-addresses">
+          <h2 class="main-section-title">Manage Delivery Addresses</h2>
+          <p class="main-section-subtitle">Add or edit your primary delivery destination for express shipping.</p>
+
+          <div class="address-card-preview" id="addressCardPreview" style="display: none;">
+            <div class="address-card-header">
+              <span class="address-tag">Default</span>
+              <strong id="previewRecipient">Customer</strong>
+            </div>
+            <p id="previewFullAddress">—</p>
+          </div>
+
+          <form id="addressForm">
+            <div class="form-grid">
+              <div class="input-box full-width">
+                <label for="profileAddress">Street Address / Flat / Building</label>
+                <input id="profileAddress" type="text" placeholder="e.g. 402, Shivalik Residency, 150ft Ring Road" autocomplete="street-address" required />
+              </div>
+              <div class="input-box">
+                <label for="profileCity">City</label>
+                <input id="profileCity" type="text" placeholder="e.g. Rajkot" autocomplete="address-level2" required />
+              </div>
+              <div class="input-box">
+                <label for="profilePincode">Pincode</label>
+                <input id="profilePincode" type="text" placeholder="6-digit PIN code" maxlength="6" autocomplete="postal-code" required />
+              </div>
+            </div>
+            <div class="save-btn-bar">
+              <button class="btn-primary" type="submit">Save Address</button>
+            </div>
+            <div class="status-msg" id="addressMsg"></div>
+          </form>
+        </div>
+
+        <!-- Tab 3: Preferences -->
+        <div class="panel-view" id="panel-preferences">
+          <h2 class="main-section-title">Communication Preferences</h2>
+          <p class="main-section-subtitle">Control the transaction alerts and catalogs you receive from Prizam.</p>
+
+          <form id="preferencesForm">
+            <label class="checkbox-row" for="emailUpdates">
+              <input id="emailUpdates" type="checkbox" />
+              <span>Receive order progress, shipment updates, and technical product catalogs.</span>
+            </label>
+            <div class="save-btn-bar">
+              <button class="btn-primary" type="submit">Save Preferences</button>
+            </div>
+            <div class="status-msg" id="preferencesMsg"></div>
+          </form>
+        </div>
+
+      </section>
+
+    </div>
   </main>
 
   <script type="module">
     import { auth, db, googleProvider } from "./assets/js/firebase-config.js";
-    import { collection, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-    import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    import { 
+      createUserWithEmailAndPassword, 
+      onAuthStateChanged, 
+      signInWithEmailAndPassword, 
+      signInWithPopup, 
+      signOut, 
+      updateProfile 
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
+    // Mobile Hamburger Drawer Toggle
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const navLinksMenu = document.getElementById("navLinksMenu");
+    const menuIcon = document.getElementById("menuIcon");
+
+    if (mobileMenuBtn && navLinksMenu) {
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinksMenu.classList.toggle("active");
+        menuIcon.className = navLinksMenu.classList.contains("active") ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+      });
+    }
+
+    // Dynamic Tab Navigation Controller
+    const menuTiles = document.querySelectorAll(".menu-tile");
+    const panelViews = document.querySelectorAll(".panel-view");
+
+    function switchPanel(targetId) {
+      menuTiles.forEach(tile => {
+        tile.classList.toggle("active", tile.getAttribute("data-target") === targetId);
+      });
+      panelViews.forEach(panel => {
+        panel.classList.toggle("active", panel.id === targetId);
+      });
+    }
+
+    menuTiles.forEach(tile => {
+      tile.addEventListener("click", () => {
+        const targetId = tile.getAttribute("data-target");
+        switchPanel(targetId);
+        window.location.hash = targetId.replace("panel-", "");
+      });
+    });
+
+    // Handle deep linking from URL hashes (#addresses, #preferences, #profile)
+    function handleInitialHash() {
+      const hash = (window.location.hash || "").replace("#", "").toLowerCase();
+      if (hash === "addresses") {
+        switchPanel("panel-addresses");
+      } else if (hash === "preferences" || hash === "settings") {
+        switchPanel("panel-preferences");
+      } else {
+        switchPanel("panel-profile");
+      }
+    }
+
+    window.addEventListener("hashchange", handleInitialHash);
+
+    // Auth State Elements
     const authState = document.getElementById("authState");
     const userState = document.getElementById("userState");
     const authForm = document.getElementById("authForm");
     const authMessage = document.getElementById("authMessage");
-    const profileMessage = document.getElementById("profileMessage");
     const signInTab = document.getElementById("signInTab");
     const signUpTab = document.getElementById("signUpTab");
     const authSubmit = document.getElementById("authSubmit");
     let isSignUp = false;
 
-    function showMessage(element, message, error = false) { element.textContent = message; element.style.color = error ? "#dc2626" : "#64748b"; }
-    function switchMode(signUp) { isSignUp = signUp; signInTab.classList.toggle("active", !signUp); signUpTab.classList.toggle("active", signUp); authSubmit.textContent = signUp ? "Create account" : "Sign in"; document.getElementById("authPassword").autocomplete = signUp ? "new-password" : "current-password"; }
-    signInTab.addEventListener("click", () => switchMode(false));
-    signUpTab.addEventListener("click", () => switchMode(true));
-
-    async function saveUserProfile(user, extra = {}) {
-      await setDoc(doc(db, "users", user.uid), { uid:user.uid, name:user.displayName || user.email.split("@")[0], email:user.email, provider:user.providerData[0]?.providerId || "password", ...extra, updatedAt:new Date().toISOString() }, { merge:true });
+    function showFeedback(el, msg, isError = false) {
+      el.textContent = msg;
+      el.style.color = isError ? "var(--danger)" : "var(--success)";
+      setTimeout(() => { el.textContent = ""; }, 4000);
     }
 
-    async function handleAuth(user) {
-      authState.classList.toggle("active", !user); userState.classList.toggle("active", Boolean(user));
-      if (!user) {
-        localStorage.removeItem("prizam_user");
-        return;
-      }
-      localStorage.setItem("prizam_user", JSON.stringify({
+    function toggleAuthMode(signUp) {
+      isSignUp = signUp;
+      signInTab.classList.toggle("active", !signUp);
+      signUpTab.classList.toggle("active", signUp);
+      authSubmit.textContent = signUp ? "Create Account" : "Sign In";
+      document.getElementById("authPassword").autocomplete = signUp ? "new-password" : "current-password";
+    }
+
+    signInTab.addEventListener("click", () => toggleAuthMode(false));
+    signUpTab.addEventListener("click", () => toggleAuthMode(true));
+
+    async function syncFirestoreUser(user, extra = {}) {
+      await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         name: user.displayName || user.email.split("@")[0],
         email: user.email,
-        provider: user.providerData[0]?.providerId || "password"
-      }));
-      const stored = (await getDoc(doc(db, "users", user.uid))).data() || {};
-      document.getElementById("profileAvatar").textContent = (user.displayName || user.email || "U").slice(0, 1).toUpperCase();
-      document.getElementById("profileName").textContent = user.displayName || user.email.split("@")[0];
-      document.getElementById("profileEmail").textContent = user.email || "";
-      document.getElementById("profileNameInput").value = stored.name || user.displayName || "";
-      document.getElementById("profilePhone").value = stored.phone || "";
-      document.getElementById("profileAddress").value = stored.address || "";
-      document.getElementById("profileCity").value = stored.city || "";
-      document.getElementById("profilePincode").value = stored.pincode || "";
-      document.getElementById("emailUpdates").checked = stored.emailUpdates !== false;
-      document.getElementById("accountProvider").textContent = `Sign-in method: ${user.providerData[0]?.providerId === "google.com" ? "Google" : "Email"}`;
+        provider: user.providerData[0]?.providerId || "password",
+        ...extra,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
     }
 
-    onAuthStateChanged(auth, (user) => handleAuth(user).catch(() => showMessage(profileMessage, "Could not load your profile.", true)));
+    function renderAddressCardPreview(name, address, city, pincode) {
+      const card = document.getElementById("addressCardPreview");
+      const recipient = document.getElementById("previewRecipient");
+      const fullAddress = document.getElementById("previewFullAddress");
+      if (address || city || pincode) {
+        recipient.textContent = name || "Customer";
+        fullAddress.textContent = `${address ? address + ", " : ""}${city ? city + " " : ""}${pincode ? "- " + pincode : ""}`;
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    }
 
+    async function handleAuth(user) {
+      if (!user) {
+        authState.classList.add("active");
+        userState.classList.remove("active");
+        localStorage.removeItem("prizam_user");
+        return;
+      }
+
+      authState.classList.remove("active");
+      userState.classList.add("active");
+
+      const displayName = user.displayName || user.email.split("@")[0];
+      document.getElementById("profileAvatar").textContent = displayName.charAt(0).toUpperCase();
+      document.getElementById("profileGreetingName").textContent = displayName;
+      document.getElementById("profileEmailDisplay").value = user.email || "";
+
+      try {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        const data = snap.exists() ? snap.data() : {};
+        document.getElementById("profileNameInput").value = data.name || user.displayName || "";
+        document.getElementById("profilePhone").value = data.phone || "";
+        document.getElementById("profileAddress").value = data.address || "";
+        document.getElementById("profileCity").value = data.city || "";
+        document.getElementById("profilePincode").value = data.pincode || "";
+        document.getElementById("emailUpdates").checked = data.emailUpdates !== false;
+        renderAddressCardPreview(data.name || user.displayName, data.address, data.city, data.pincode);
+      } catch (e) {
+        console.error("Firestore user profile read error:", e);
+      }
+      handleInitialHash();
+    }
+
+    onAuthStateChanged(auth, handleAuth);
+
+    // Google Sign-In
     document.getElementById("googleButton").addEventListener("click", async () => {
-      showMessage(authMessage, "Connecting to Google...");
-      try { const result = await signInWithPopup(auth, googleProvider); await saveUserProfile(result.user); showMessage(authMessage, "Signed in successfully."); }
-      catch (error) { showMessage(authMessage, error.code === "auth/popup-closed-by-user" ? "Google sign-in was cancelled." : "Google sign-in could not be completed.", true); }
+      showFeedback(authMessage, "Connecting to Google...");
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        await syncFirestoreUser(result.user);
+      } catch (error) {
+        showFeedback(authMessage, error.code === "auth/popup-closed-by-user" ? "Sign-in was cancelled." : "Could not sign in with Google.", true);
+      }
     });
 
-    authForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    // Email/Password Authentication
+    authForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
       const email = document.getElementById("authEmail").value.trim();
       const password = document.getElementById("authPassword").value;
+
       try {
-        const result = isSignUp ? await createUserWithEmailAndPassword(auth, email, password) : await signInWithEmailAndPassword(auth, email, password);
-        await saveUserProfile(result.user);
-        showMessage(authMessage, isSignUp ? "Account created." : "Signed in successfully.");
-      } catch (error) { showMessage(authMessage, error.code === "auth/email-already-in-use" ? "This email already has an account." : "Please check your email and password.", true); }
+        const res = isSignUp 
+          ? await createUserWithEmailAndPassword(auth, email, password)
+          : await signInWithEmailAndPassword(auth, email, password);
+        await syncFirestoreUser(res.user);
+      } catch (error) {
+        showFeedback(authMessage, error.code === "auth/email-already-in-use" ? "This email already has an account." : "Invalid email or password.", true);
+      }
     });
 
-    document.getElementById("profileForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
+    // Tab 1: Save Personal Information
+    document.getElementById("profileInfoForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
       const user = auth.currentUser;
       if (!user) return;
+      const msgEl = document.getElementById("profileMsg");
+
       const name = document.getElementById("profileNameInput").value.trim();
-      const profile = { name, phone:document.getElementById("profilePhone").value.trim(), address:document.getElementById("profileAddress").value.trim(), city:document.getElementById("profileCity").value.trim(), pincode:document.getElementById("profilePincode").value.trim() };
-      try { if (name && name !== user.displayName) await updateProfile(user, { displayName:name }); await saveUserProfile(user, profile); await handleAuth(auth.currentUser); showMessage(profileMessage, "Profile saved."); }
-      catch (error) { showMessage(profileMessage, "Could not save your profile.", true); }
+      const phone = document.getElementById("profilePhone").value.trim();
+
+      try {
+        if (name && name !== user.displayName) {
+          await updateProfile(user, { displayName: name });
+        }
+        await syncFirestoreUser(user, { name, phone });
+        document.getElementById("profileGreetingName").textContent = name || user.email.split("@")[0];
+        document.getElementById("profileAvatar").textContent = (name || user.email).charAt(0).toUpperCase();
+        showFeedback(msgEl, "Personal details saved successfully.");
+      } catch (err) {
+        showFeedback(msgEl, "Failed to save personal details.", true);
+      }
     });
 
-    document.getElementById("saveSettingsButton").addEventListener("click", async () => {
+    // Tab 2: Save Delivery Address
+    document.getElementById("addressForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
       const user = auth.currentUser;
       if (!user) return;
+      const msgEl = document.getElementById("addressMsg");
+
+      const address = document.getElementById("profileAddress").value.trim();
+      const city = document.getElementById("profileCity").value.trim();
+      const pincode = document.getElementById("profilePincode").value.trim();
+      const name = document.getElementById("profileNameInput").value.trim() || user.displayName;
+
       try {
-        await setDoc(doc(db, "users", user.uid), { emailUpdates: document.getElementById("emailUpdates").checked, updatedAt:new Date().toISOString() }, { merge:true });
-        showMessage(profileMessage, "Settings saved.");
-      } catch (error) { showMessage(profileMessage, "Could not save settings.", true); }
+        await syncFirestoreUser(user, { address, city, pincode });
+        renderAddressCardPreview(name, address, city, pincode);
+        showFeedback(msgEl, "Delivery address saved successfully.");
+      } catch (err) {
+        showFeedback(msgEl, "Failed to save address.", true);
+      }
     });
 
-    document.getElementById("signOutButton").addEventListener("click", async () => { await signOut(auth); showMessage(authMessage, "You have signed out."); });
+    // Tab 3: Save Preferences
+    document.getElementById("preferencesForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return;
+      const msgEl = document.getElementById("preferencesMsg");
+
+      const emailUpdates = document.getElementById("emailUpdates").checked;
+
+      try {
+        await syncFirestoreUser(user, { emailUpdates });
+        showFeedback(msgEl, "Preferences saved successfully.");
+      } catch (err) {
+        showFeedback(msgEl, "Failed to save preferences.", true);
+      }
+    });
+
+    // Sign Out
+    document.getElementById("signOutButton").addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    // Cart Count badge synchronization
+    document.addEventListener("DOMContentLoaded", () => {
+      try {
+        const cart = JSON.parse(localStorage.getItem("prizam_cart") || "[]");
+        const badge = document.getElementById("cartCount");
+        if (badge) badge.textContent = cart.reduce((acc, it) => acc + (Number(it.quantity) || 1), 0);
+      } catch (e) {}
+      handleInitialHash();
+    });
   </script>
 </body>
 </html>

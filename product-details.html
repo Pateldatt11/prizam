@@ -29,7 +29,7 @@
       --success: #16a34a;
       --danger: #ef4444;
       --radius: 12px;
-      --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      --transition-smooth: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     * {
@@ -40,7 +40,6 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Prevents horizontal overflow while preserving sticky scrolling across Android & iOS */
     html, body {
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
@@ -71,9 +70,10 @@
       }
     }
 
-    /* Sticky Navbar */
+    /* ==========================================================================
+       Sticky Navigation Bar with Profile Dropdown & Cart Preview
+       ========================================================================== */
     .navbar {
-      position: -webkit-sticky;
       position: sticky;
       top: 0;
       z-index: 1000;
@@ -86,7 +86,7 @@
     .nav-container {
       max-width: 1240px;
       margin: 0 auto;
-      padding: 0.85rem 1.25rem;
+      padding: 0.9rem 1.25rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -94,7 +94,7 @@
 
     .logo {
       font-size: 1.25rem;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: -0.5px;
       text-decoration: none;
       color: var(--primary);
@@ -133,13 +133,13 @@
       align-items: flex-start !important;
       padding: 5rem 2rem 2rem;
       gap: 1.5rem !important;
-      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.12);
       transform: translateX(-100%);
-      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
       z-index: 999;
       display: flex;
-      border-top-right-radius: 24px;
-      border-bottom-right-radius: 24px;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
     }
 
     .nav-links.active {
@@ -149,12 +149,11 @@
     .nav-links a {
       text-decoration: none;
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
       transition: var(--transition-smooth);
       position: relative;
-      width: 100%;
-      display: block;
+      width: fit-content;
     }
 
     .nav-links a:hover,
@@ -183,7 +182,6 @@
       .nav-links a {
         font-size: 0.95rem;
         font-weight: 500;
-        width: fit-content;
       }
     }
 
@@ -191,6 +189,42 @@
       display: flex;
       align-items: center;
       gap: 1.1rem;
+    }
+
+    .navbar-search {
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: #f1f5f9;
+      border-radius: 20px;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--border);
+    }
+
+    .navbar-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      width: 160px;
+      padding-right: 0.5rem;
+    }
+
+    .navbar-search button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    @media (max-width: 680px) {
+      .navbar-search {
+        display: none;
+      }
     }
 
     .icon-btn {
@@ -203,14 +237,162 @@
       position: relative;
       padding: 0.2rem;
       transition: transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .icon-btn:hover {
       transform: translateY(-2px);
     }
 
+    /* Profile Hover Dropdown */
+    .profile-menu {
+      position: relative;
+      display: block;
+    }
+
+    .profile-trigger {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .mobile-profile-icon {
+      display: none;
+    }
+
+    .profile-menu::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: -24px;
+      width: 320px;
+      height: 18px;
+      background: transparent;
+      z-index: 1099;
+    }
+
+    .profile-dropdown {
+      position: absolute;
+      top: calc(100% + 7px);
+      right: -18px;
+      width: 270px;
+      background: #ffffff;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+      padding: 0.75rem 0;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1100;
+    }
+
+    .profile-dropdown::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      right: 20px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 1px solid rgba(17, 24, 39, 0.08);
+      border-top: 1px solid rgba(17, 24, 39, 0.08);
+      transform: rotate(45deg);
+    }
+
+    .profile-menu:hover .profile-dropdown,
+    .profile-menu:focus-within .profile-dropdown {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .profile-dropdown-header {
+      padding: 0.7rem 1rem 0.85rem;
+      border-bottom: 1px solid #eef0f3;
+    }
+
+    .profile-dropdown-header strong {
+      display: block;
+      color: #111827;
+      font-size: 0.92rem;
+    }
+
+    .profile-dropdown-header span {
+      display: block;
+      color: #6b7280;
+      font-size: 0.76rem;
+      margin-top: 0.18rem;
+    }
+
+    .profile-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.72rem 1rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+
+    .profile-dropdown a i {
+      width: 18px;
+      text-align: center;
+      color: #6b7280;
+    }
+
+    .profile-dropdown a:hover {
+      background: #f7f8fa;
+      color: #111827;
+    }
+
+    .profile-dropdown .profile-login-btn {
+      margin: 0.3rem 0.75rem 0.15rem;
+      width: calc(100% - 1.5rem);
+      justify-content: center;
+      border-radius: 8px;
+      background: #121212;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 0.65rem 0.9rem;
+    }
+
+    .profile-dropdown .profile-login-btn i {
+      color: #ffffff;
+    }
+
+    .profile-logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.72rem 1rem;
+      margin: 0.15rem 0 0;
+      border: 0;
+      border-top: 1px solid #eef0f3;
+      background: transparent;
+      color: #b42318;
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Cart Hover Preview */
+    .cart-menu {
+      position: relative;
+    }
+
     .cart-badge-wrapper {
       position: relative;
+      display: inline-flex;
     }
 
     .cart-badge {
@@ -218,7 +400,7 @@
       top: -6px;
       right: -10px;
       background: var(--primary);
-      color: #fff;
+      color: #ffffff;
       font-size: 0.65rem;
       font-weight: 700;
       border-radius: 50%;
@@ -227,6 +409,129 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .cart-menu::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: -22px;
+      width: 300px;
+      height: 18px;
+      background: transparent;
+      z-index: 1099;
+    }
+
+    .cart-hover-card {
+      position: absolute;
+      top: calc(100% + 7px);
+      right: -18px;
+      width: 285px;
+      background: #ffffff;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1100;
+    }
+
+    .cart-hover-card::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      right: 18px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 1px solid rgba(17, 24, 39, 0.08);
+      border-top: 1px solid rgba(17, 24, 39, 0.08);
+      transform: rotate(45deg);
+    }
+
+    .cart-menu:hover .cart-hover-card,
+    .cart-menu:focus-within .cart-hover-card {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .cart-hover-title {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: #111827;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 0.85rem;
+    }
+
+    .cart-hover-status {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.8rem;
+      border-radius: 9px;
+      background: #f7f8fa;
+      border: 1px solid #eef0f3;
+      margin-bottom: 0.85rem;
+    }
+
+    .cart-hover-status-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      color: #111827;
+      flex-shrink: 0;
+      border: 1px solid #e5e7eb;
+    }
+
+    .cart-hover-status strong {
+      display: block;
+      color: #111827;
+      font-size: 0.82rem;
+    }
+
+    .cart-hover-status span {
+      display: block;
+      color: #6b7280;
+      font-size: 0.74rem;
+    }
+
+    .cart-hover-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 38px;
+      border-radius: 8px;
+      background: #121212;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 899px) {
+      .profile-menu {
+        display: none;
+      }
+      .mobile-profile-icon {
+        display: inline-flex;
+      }
+      .cart-hover-card,
+      .cart-menu::after {
+        display: none;
+      }
     }
 
     /* Single-line horizontally scrollable breadcrumbs */
@@ -277,7 +582,7 @@
       flex-shrink: 1;
     }
 
-    /* Amazon-Style Split Layout */
+    /* Split Layout */
     .product-detail-layout {
       display: grid;
       grid-template-columns: 1.1fr 1.25fr;
@@ -291,7 +596,6 @@
     .gallery-container {
       display: flex;
       gap: 1rem;
-      position: -webkit-sticky;
       position: sticky;
       top: 85px;
       align-self: start;
@@ -405,17 +709,64 @@
       color: var(--text-muted);
     }
 
+    /* Header row combining Product Title & Wishlist Button */
+    .product-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.25rem;
+      margin-top: 0.2rem;
+      margin-bottom: 0.75rem;
+    }
+
     .detail-title {
       font-size: clamp(1.85rem, 5vw, 2.45rem);
       font-weight: 800;
       letter-spacing: -0.75px;
       line-height: 1.2;
       color: var(--text-main);
-      margin-top: 0.2rem;
-      margin-bottom: 0.75rem;
+      margin: 0;
+      flex: 1;
       overflow-wrap: anywhere;
       word-break: break-word;
       white-space: normal !important;
+    }
+
+    /* Modern Circular Wishlist Button beside Heading */
+    .btn-wishlist-toggle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      margin-top: 2px;
+    }
+
+    .btn-wishlist-toggle:hover {
+      border-color: #fca5a5;
+      color: var(--danger);
+      background: #fef2f2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+    }
+
+    .btn-wishlist-toggle.active {
+      border-color: #fca5a5;
+      background: #fef2f2;
+      color: var(--danger);
+    }
+
+    .btn-wishlist-toggle.active i {
+      font-weight: 900;
     }
 
     .rating-row {
@@ -487,12 +838,6 @@
       margin-bottom: 0;
     }
 
-    .detail-desc p:empty,
-    .detail-desc p:has(br:only-child) {
-      min-height: 1.2rem;
-      margin-bottom: 0.75rem;
-    }
-
     .detail-desc .tab-stop {
       display: inline-block;
       width: 2rem;
@@ -500,53 +845,10 @@
       white-space: pre;
     }
 
-    .detail-desc .ql-indent-1 { padding-left: 2rem; }
-    .detail-desc .ql-indent-2 { padding-left: 4rem; }
-    .detail-desc .ql-indent-3 { padding-left: 6rem; }
-
     .detail-desc strong,
     .detail-desc b {
       font-weight: 800;
       color: var(--text-main);
-    }
-
-    .detail-desc em,
-    .detail-desc i {
-      font-style: italic;
-    }
-
-    .detail-desc u {
-      text-decoration: underline;
-    }
-
-    .detail-desc s {
-      text-decoration: line-through;
-    }
-
-    .detail-desc h1,
-    .detail-desc h2,
-    .detail-desc h3,
-    .detail-desc h4 {
-      font-weight: 800;
-      color: var(--text-main);
-      margin-top: 1.1rem;
-      margin-bottom: 0.5rem;
-      line-height: 1.35;
-    }
-
-    .detail-desc h1 { font-size: 1.45rem; }
-    .detail-desc h2 { font-size: 1.25rem; }
-    .detail-desc h3 { font-size: 1.1rem; }
-    .detail-desc h4 { font-size: 1rem; }
-
-    .detail-desc ul,
-    .detail-desc ol {
-      padding-left: 1.4rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .detail-desc li {
-      margin-bottom: 0.35rem;
     }
 
     .key-specs {
@@ -578,7 +880,7 @@
       flex-shrink: 0;
     }
 
-    /* Standard Product Action Row (Consistent across all devices) */
+    /* Product Action Row with Cart & Quantity */
     .action-row {
       display: flex;
       align-items: center;
@@ -707,7 +1009,7 @@
       line-height: 1.4;
     }
 
-    /* Nested Specifications Card: Keeps left gallery pinned until footer */
+    /* Specifications Card */
     .specs-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -733,8 +1035,6 @@
 
     .specs-card table.specs-table {
       width: 100% !important;
-      min-width: 0 !important;
-      max-width: 100% !important;
       table-layout: fixed !important;
       border-collapse: collapse;
       box-sizing: border-box;
@@ -752,9 +1052,6 @@
       padding: 0.95rem 0;
       font-size: 0.9rem;
       line-height: 1.6;
-      white-space: normal !important;
-      word-wrap: break-word !important;
-      overflow-wrap: anywhere !important;
       word-break: break-word !important;
       box-sizing: border-box;
     }
@@ -824,288 +1121,41 @@
       }
     }
 
-    /* Smartphone Horizontal (Landscape) View */
-    @media (orientation: landscape) and (max-height: 550px) {
-      .navbar {
-        position: -webkit-sticky !important;
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 1000 !important;
-      }
-
-      .nav-container {
-        padding: 0.45rem 1rem !important;
-      }
-
-      .container {
-        padding-left: max(1rem, env(safe-area-inset-left)) !important;
-        padding-right: max(1rem, env(safe-area-inset-right)) !important;
-      }
-
-      .breadcrumb-row {
-        padding: 0.35rem 0 !important;
-        font-size: 0.76rem !important;
-      }
-
-      .breadcrumb-row strong {
-        max-width: 160px !important;
-      }
-
-      .product-detail-layout {
-        display: grid !important;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) !important;
-        gap: 1.25rem !important;
-        margin: 0.5rem 0 2rem !important;
-        align-items: start !important;
-      }
-
-      .gallery-container {
-        position: -webkit-sticky !important;
-        position: sticky !important;
-        top: 55px !important;
-        align-self: start !important;
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 0.5rem !important;
-        height: calc(100dvh - 65px) !important;
-        max-height: 280px !important;
-        align-items: center !important;
-        z-index: 10 !important;
-      }
-
-      .thumbnails-track {
-        display: flex !important;
-        flex-direction: column !important;
-        height: 100% !important;
-        max-height: 280px !important;
-        width: auto !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        -webkit-overflow-scrolling: touch !important;
-        gap: 0.35rem !important;
-        padding: 2px 2px 2px 0 !important;
-        flex-shrink: 0 !important;
-      }
-
-      .thumb-item {
-        width: 44px !important;
-        height: 44px !important;
-        border-radius: 6px !important;
-        flex-shrink: 0 !important;
-      }
-
-      .main-image-viewport {
-        flex: 1 !important;
-        height: 100% !important;
-        max-height: 280px !important;
-        min-height: 0 !important;
-        border-radius: 10px !important;
-        background: #ffffff !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-      }
-
-      .main-image-viewport img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: contain !important;
-      }
-
-      .product-info-column {
-        min-width: 0 !important;
-        padding-bottom: 1.5rem !important;
-      }
-
-      .detail-title {
-        font-size: 1.55rem !important;
-        line-height: 1.22 !important;
-        letter-spacing: -0.5px !important;
-        margin-bottom: 0.45rem !important;
-      }
-
-      .rating-row {
-        margin-bottom: 0.5rem !important;
-        font-size: 0.78rem !important;
-      }
-
-      .price-row {
-        margin-bottom: 0.75rem !important;
-        padding-bottom: 0.65rem !important;
-      }
-
-      .price-current {
-        font-size: 1.45rem !important;
-      }
-
-      .detail-desc {
-        font-size: 0.85rem !important;
-        line-height: 1.55 !important;
-        margin-bottom: 1rem !important;
-      }
-
-      .key-specs {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        padding: 0.75rem !important;
-        gap: 0.4rem !important;
-        margin-bottom: 1rem !important;
-      }
-
-      .key-spec-item {
-        font-size: 0.78rem !important;
-      }
-
-      .action-row {
-        flex-direction: row !important;
-        align-items: center !important;
-        gap: 0.65rem !important;
-        margin-bottom: 1rem !important;
-      }
-
-      .qty-selector {
-        width: auto !important;
-      }
-
-      .qty-btn {
-        padding: 0.5rem 0.75rem !important;
-      }
-
-      .btn-checkout {
-        flex: 1 !important;
-        min-height: 40px !important;
-        padding: 0.65rem 1rem !important;
-        font-size: 0.88rem !important;
-      }
-
-      .delivery-box {
-        padding: 0.85rem !important;
-        margin-bottom: 1.25rem !important;
-      }
-
-      .specs-card {
-        padding: 1.25rem 1rem !important;
-        margin-top: 1rem !important;
-        margin-bottom: 2rem !important;
-      }
-    }
-
-    /* Smartphone Portrait Breakpoint (≤ 768px) */
+    /* Smartphone Portrait */
     @media (max-width: 768px) and (orientation: portrait) {
       .breadcrumb-row {
         padding: 0.65rem 0 0.45rem !important;
         font-size: 0.76rem !important;
-        gap: 0.35rem !important;
       }
-
-      .breadcrumb-row strong {
-        max-width: 140px !important;
-      }
-
       .detail-title {
-        font-size: clamp(2rem, 7.2vw, 2.45rem) !important;
-        line-height: 1.18 !important;
-        letter-spacing: -0.8px !important;
-        font-weight: 800 !important;
-        margin-top: 0.35rem !important;
-        margin-bottom: 0.85rem !important;
+        font-size: clamp(1.85rem, 6.8vw, 2.25rem) !important;
       }
-
-      .detail-desc {
-        white-space: normal !important;
-        line-height: 1.62 !important;
-      }
-
-      .detail-desc .tab-stop {
-        width: 1.25rem !important;
-        min-width: 1.25rem !important;
-      }
-
-      .detail-desc p {
-        margin-bottom: 0.85rem !important;
-      }
-
-      .detail-desc p:last-child {
-        margin-bottom: 0 !important;
-      }
-
       .action-row {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 0.75rem !important;
+        flex-direction: row !important;
+        flex-wrap: wrap;
       }
-
       .qty-selector {
-        width: 100% !important;
-        justify-content: space-between !important;
+        width: auto !important;
       }
-
-      .qty-input {
-        flex: 1 !important;
-      }
-
       .btn-checkout {
-        width: 100% !important;
+        flex: 1 1 auto !important;
+        min-width: 160px;
       }
-
-      .specs-card {
-        padding: 1.5rem 1.15rem !important;
-        margin-top: 1.5rem !important;
-        margin-bottom: 2.5rem !important;
-      }
-
-      .specs-card h2 {
-        font-size: 1.2rem;
-        margin-bottom: 1.1rem;
-      }
-
       .specs-card table.specs-table,
       .specs-card table.specs-table tbody,
       .specs-card table.specs-table tr,
       .specs-card table.specs-table td {
         display: block !important;
         width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
       }
-
-      .specs-card table.specs-table tr {
-        padding: 1rem 0 !important;
-        border-bottom: 1px solid var(--border) !important;
-      }
-
       .specs-card table.specs-table td:first-child {
         width: 100% !important;
         padding: 0 0 0.4rem 0 !important;
         font-size: 0.76rem !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.8px !important;
-        color: var(--text-muted) !important;
-        font-weight: 700 !important;
       }
-
       .specs-card table.specs-table td:last-child {
         width: 100% !important;
         padding: 0 !important;
-        font-size: 0.95rem !important;
-        line-height: 1.55 !important;
-        color: var(--text-main) !important;
-        font-weight: 700 !important;
-        white-space: normal !important;
-        overflow-wrap: anywhere !important;
-        word-wrap: break-word !important;
-        word-break: break-word !important;
-      }
-
-      .key-specs {
-        grid-template-columns: 1fr;
-      }
-
-      .detail-toast {
-        left: 1rem;
-        right: 1rem;
-        bottom: 1.25rem !important;
-        text-align: center;
       }
     }
   </style>
@@ -1113,7 +1163,7 @@
 </head>
 <body>
 
-  <!-- Sticky Navbar -->
+  <!-- Top Navbar with Hover Menus -->
   <header class="navbar">
     <div class="nav-container">
       <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
@@ -1135,15 +1185,79 @@
 
       <div class="nav-actions">
         <form class="navbar-search" action="shop.html" method="get" role="search">
-          <input type="search" name="search" placeholder="Search products" aria-label="Search products" />
+          <input type="search" name="search" placeholder="Search products..." aria-label="Search products" />
           <button type="submit" aria-label="Submit product search"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
-        <a href="profile.html" class="icon-btn" aria-label="My Profile"><i class="fa-solid fa-user"></i></a>
-        <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
-          <i class="fa-solid fa-bag-shopping"></i>
-          <span class="cart-badge" id="cartCount">0</span>
+
+        <!-- Desktop Profile Hover Dropdown -->
+        <div class="profile-menu">
+          <a href="profile.html" class="icon-btn profile-trigger" aria-label="My Profile">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          <div class="profile-dropdown">
+            <div class="profile-dropdown-header">
+              <strong id="profileGreeting">Hello, Welcome!</strong>
+              <span id="profileAccountText">Access your Prizam account</span>
+            </div>
+            <a href="my-orders.html">
+              <i class="fa-solid fa-box"></i>
+              <span>My Orders</span>
+            </a>
+            <a href="wishlist.html">
+              <i class="fa-regular fa-heart"></i>
+              <span>Wishlist</span>
+            </a>
+            <a href="profile.html#rewards">
+              <i class="fa-solid fa-star"></i>
+              <span>Rewards &amp; Offers</span>
+            </a>
+            <a href="profile.html#preferences">
+              <i class="fa-solid fa-gear"></i>
+              <span>Account Settings</span>
+            </a>
+            <button type="button" class="profile-logout-btn" id="profileLogoutBtn" style="display:none;">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              <span>Logout</span>
+            </button>
+            <a href="profile.html" class="profile-login-btn" id="profileLoginBtn">
+              <i class="fa-solid fa-right-to-bracket"></i>
+              <span id="profileLoginText">Login / Sign Up</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Fallback Profile Icon for Mobile -->
+        <a href="profile.html" class="icon-btn mobile-profile-icon" aria-label="My Profile">
+          <i class="fa-solid fa-user"></i>
         </a>
-        <a href="profile.html#settings" class="icon-btn" title="User Settings" aria-label="User Settings"><i class="fa-solid fa-gear"></i></a>
+
+        <!-- Cart Menu with Hover Preview Status -->
+        <div class="cart-menu">
+          <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="cart-badge" id="cartCount">0</span>
+          </a>
+          <div class="cart-hover-card" role="status">
+            <div class="cart-hover-title">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <span>Shopping Cart</span>
+            </div>
+            <div class="cart-hover-status">
+              <div class="cart-hover-status-icon" id="cartHoverIcon">
+                <i class="fa-solid fa-bag-shopping"></i>
+              </div>
+              <div>
+                <strong id="cartHoverTitle">Your cart is empty</strong>
+                <span id="cartHoverText">Add products to see them here.</span>
+              </div>
+            </div>
+            <a href="cart.html" class="cart-hover-action" id="cartHoverAction">View Cart</a>
+          </div>
+        </div>
+
+        <a href="profile.html#preferences" class="icon-btn" title="User Settings" aria-label="User Settings">
+          <i class="fa-solid fa-gear"></i>
+        </a>
       </div>
     </div>
   </header>
@@ -1161,7 +1275,7 @@
       <strong id="bcTitle">Product Detail</strong>
     </div>
 
-    <!-- Main Amazon Split-Scroll Presentation -->
+    <!-- Main Split-Scroll Presentation -->
     <div class="product-detail-layout" id="productDetailLayout">
       
       <!-- Left: Pinned Sticky Gallery -->
@@ -1180,7 +1294,13 @@
           <span class="detail-badge origin"><i class="fa-solid fa-location-dot"></i> Rajkot Facility</span>
         </div>
 
-        <h1 class="detail-title" id="productTitle">Linear Shower Drain</h1>
+        <!-- Product Title Row with Integrated Wishlist Button -->
+        <div class="product-title-row">
+          <h1 class="detail-title" id="productTitle">Linear Shower Drain</h1>
+          <button class="btn-wishlist-toggle" id="wishlistToggleBtn" title="Save to Wishlist" aria-label="Save to Wishlist">
+            <i class="fa-regular fa-heart" id="wishlistHeartIcon"></i>
+          </button>
+        </div>
         
         <div class="rating-row">
           <i class="fa-solid fa-star"></i>
@@ -1197,9 +1317,9 @@
           <span class="price-discount" id="productDiscount">28% OFF</span>
         </div>
 
-        <!-- Fluid Word Description -->
+        <!-- Description -->
         <div class="detail-desc" id="productDescription">
-          The Linear Shower Drain combines <strong>functionality, durability, and modern aesthetics</strong>. Its streamlined design helps create a more open and elegant shower area while providing dependable drainage for everyday use.
+          The Linear Shower Drain combines <strong>functionality, durability, and modern aesthetics</strong>.
         </div>
 
         <!-- Fast Feature Overview -->
@@ -1210,7 +1330,7 @@
           <div class="key-spec-item"><i class="fa-solid fa-wrench"></i> Fast Subfloor Fitting</div>
         </div>
 
-        <!-- In-Page Action Row -->
+        <!-- In-Page Action Row (Quantity + Add to Cart) -->
         <div class="action-row">
           <div class="qty-selector">
             <button class="qty-btn" id="qtyMinus">-</button>
@@ -1224,7 +1344,7 @@
 
         <!-- Pincode Availability Box -->
         <div class="delivery-box">
-          <label for="pincodeInput"><i class="fa-solid fa-truck-fast"></i> Check Dispatch Availability & Timeline</label>
+          <label for="pincodeInput"><i class="fa-solid fa-truck-fast"></i> Check Dispatch Availability &amp; Timeline</label>
           <div class="pincode-form">
             <input type="text" class="pincode-input" id="pincodeInput" placeholder="Enter 6-digit postal code (e.g. 360021)" maxlength="6" />
             <button class="pincode-btn" id="pincodeCheckBtn">Check</button>
@@ -1232,34 +1352,34 @@
           <p class="pincode-status" id="pincodeMessage"></p>
         </div>
 
-        <!-- Technical Specs Table (Nested inside column to keep Gallery sticky alongside it) -->
+        <!-- Technical Specs Table -->
         <div class="specs-card">
           <h2>Comprehensive Engineering Specifications</h2>
           <table class="specs-table">
             <tbody>
               <tr>
-                <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Material Grade</td>
-                <td id="tableMaterial" style="white-space: normal !important; overflow-wrap: anywhere !important;">Grade 304 Stainless Steel (SS304)</td>
+                <td>Material Grade</td>
+                <td id="tableMaterial">Grade 304 Stainless Steel (SS304)</td>
               </tr>
               <tr>
-                <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Manufacturing Origin</td>
-                <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Metoda GIDC, Rajkot, Gujarat, India</td>
+                <td>Manufacturing Origin</td>
+                <td>Metoda GIDC, Rajkot, Gujarat, India</td>
               </tr>
               <tr>
-                <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Dimensions (L x W x H)</td>
-                <td id="specDimensions" style="white-space: normal !important; overflow-wrap: anywhere !important;">600mm x 70mm x 20mm</td>
+                <td>Dimensions (L x W x H)</td>
+                <td id="specDimensions">600mm x 70mm x 20mm</td>
               </tr>
               <tr>
-                <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Hydraulic Discharge Rate</td>
-                <td id="tableFlowRate" style="white-space: normal !important; overflow-wrap: anywhere !important;">40 L/min</td>
+                <td>Hydraulic Discharge Rate</td>
+                <td id="tableFlowRate">40 L/min</td>
               </tr>
               <tr>
-                <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Debris Filter Core</td>
-                <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Removable Stainless Steel Hair/Sediment Trap Included</td>
+                <td>Debris Filter Core</td>
+                <td>Removable Stainless Steel Hair/Sediment Trap Included</td>
               </tr>
               <tr>
-                <td style="white-space: normal !important; overflow-wrap: anywhere !important;">Manufacturer Warranty</td>
-                <td style="white-space: normal !important; overflow-wrap: anywhere !important;">5-Year Complete Prizam Warranty against rust and pitting</td>
+                <td>Manufacturer Warranty</td>
+                <td>5-Year Complete Prizam Warranty against rust and pitting</td>
               </tr>
             </tbody>
           </table>
@@ -1283,7 +1403,7 @@
         <h4>Quick Links</h4>
         <a href="index.html">Home</a>
         <a href="shop.html">Shop Catalog</a>
-        <a href="blog.html">Blog & Guides</a>
+        <a href="wishlist.html">My Wishlist</a>
         <a href="contact.html">Contact Rajkot Desk</a>
       </div>
       <div class="footer-links">
@@ -1302,15 +1422,18 @@
     </div>
   </footer>
 
-  <div class="detail-toast" id="detailToast">Added to Bag</div>
+  <div class="detail-toast" id="detailToast">Notification message</div>
 
-  <!-- Product Loader, Shared Cart & Click Tracking Handler -->
+  <!-- Product Loader, IndexedDB Wishlist & Shared Cart Logic -->
   <script type="module">
     import { db } from "./assets/js/firebase-config.js";
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
     import { trackProductClick } from "./assets/js/product-tracker.js";
 
-    // Mobile Hamburger Toggle Logic
+    // =========================================================================
+    // Mobile Hamburger Menu Toggle
+    // =========================================================================
     const mobileMenuBtn = document.getElementById("mobileMenuBtn");
     const navLinksMenu = document.getElementById("navLinksMenu");
     const menuIcon = document.getElementById("menuIcon");
@@ -1324,6 +1447,127 @@
       });
     }
 
+    // =========================================================================
+    // Firebase Auth & Navbar Dropdown Controller
+    // =========================================================================
+    const auth = getAuth();
+    const profileGreeting = document.getElementById("profileGreeting");
+    const profileAccountText = document.getElementById("profileAccountText");
+    const profileLoginBtn = document.getElementById("profileLoginBtn");
+    const profileLoginText = document.getElementById("profileLoginText");
+    const profileLogoutBtn = document.getElementById("profileLogoutBtn");
+    const profileDropdown = document.querySelector(".profile-dropdown");
+    const profileOrdersLink = profileDropdown ? profileDropdown.querySelector('a[href="my-orders.html"]') : null;
+
+    function renderProfileMenu(user) {
+      if (!profileGreeting || !profileLoginBtn) return;
+      if (user) {
+        const name = (user.displayName || user.email || "User").split(/[\s@]/)[0];
+        profileGreeting.textContent = `Hi, ${name}!`;
+        profileAccountText.textContent = user.email;
+        profileLoginBtn.href = "profile.html";
+        profileLoginBtn.querySelector("i").className = "fa-solid fa-user";
+        profileLoginText.textContent = "My Profile";
+        profileLogoutBtn.style.display = "flex";
+        if (profileDropdown) {
+          profileDropdown.appendChild(profileLogoutBtn);
+          profileDropdown.appendChild(profileLoginBtn);
+        }
+      } else {
+        profileGreeting.textContent = "Hello, Welcome!";
+        profileAccountText.textContent = "Access your Prizam account";
+        profileLoginBtn.href = "profile.html";
+        profileLoginBtn.querySelector("i").className = "fa-solid fa-right-to-bracket";
+        profileLoginText.textContent = "Login / Sign Up";
+        profileLogoutBtn.style.display = "none";
+        if (profileDropdown && profileOrdersLink) {
+          profileDropdown.insertBefore(profileLoginBtn, profileOrdersLink);
+        }
+      }
+    }
+
+    if (profileLogoutBtn) {
+      profileLogoutBtn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+          renderProfileMenu(null);
+        } catch (err) {
+          console.error("Sign out error:", err);
+        }
+      });
+    }
+
+    onAuthStateChanged(auth, renderProfileMenu);
+
+    // =========================================================================
+    // IndexedDB Connection (PrizamDB -> wishlist store)
+    // =========================================================================
+    const DB_NAME = "PrizamDB";
+    const DB_VERSION = 1;
+    const STORE_NAME = "wishlist";
+
+    function openWishlistDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (e) => {
+          const dbInstance = e.target.result;
+          if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
+            dbInstance.createObjectStore(STORE_NAME, { keyPath: "id" });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function isItemInWishlist(id) {
+      try {
+        const dbInstance = await openWishlistDB();
+        return new Promise((resolve) => {
+          const tx = dbInstance.transaction(STORE_NAME, "readonly");
+          const store = tx.objectStore(STORE_NAME);
+          const req = store.get(id);
+          req.onsuccess = () => resolve(Boolean(req.result));
+          req.onerror = () => resolve(false);
+        });
+      } catch (err) {
+        return false;
+      }
+    }
+
+    async function addToWishlist(product) {
+      const dbInstance = await openWishlistDB();
+      return new Promise((resolve, reject) => {
+        const tx = dbInstance.transaction(STORE_NAME, "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.put({
+          id: product.id,
+          title: product.title,
+          category: product.category || "Bathroom Drains",
+          price: Number(product.price),
+          originalPrice: Number(product.originalPrice) || 0,
+          material: product.material || "304 Stainless Steel",
+          imageUrl: product.imageUrl || ""
+        });
+        req.onsuccess = () => resolve(true);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function removeFromWishlist(id) {
+      const dbInstance = await openWishlistDB();
+      return new Promise((resolve, reject) => {
+        const tx = dbInstance.transaction(STORE_NAME, "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.delete(id);
+        req.onsuccess = () => resolve(true);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    // =========================================================================
+    // Product Details Logic
+    // =========================================================================
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get("id");
 
@@ -1333,7 +1577,7 @@
       price: 2499,
       originalPrice: 3499,
       category: "Bathroom Drains",
-      description: "The Linear Shower Drain combines <strong>functionality, durability, and modern aesthetics</strong>. Its streamlined design helps create a more open and elegant shower area while providing dependable drainage for everyday use.",
+      description: "The Linear Shower Drain combines <strong>functionality, durability, and modern aesthetics</strong>.",
       imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
       additionalImages: [
         "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
@@ -1351,7 +1595,7 @@
     function showToast(msg) {
       toast.textContent = msg;
       toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 2200);
+      setTimeout(() => toast.classList.remove("show"), 2400);
     }
 
     function getCart() {
@@ -1365,12 +1609,33 @@
 
     function updateCartBadgeCount() {
       try {
-        const raw = localStorage.getItem("prizam_cart");
-        const cart = raw ? JSON.parse(raw) : [];
+        const cart = getCart();
         const count = cart.reduce((tot, item) => tot + (Number(item.quantity) || 1), 0);
         const badge = document.getElementById("cartCount");
         if (badge) badge.textContent = count;
+        updateCartHoverState();
       } catch (e) {}
+    }
+
+    function updateCartHoverState() {
+      const countEl = document.getElementById("cartCount");
+      const titleEl = document.getElementById("cartHoverTitle");
+      const textEl = document.getElementById("cartHoverText");
+      const actionEl = document.getElementById("cartHoverAction");
+      if (!countEl || !titleEl) return;
+      const count = Math.max(0, parseInt(countEl.textContent || "0", 10) || 0);
+
+      if (count === 0) {
+        titleEl.textContent = "Your cart is empty";
+        textEl.textContent = "Add products to see them here.";
+        actionEl.textContent = "Start Shopping";
+        actionEl.href = "shop.html";
+      } else {
+        titleEl.textContent = `${count} ${count === 1 ? "product" : "products"} in your cart`;
+        textEl.textContent = "Your items are ready for checkout.";
+        actionEl.textContent = "View Cart";
+        actionEl.href = "cart.html";
+      }
     }
 
     // Quantity selectors
@@ -1404,6 +1669,38 @@
       }
     });
 
+    // =========================================================================
+    // Wishlist Button UI & Controller
+    // =========================================================================
+    const wishlistToggleBtn = document.getElementById("wishlistToggleBtn");
+    const wishlistHeartIcon = document.getElementById("wishlistHeartIcon");
+
+    async function syncWishlistButtonState() {
+      const inWishlist = await isItemInWishlist(currentProduct.id);
+      if (inWishlist) {
+        wishlistToggleBtn.classList.add("active");
+        wishlistToggleBtn.title = "Remove from Wishlist";
+        wishlistHeartIcon.className = "fa-solid fa-heart";
+      } else {
+        wishlistToggleBtn.classList.remove("active");
+        wishlistToggleBtn.title = "Save to Wishlist";
+        wishlistHeartIcon.className = "fa-regular fa-heart";
+      }
+    }
+
+    wishlistToggleBtn.addEventListener("click", async () => {
+      const inWishlist = await isItemInWishlist(currentProduct.id);
+      if (inWishlist) {
+        await removeFromWishlist(currentProduct.id);
+        syncWishlistButtonState();
+        showToast("Removed from Wishlist");
+      } else {
+        await addToWishlist(currentProduct);
+        syncWishlistButtonState();
+        showToast("Saved to Wishlist! View in Wishlist");
+      }
+    });
+
     // Fetch Product & Initialize
     async function loadProductDetails() {
       if (productId) {
@@ -1415,7 +1712,7 @@
             fetched = { id: docSnap.id, ...docSnap.data() };
           }
         } catch (err) {
-          console.warn("Firestore offline. Checking local admin catalog.");
+          console.warn("Firestore offline. Checking local storage cache.");
         }
 
         if (!fetched) {
@@ -1437,11 +1734,11 @@
 
       trackProductClick(currentProduct.id);
       renderProductToUI();
+      await syncWishlistButtonState();
     }
 
     function formatDescriptionWithTabsAndSpacing(rawHtml) {
       if (!rawHtml || typeof rawHtml !== 'string') return '';
-      
       let formatted = rawHtml;
       formatted = formatted.replace(/\t/g, '<span class="tab-stop">&emsp;</span>');
       formatted = formatted.replace(/ {2,}/g, ' ');
@@ -1452,7 +1749,6 @@
           .map(para => `<p>${para.replace(/\r?\n/g, '<br>')}</p>`)
           .join('');
       }
-
       return formatted;
     }
 
@@ -1462,13 +1758,13 @@
       document.getElementById("bcCategory").textContent = currentProduct.category || "Bathroom Drains";
       document.getElementById("bcCategory").href = `shop.html?category=${encodeURIComponent(currentProduct.category || 'Bathroom Drains')}`;
       
-      const priceFormatted = `₹${Number(currentProduct.price).toLocaleString()}`;
+      const priceFormatted = `₹${Number(currentProduct.price).toLocaleString('en-IN')}`;
       document.getElementById("productPrice").textContent = priceFormatted;
 
       if (currentProduct.originalPrice && Number(currentProduct.originalPrice) > Number(currentProduct.price)) {
         document.getElementById("productOldPrice").style.display = "inline";
         document.getElementById("productDiscount").style.display = "inline-block";
-        document.getElementById("productOldPrice").textContent = `₹${Number(currentProduct.originalPrice).toLocaleString()}`;
+        document.getElementById("productOldPrice").textContent = `₹${Number(currentProduct.originalPrice).toLocaleString('en-IN')}`;
         const discountPct = Math.round(((currentProduct.originalPrice - currentProduct.price) / currentProduct.originalPrice) * 100);
         document.getElementById("productDiscount").textContent = `${discountPct}% OFF`;
       } else {

@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Wishlist | Prizam Architectural Systems</title>
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+  <script type="module" src="assets/js/navbar-search.js"></script>
+
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #16a34a;
+      --danger: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition-smooth: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      width: 100%;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo-mark {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.4rem;
+      z-index: 1001;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 300px;
+      height: 100vh;
+      background: #ffffff;
+      flex-direction: column;
+      padding: 5rem 2rem 2rem;
+      gap: 1.5rem;
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.12);
+      transform: translateX(-100%);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 999;
+      display: flex;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .nav-links.active {
+      transform: translateX(0);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+      position: relative;
+      width: fit-content;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    @media (min-width: 900px) {
+      .mobile-menu-toggle {
+        display: none;
+      }
+      .nav-links {
+        position: static;
+        height: auto;
+        width: auto;
+        max-width: none;
+        background: transparent;
+        flex-direction: row;
+        padding: 0;
+        box-shadow: none;
+        transform: none !important;
+        gap: 2rem;
+        border-radius: 0;
+      }
+      .nav-links a {
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .navbar-search {
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: #f1f5f9;
+      border-radius: 20px;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--border);
+    }
+
+    .navbar-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      width: 160px;
+      padding-right: 0.5rem;
+    }
+
+    .navbar-search button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    @media (max-width: 680px) {
+      .navbar-search {
+        display: none;
+      }
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.15rem;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      padding: 0.2rem;
+      transition: transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Desktop Profile Hover Menu */
+    .profile-menu {
+      position: relative;
+      display: block;
+    }
+
+    .profile-trigger {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .mobile-profile-icon {
+      display: none;
+    }
+
+    .profile-menu::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: -24px;
+      width: 320px;
+      height: 18px;
+      background: transparent;
+      z-index: 1099;
+    }
+
+    .profile-dropdown {
+      position: absolute;
+      top: calc(100% + 7px);
+      right: -18px;
+      width: 270px;
+      background: #ffffff;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+      padding: 0.75rem 0;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1100;
+    }
+
+    .profile-dropdown::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      right: 20px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 1px solid rgba(17, 24, 39, 0.08);
+      border-top: 1px solid rgba(17, 24, 39, 0.08);
+      transform: rotate(45deg);
+    }
+
+    .profile-menu:hover .profile-dropdown,
+    .profile-menu:focus-within .profile-dropdown {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .profile-dropdown-header {
+      padding: 0.7rem 1rem 0.85rem;
+      border-bottom: 1px solid #eef0f3;
+    }
+
+    .profile-dropdown-header strong {
+      display: block;
+      color: #111827;
+      font-size: 0.92rem;
+    }
+
+    .profile-dropdown-header span {
+      display: block;
+      color: #6b7280;
+      font-size: 0.76rem;
+      margin-top: 0.18rem;
+    }
+
+    .profile-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.72rem 1rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+
+    .profile-dropdown a i {
+      width: 18px;
+      text-align: center;
+      color: #6b7280;
+    }
+
+    .profile-dropdown a:hover,
+    .profile-dropdown a.active-link {
+      background: #f7f8fa;
+      color: #111827;
+    }
+
+    .profile-dropdown .profile-login-btn {
+      margin: 0.3rem 0.75rem 0.15rem;
+      width: calc(100% - 1.5rem);
+      justify-content: center;
+      border-radius: 8px;
+      background: #121212;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 0.65rem 0.9rem;
+    }
+
+    .profile-dropdown .profile-login-btn i {
+      color: #ffffff;
+    }
+
+    .profile-logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.72rem 1rem;
+      margin: 0.15rem 0 0;
+      border: 0;
+      border-top: 1px solid #eef0f3;
+      background: transparent;
+      color: #b42318;
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Cart Hover Card */
+    .cart-menu {
+      position: relative;
+    }
+
+    .cart-badge-wrapper {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-menu::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: -22px;
+      width: 300px;
+      height: 18px;
+      background: transparent;
+      z-index: 1099;
+    }
+
+    .cart-hover-card {
+      position: absolute;
+      top: calc(100% + 7px);
+      right: -18px;
+      width: 285px;
+      background: #ffffff;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1100;
+    }
+
+    .cart-hover-card::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      right: 18px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 1px solid rgba(17, 24, 39, 0.08);
+      border-top: 1px solid rgba(17, 24, 39, 0.08);
+      transform: rotate(45deg);
+    }
+
+    .cart-menu:hover .cart-hover-card,
+    .cart-menu:focus-within .cart-hover-card {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .cart-hover-title {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: #111827;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 0.85rem;
+    }
+
+    .cart-hover-status {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.8rem;
+      border-radius: 9px;
+      background: #f7f8fa;
+      border: 1px solid #eef0f3;
+      margin-bottom: 0.85rem;
+    }
+
+    .cart-hover-status-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      color: #111827;
+      flex-shrink: 0;
+      border: 1px solid #e5e7eb;
+    }
+
+    .cart-hover-status strong {
+      display: block;
+      color: #111827;
+      font-size: 0.82rem;
+    }
+
+    .cart-hover-status span {
+      display: block;
+      color: #6b7280;
+      font-size: 0.74rem;
+    }
+
+    .cart-hover-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 38px;
+      border-radius: 8px;
+      background: #121212;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 899px) {
+      .profile-menu {
+        display: none;
+      }
+      .mobile-profile-icon {
+        display: inline-flex;
+      }
+      .cart-hover-card,
+      .cart-menu::after {
+        display: none;
+      }
+    }
+
+    /* Wishlist Main View */
+    .wishlist-wrapper {
+      max-width: 1240px;
+      margin: 32px auto 64px;
+      padding: 0 1.25rem;
+      width: 100%;
+      flex-grow: 1;
+    }
+
+    .wishlist-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .wishlist-header h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .wishlist-count-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .wishlist-header p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .btn-clear-wishlist {
+      background: #ffffff;
+      color: var(--danger);
+      border: 1px solid #fee2e2;
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-clear-wishlist:hover {
+      background: #fef2f2;
+      border-color: var(--danger);
+    }
+
+    .storage-note-strip {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .storage-note-strip i {
+      color: #15803d;
+      margin-right: 6px;
+    }
+
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .wishlist-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+      transition: var(--transition-smooth);
+    }
+
+    .wishlist-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 25px -8px rgba(0, 0, 0, 0.08);
+      border-color: #cbd5e1;
+    }
+
+    .card-thumb-wrap {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      background: #f8fafc;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .card-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .wishlist-card:hover .card-thumb-wrap img {
+      transform: scale(1.05);
+    }
+
+    .btn-remove-wishlist {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      color: var(--danger);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: var(--transition-smooth);
+      z-index: 5;
+    }
+
+    .btn-remove-wishlist:hover {
+      background: var(--danger);
+      color: #ffffff;
+      border-color: var(--danger);
+      transform: scale(1.1);
+    }
+
+    .card-content {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-category {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.35rem;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 0.4rem;
+      cursor: pointer;
+      color: var(--text-main);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-title:hover {
+      color: var(--accent);
+    }
+
+    .card-specs {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .card-price-box {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 1.15rem;
+    }
+
+    .price-current {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .price-old {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
+    .btn-move-cart {
+      margin-top: auto;
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-move-cart:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .wishlist-empty-state {
+      padding: 60px 20px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-align: center;
+      max-width: 600px;
+      margin: 40px auto;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .empty-icon-wrap {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #f8fafc;
+      border: 1px dashed var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .wishlist-empty-state h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .wishlist-empty-state p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .btn-explore {
+      background: var(--primary);
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-explore:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .wishlist-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--primary);
+      color: #ffffff;
+      padding: 0.85rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 2000;
+    }
+
+    .wishlist-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar with Hover Dropdowns & Left-Drawer -->
+  <header class="navbar">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
+      </button>
+
+      <a href="index.html" class="logo">
+        <span class="logo-mark">●</span> Prizam
+      </a>
+
+      <nav class="nav-links" id="navLinksMenu">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Products</a>
+        <a href="index.html#top-picks">Top Picks</a>
+        <a href="blog.html">Blog</a>
+        <a href="brochure.html">Brochures</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <form class="navbar-search" action="shop.html" method="get" role="search">
+          <input type="search" name="search" placeholder="Search products..." aria-label="Search products" />
+          <button type="submit" aria-label="Submit product search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+
+        <!-- Desktop Profile Hover Dropdown -->
+        <div class="profile-menu">
+          <a href="profile.html" class="icon-btn profile-trigger" aria-label="My Profile">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          <div class="profile-dropdown">
+            <div class="profile-dropdown-header">
+              <strong id="profileGreeting">Hello, Welcome!</strong>
+              <span id="profileAccountText">Access your Prizam account</span>
+            </div>
+            <a href="my-orders.html">
+              <i class="fa-solid fa-box"></i>
+              <span>My Orders</span>
+            </a>
+            <a href="wishlist.html" class="active-link">
+              <i class="fa-regular fa-heart"></i>
+              <span>Wishlist</span>
+            </a>
+            <a href="profile.html#rewards">
+              <i class="fa-solid fa-star"></i>
+              <span>Rewards &amp; Offers</span>
+            </a>
+            <a href="profile.html#preferences">
+              <i class="fa-solid fa-gear"></i>
+              <span>Account Settings</span>
+            </a>
+            <button type="button" class="profile-logout-btn" id="profileLogoutBtn" style="display:none;">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              <span>Logout</span>
+            </button>
+            <a href="profile.html" class="profile-login-btn" id="profileLoginBtn">
+              <i class="fa-solid fa-right-to-bracket"></i>
+              <span id="profileLoginText">Login / Sign Up</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Profile Fallback Icon -->
+        <a href="profile.html" class="icon-btn mobile-profile-icon" aria-label="My Profile">
+          <i class="fa-solid fa-user"></i>
+        </a>
+
+        <!-- Cart Menu with Hover Preview Status -->
+        <div class="cart-menu">
+          <a href="cart.html" class="icon-btn cart-badge-wrapper" aria-label="Cart">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="cart-badge" id="cartCount">0</span>
+          </a>
+          <div class="cart-hover-card" role="status">
+            <div class="cart-hover-title">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <span>Shopping Cart</span>
+            </div>
+            <div class="cart-hover-status">
+              <div class="cart-hover-status-icon" id="cartHoverIcon">
+                <i class="fa-solid fa-bag-shopping"></i>
+              </div>
+              <div>
+                <strong id="cartHoverTitle">Your cart is empty</strong>
+                <span id="cartHoverText">Add products to see them here.</span>
+              </div>
+            </div>
+            <a href="cart.html" class="cart-hover-action" id="cartHoverAction">View Cart</a>
+          </div>
+        </div>
+
+        <a href="profile.html#preferences" class="icon-btn" title="User Settings" aria-label="User Settings">
+          <i class="fa-solid fa-gear"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wishlist-wrapper">
+    <div class="wishlist-header">
+      <div>
+        <h1>My Wishlist <span class="wishlist-count-badge" id="wishlistCountBadge">0 items</span></h1>
+        <p>Saved architectural fixtures and systems stored locally on your device.</p>
+      </div>
+      <!-- <button type="button" class="btn-clear-wishlist" id="clearWishlistBtn" style="display:none;">
+        <i class="fa-regular fa-trash-can"></i> Clear All
+      </button> -->
+    </div>
+
+    <!-- IndexedDB Storage Notice -->
+    <div class="storage-note-strip">
+      <span><i class="fa-solid fa-database"></i> High-Speed Local Storage: Wishlist items are saved in your browser's IndexedDB to preserve cloud capacity.</span>
+      <span style="font-weight:700; color:#15803d;"><i class="fa-solid fa-bolt"></i> Instant Access</span>
+    </div>
+
+    <!-- Dynamic Wishlist Grid -->
+    <div class="wishlist-grid" id="wishlistGrid"></div>
+
+    <!-- Empty State View -->
+    <div class="wishlist-empty-state" id="emptyState" style="display:none;">
+      <div class="empty-icon-wrap">
+        <i class="fa-regular fa-heart"></i>
+      </div>
+      <h2>Your wishlist is empty</h2>
+      <p>You haven't saved any architectural drainage systems yet. Browse our catalog and tap the heart icon to save products here.</p>
+      <a href="shop.html" class="btn-explore">
+        <i class="fa-solid fa-arrow-right"></i> Explore Catalog
+      </a>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="wishlist-toast" id="wishlistToast">Action completed</div>
+
+  <!-- IndexedDB Storage Engine & Auth Controller -->
+  <script type="module">
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+    // =========================================================================
+    // IndexedDB Implementation for Wishlist Management
+    // =========================================================================
+    const DB_NAME = "PrizamDB";
+    const DB_VERSION = 1;
+    const STORE_NAME = "wishlist";
+
+    function openWishlistDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME, { keyPath: "id" });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function getAllWishlistItems() {
+      const db = await openWishlistDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readonly");
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function deleteWishlistItem(id) {
+      const db = await openWishlistDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.delete(id);
+        req.onsuccess = () => resolve(true);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function clearAllWishlistItems() {
+      const db = await openWishlistDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.clear();
+        req.onsuccess = () => resolve(true);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    // =========================================================================
+    // Cart & UI Feedback Helpers
+    // =========================================================================
+    const toast = document.getElementById("wishlistToast");
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function getCart() {
+      try {
+        const raw = localStorage.getItem("prizam_cart");
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function updateCartBadge() {
+      const cart = getCart();
+      const count = cart.reduce((tot, item) => tot + (Number(item.quantity) || 1), 0);
+      const badge = document.getElementById("cartCount");
+      if (badge) badge.textContent = count;
+      updateCartHoverState();
+    }
+
+    function updateCartHoverState() {
+      const countEl = document.getElementById("cartCount");
+      const titleEl = document.getElementById("cartHoverTitle");
+      const textEl = document.getElementById("cartHoverText");
+      const actionEl = document.getElementById("cartHoverAction");
+      if (!countEl || !titleEl) return;
+      const count = Math.max(0, parseInt(countEl.textContent || "0", 10) || 0);
+
+      if (count === 0) {
+        titleEl.textContent = "Your cart is empty";
+        textEl.textContent = "Add products to see them here.";
+        actionEl.textContent = "Start Shopping";
+        actionEl.href = "shop.html";
+      } else {
+        titleEl.textContent = `${count} ${count === 1 ? "product" : "products"} in your cart`;
+        textEl.textContent = "Your items are ready for checkout.";
+        actionEl.textContent = "View Cart";
+        actionEl.href = "cart.html";
+      }
+    }
+
+    // =========================================================================
+    // Render Wishlist Grid from IndexedDB
+    // =========================================================================
+    const grid = document.getElementById("wishlistGrid");
+    const emptyState = document.getElementById("emptyState");
+    const badge = document.getElementById("wishlistCountBadge");
+    const clearBtn = document.getElementById("clearWishlistBtn");
+
+    async function renderWishlist() {
+      try {
+        const items = await getAllWishlistItems();
+        badge.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
+
+        if (items.length === 0) {
+          grid.innerHTML = "";
+          emptyState.style.display = "block";
+          if (clearBtn) clearBtn.style.display = "none";
+          return;
+        }
+
+        emptyState.style.display = "none";
+        if (clearBtn) clearBtn.style.display = "inline-flex";
+        grid.innerHTML = "";
+
+        items.forEach((product) => {
+          const card = document.createElement("div");
+          card.className = "wishlist-card";
+          card.id = `wishlist-${product.id}`;
+
+          card.innerHTML = `
+            <div class="card-thumb-wrap" onclick="location.href='product-details.html?id=${encodeURIComponent(product.id)}'">
+              <button type="button" class="btn-remove-wishlist" title="Remove from Wishlist" data-id="${product.id}">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+              <img src="${product.imageUrl || 'https://via.placeholder.com/400x300'}" alt="${product.title}" loading="lazy" />
+            </div>
+            <div class="card-content">
+              <span class="card-category">${product.category || 'Drainage System'}</span>
+              <h3 class="card-title" onclick="location.href='product-details.html?id=${encodeURIComponent(product.id)}'">
+                ${product.title}
+              </h3>
+              <p class="card-specs">Material: ${product.material || 'Grade 304 Stainless Steel'}</p>
+              <div class="card-price-box">
+                <span class="price-current">₹${Number(product.price).toLocaleString('en-IN')}</span>
+                ${product.originalPrice ? `<span class="price-old">₹${Number(product.originalPrice).toLocaleString('en-IN')}</span>` : ''}
+              </div>
+              <button type="button" class="btn-move-cart" data-product='${encodeURIComponent(JSON.stringify(product))}'>
+                <i class="fa-solid fa-bag-shopping"></i> Move to Cart
+              </button>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        });
+
+        // Bind Remove Buttons
+        document.querySelectorAll(".btn-remove-wishlist").forEach((btn) => {
+          btn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            const id = btn.getAttribute("data-id");
+            await deleteWishlistItem(id);
+            showToast("Removed from wishlist");
+            renderWishlist();
+          });
+        });
+
+        // Bind Move to Cart Buttons
+        document.querySelectorAll(".btn-move-cart").forEach((btn) => {
+          btn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            const product = JSON.parse(decodeURIComponent(btn.getAttribute("data-product")));
+            
+            // 1. Add to localStorage Cart
+            let cart = getCart();
+            const existing = cart.find(i => i.id === product.id);
+            if (existing) {
+              existing.quantity = (Number(existing.quantity) || 1) + 1;
+            } else {
+              cart.push({
+                id: product.id,
+                title: product.title,
+                price: Number(product.price),
+                imageUrl: product.imageUrl,
+                quantity: 1
+              });
+            }
+            localStorage.setItem("prizam_cart", JSON.stringify(cart));
+            updateCartBadge();
+
+            // 2. Remove from IndexedDB Wishlist
+            await deleteWishlistItem(product.id);
+            showToast(`Moved "${product.title}" to cart`);
+            renderWishlist();
+          });
+        });
+
+      } catch (err) {
+        console.error("IndexedDB read error:", err);
+      }
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener("click", async () => {
+        if (confirm("Are you sure you want to clear your entire wishlist?")) {
+          await clearAllWishlistItems();
+          showToast("Wishlist cleared");
+          renderWishlist();
+        }
+      });
+    }
+
+    // =========================================================================
+    // Auth & Navigation State Controllers
+    // =========================================================================
+    const auth = getAuth();
+    const profileGreeting = document.getElementById("profileGreeting");
+    const profileAccountText = document.getElementById("profileAccountText");
+    const profileLoginBtn = document.getElementById("profileLoginBtn");
+    const profileLoginText = document.getElementById("profileLoginText");
+    const profileLogoutBtn = document.getElementById("profileLogoutBtn");
+    const profileDropdown = document.querySelector(".profile-dropdown");
+    const profileOrdersLink = profileDropdown ? profileDropdown.querySelector('a[href="my-orders.html"]') : null;
+
+    function renderProfileMenu(user) {
+      if (!profileGreeting || !profileLoginBtn) return;
+      if (user) {
+        const name = (user.displayName || user.email || "User").split(/[\s@]/)[0];
+        profileGreeting.textContent = `Hi, ${name}!`;
+        profileAccountText.textContent = user.email;
+        profileLoginBtn.href = "profile.html";
+        profileLoginBtn.querySelector("i").className = "fa-solid fa-user";
+        profileLoginText.textContent = "My Profile";
+        profileLogoutBtn.style.display = "flex";
+        if (profileDropdown) {
+          profileDropdown.appendChild(profileLogoutBtn);
+          profileDropdown.appendChild(profileLoginBtn);
+        }
+      } else {
+        profileGreeting.textContent = "Hello, Welcome!";
+        profileAccountText.textContent = "Access your Prizam account";
+        profileLoginBtn.href = "profile.html";
+        profileLoginBtn.querySelector("i").className = "fa-solid fa-right-to-bracket";
+        profileLoginText.textContent = "Login / Sign Up";
+        profileLogoutBtn.style.display = "none";
+        if (profileDropdown && profileOrdersLink) {
+          profileDropdown.insertBefore(profileLoginBtn, profileOrdersLink);
+        }
+      }
+    }
+
+    if (profileLogoutBtn) {
+      profileLogoutBtn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+          renderProfileMenu(null);
+        } catch (err) {
+          console.error("Sign out error:", err);
+        }
+      });
+    }
+
+    onAuthStateChanged(auth, renderProfileMenu);
+
+    // Mobile Hamburger Toggle
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const navLinks = document.getElementById("navLinksMenu");
+    const menuIcon = document.getElementById("menuIcon");
+    if (mobileMenuBtn && navLinks) {
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
+        menuIcon.className = navLinks.classList.contains("active") ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      updateCartBadge();
+      await renderWishlist();
+    });
+
+    window.addEventListener("storage", () => {
+      updateCartBadge();
+    });
+  </script>
+</body>
+</html>
