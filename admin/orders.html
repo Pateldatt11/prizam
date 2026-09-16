@@ -609,6 +609,110 @@
         line-height: 1.55;
       }
 
+      .gujarat-map-wrap {
+        position: relative;
+        background:
+          radial-gradient(circle at top left, rgba(59, 130, 246, 0.08), transparent 35%),
+          radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.08), transparent 32%),
+          #ffffff;
+      }
+
+      .gujarat-map-toolbar {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 700;
+        display: flex;
+        gap: 0.55rem;
+      }
+
+      .gujarat-map-btn {
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.92);
+        color: var(--text-main);
+        padding: 0.55rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+        cursor: pointer;
+        backdrop-filter: blur(6px);
+      }
+
+      .gujarat-map-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .gujarat-legend-card,
+      .district-insight-card {
+        margin-top: 1rem;
+        padding: 0.85rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #ffffff;
+      }
+
+      .gujarat-legend-card h4,
+      .district-insight-card h4 {
+        font-size: 0.8rem;
+        font-weight: 800;
+        margin-bottom: 0.7rem;
+      }
+
+      .legend-scale {
+        height: 10px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #e0f2fe 0%, #7dd3fc 25%, #38bdf8 50%, #0ea5e9 75%, #1d4ed8 100%);
+      }
+
+      .legend-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        margin-top: 0.45rem;
+      }
+
+      .district-insight-card p {
+        margin: 0;
+        font-size: 0.78rem;
+        line-height: 1.55;
+        color: var(--text-muted);
+      }
+
+      .district-insight-card .district-focus-name {
+        display: inline-block;
+        margin-top: 0.45rem;
+        font-size: 0.95rem;
+        font-weight: 900;
+        color: var(--text-main);
+      }
+
+      .district-insight-card .district-focus-count {
+        display: inline-flex;
+        margin-top: 0.55rem;
+        padding: 0.38rem 0.65rem;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-size: 0.75rem;
+        font-weight: 800;
+      }
+
+      #gujaratDeliveredHeatmap.leaflet-container {
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+      }
+
+      #gujaratDeliveredHeatmap .leaflet-interactive {
+        transition: fill 0.18s ease, stroke 0.18s ease, opacity 0.18s ease;
+        vector-effect: non-scaling-stroke;
+      }
+
       .leaflet-control-attribution {
         font-size: 9px !important;
       }
@@ -1101,6 +1205,12 @@
 
             <div class="gujarat-map-layout">
               <div class="gujarat-map-wrap">
+                <div class="gujarat-map-toolbar">
+                  <button class="gujarat-map-btn" type="button" onclick="resetGujaratMapView()">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    Reset View
+                  </button>
+                </div>
                 <div id="gujaratDeliveredHeatmap"></div>
               </div>
 
@@ -1110,6 +1220,20 @@
                   <div style="font-size:0.8rem; color:var(--text-muted);">
                     Waiting for delivered-order data...
                   </div>
+                </div>
+
+                <div class="gujarat-legend-card">
+                  <h4>Heat Scale</h4>
+                  <div class="legend-scale"></div>
+                  <div class="legend-labels">
+                    <span>Lower deliveries</span>
+                    <span>Higher deliveries</span>
+                  </div>
+                </div>
+
+                <div class="district-insight-card" id="gujaratDistrictInsight">
+                  <h4>District Focus</h4>
+                  <p>Hover or click any district on the Gujarat SVG map to view delivery concentration.</p>
                 </div>
 
                 <p class="gujarat-map-note">
@@ -1269,6 +1393,11 @@
       let gujaratMap = null;
       let gujaratDistrictLayer = null;
       let gujaratGeoJson = null;
+      let currentGujaratCounts = {};
+      let currentGujaratRankedDistricts = [];
+      let currentGujaratDeliveredCount = 0;
+      let currentGujaratMaxCount = 1;
+      let selectedGujaratDistrictName = null;
 
       const GUJARAT_GEOJSON_URLS = [
         "https://raw.githubusercontent.com/udit-001/india-maps-data/main/geojson/states/gujarat.geojson",
@@ -1550,6 +1679,89 @@
         return "#bfdbfe";
       }
 
+
+      function getGujaratDistrictStyle(count, maxCount, isActive = false) {
+        let fillColor = "#eef2f7";
+
+        if (count > 0) {
+          const ratio = maxCount > 0 ? count / maxCount : 0;
+          if (ratio >= 0.80) fillColor = "#1d4ed8";
+          else if (ratio >= 0.60) fillColor = "#0ea5e9";
+          else if (ratio >= 0.40) fillColor = "#38bdf8";
+          else if (ratio >= 0.20) fillColor = "#7dd3fc";
+          else fillColor = "#bae6fd";
+        }
+
+        return {
+          color: isActive ? "#0f172a" : "#ffffff",
+          weight: isActive ? 2.2 : 1.25,
+          fillColor,
+          fillOpacity: isActive ? 1 : 0.96
+        };
+      }
+
+      function updateGujaratDistrictInsight(district, count, deliveredCount, selected = false) {
+        const el = document.getElementById("gujaratDistrictInsight");
+        if (!el) return;
+
+        const share = deliveredCount > 0
+          ? ((count / deliveredCount) * 100).toFixed(1)
+          : "0.0";
+
+        el.innerHTML = `
+          <h4>${selected ? "Selected District" : "District Focus"}</h4>
+          <p>${selected ? "You pinned this district." : "Current district delivery concentration."}</p>
+          <span class="district-focus-name">${esc(district || "Unknown District")}</span><br>
+          <span class="district-focus-count">${count} ${count === 1 ? "delivered order" : "delivered orders"} • ${share}% share</span>
+        `;
+      }
+
+      function resetGujaratDistrictInsight() {
+        const el = document.getElementById("gujaratDistrictInsight");
+        if (!el) return;
+
+        const top = currentGujaratRankedDistricts[0];
+
+        if (top) {
+          el.innerHTML = `
+            <h4>District Focus</h4>
+            <p>Highest delivery concentration currently appears in this district.</p>
+            <span class="district-focus-name">${esc(top.district)}</span><br>
+            <span class="district-focus-count">${top.count} ${top.count === 1 ? "delivered order" : "delivered orders"}</span>
+          `;
+          return;
+        }
+
+        el.innerHTML = `
+          <h4>District Focus</h4>
+          <p>Hover or click any district on the Gujarat SVG map to view delivery concentration.</p>
+        `;
+      }
+
+      function applyGujaratDistrictStyles() {
+        if (!gujaratDistrictLayer) return;
+
+        gujaratDistrictLayer.eachLayer((layer) => {
+          const district = getGeoJsonDistrictName(layer.feature);
+          const count = currentGujaratCounts[district] || 0;
+          const isActive = selectedGujaratDistrictName === district;
+          layer.setStyle(getGujaratDistrictStyle(count, currentGujaratMaxCount, isActive));
+        });
+      }
+
+      window.resetGujaratMapView = function() {
+        selectedGujaratDistrictName = null;
+        applyGujaratDistrictStyles();
+        resetGujaratDistrictInsight();
+
+        if (gujaratMap && gujaratDistrictLayer) {
+          const bounds = gujaratDistrictLayer.getBounds();
+          if (bounds.isValid()) {
+            gujaratMap.fitBounds(bounds, { padding: [15, 15] });
+          }
+        }
+      };
+
       function renderGujaratDistrictRanking(rankedDistricts) {
         const list = document.getElementById("gujaratCityRankList");
         if (!list) return;
@@ -1638,8 +1850,14 @@
         const { counts, rankedDistricts, deliveredCount } =
           buildGujaratDistrictCounts();
 
+        currentGujaratCounts = counts;
+        currentGujaratRankedDistricts = rankedDistricts;
+        currentGujaratDeliveredCount = deliveredCount;
+        currentGujaratMaxCount = Math.max(1, ...Object.values(counts).map(Number));
+
         countElement.textContent = deliveredCount.toLocaleString("en-IN");
         renderGujaratDistrictRanking(rankedDistricts);
+        resetGujaratDistrictInsight();
 
         if (!gujaratMap) {
           gujaratMap = L.map("gujaratDeliveredHeatmap", {
@@ -1666,22 +1884,12 @@
             gujaratMap.removeLayer(gujaratDistrictLayer);
           }
 
-          const maxCount = Math.max(
-            1,
-            ...Object.values(counts).map(Number)
-          );
-
           gujaratDistrictLayer = L.geoJSON(geojson, {
             style(feature) {
               const district = getGeoJsonDistrictName(feature);
               const count = counts[district] || 0;
-
-              return {
-                color: "#ffffff",
-                weight: 1.25,
-                fillColor: districtHeatColor(count, maxCount),
-                fillOpacity: 1
-              };
+              const isActive = selectedGujaratDistrictName === district;
+              return getGujaratDistrictStyle(count, currentGujaratMaxCount, isActive);
             },
 
             onEachFeature(feature, layer) {
@@ -1693,19 +1901,50 @@
                 {
                   sticky: true,
                   direction: "auto",
-                  opacity: 0.95
+                  opacity: 0.96
                 }
               );
 
               layer.on({
                 mouseover(e) {
+                  const isActive = selectedGujaratDistrictName === district;
                   e.target.setStyle({
-                    weight: 2.2,
-                    color: "#0f172a"
+                    color: "#0f172a",
+                    weight: isActive ? 2.2 : 2.0,
+                    fillOpacity: 1
                   });
+                  updateGujaratDistrictInsight(district, count, currentGujaratDeliveredCount, isActive);
                 },
-                mouseout(e) {
-                  gujaratDistrictLayer.resetStyle(e.target);
+                mouseout() {
+                  applyGujaratDistrictStyles();
+                  if (selectedGujaratDistrictName) {
+                    const activeCount = currentGujaratCounts[selectedGujaratDistrictName] || 0;
+                    updateGujaratDistrictInsight(
+                      selectedGujaratDistrictName,
+                      activeCount,
+                      currentGujaratDeliveredCount,
+                      true
+                    );
+                  } else {
+                    resetGujaratDistrictInsight();
+                  }
+                },
+                click() {
+                  selectedGujaratDistrictName =
+                    selectedGujaratDistrictName === district ? null : district;
+
+                  applyGujaratDistrictStyles();
+
+                  if (selectedGujaratDistrictName) {
+                    updateGujaratDistrictInsight(
+                      district,
+                      count,
+                      currentGujaratDeliveredCount,
+                      true
+                    );
+                  } else {
+                    resetGujaratDistrictInsight();
+                  }
                 }
               });
             }
