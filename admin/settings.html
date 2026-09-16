@@ -1,918 +1,661 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prizam Admin | System & Maintenance Settings</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prizam Admin | System Settings</title>
 
-  <!-- Typography & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <!-- 🔒 HEARTBEAT SCRIPT -->
+    <script>
+      (function () {
+        const lastHb = localStorage.getItem("admin_heartbeat");
+        const now = Date.now();
+        if (
+          !sessionStorage.getItem("prizam_admin_logged_in") ||
+          (lastHb && now - parseInt(lastHb) > 15000)
+        ) {
+          sessionStorage.removeItem("prizam_admin_logged_in");
+          window.location.replace("login.html");
+        } else {
+          localStorage.setItem("admin_heartbeat", now.toString());
+          setInterval(() => {
+            localStorage.setItem("admin_heartbeat", Date.now().toString());
+          }, 3000);
+        }
+      })();
+    </script>
 
-  <style>
-    :root {
-      --sidebar-bg: #070b13;
-      --sidebar-hover: #0f172a;
-      --sidebar-border: #131b2e;
-      --sidebar-text: #94a3b8;
-      --sidebar-heading: #475569;
-      --sidebar-active-bg: #2563eb;
-      --sidebar-active-text: #ffffff;
-      --primary: #0f172a;
-      --primary-hover: #1e293b;
-      --accent: #2563eb;
-      --surface: #ffffff;
-      --bg: #f8fafc;
-      --border: #e2e8f0;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Plus Jakarta Sans", sans-serif;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-    }
-
-    /* ================= 1. PRECISION DARK SIDEBAR ================= */
-    .admin-sidebar {
-      width: 270px;
-      background: var(--sidebar-bg);
-      color: var(--sidebar-text);
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 100;
-      border-right: 1px solid var(--sidebar-border);
-      user-select: none;
-    }
-
-    .sidebar-header {
-      padding: 1.75rem 1.5rem 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-
-    .sidebar-brand-dot {
-      width: 9px;
-      height: 9px;
-      background-color: #38bdf8;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
-      flex-shrink: 0;
-    }
-
-    .sidebar-brand-title {
-      color: #ffffff;
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      text-decoration: none;
-    }
-
-    .sidebar-nav-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0.5rem 1rem 1.5rem;
-    }
-
-    .sidebar-nav-scroll::-webkit-scrollbar {
-      width: 5px;
-    }
-    .sidebar-nav-scroll::-webkit-scrollbar-thumb {
-      background: #1e293b;
-      border-radius: 4px;
-    }
-
-    .sidebar-section-title {
-      font-size: 0.72rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--sidebar-heading);
-      padding: 1.25rem 0.75rem 0.5rem;
-    }
-
-    .sidebar-link {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      padding: 0.75rem 0.95rem;
-      border-radius: 10px;
-      color: var(--sidebar-text);
-      text-decoration: none;
-      font-size: 0.92rem;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      margin-bottom: 0.2rem;
-    }
-
-    .sidebar-link i {
-      font-size: 1rem;
-      width: 20px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .sidebar-link:hover {
-      color: #ffffff;
-      background: var(--sidebar-hover);
-    }
-
-    .sidebar-link.active {
-      background: var(--sidebar-active-bg);
-      color: var(--sidebar-active-text);
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
-    }
-
-    .sidebar-badge {
-      margin-left: auto;
-      background: rgba(0, 0, 0, 0.25);
-      color: #ffffff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.15rem 0.55rem;
-      border-radius: 12px;
-      min-width: 22px;
-      text-align: center;
-    }
-
-    .sidebar-link.active .sidebar-badge {
-      background: rgba(0, 0, 0, 0.35);
-    }
-
-    .sidebar-sublink {
-      padding-left: 1.15rem;
-    }
-
-    .sidebar-footer {
-      padding: 1.25rem 1.25rem;
-      border-top: 1px solid var(--sidebar-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #060910;
-    }
-
-    .sidebar-user-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      overflow: hidden;
-    }
-
-    .sidebar-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #1e293b;
-      color: #38bdf8;
-      font-weight: 800;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .sidebar-meta {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .sidebar-user-name {
-      color: #ffffff;
-      font-size: 0.88rem;
-      font-weight: 700;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .sidebar-user-email {
-      color: #64748b;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .sidebar-logout-btn {
-      background: none;
-      border: none;
-      color: #64748b;
-      font-size: 1.15rem;
-      cursor: pointer;
-      padding: 0.4rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-
-    .sidebar-logout-btn:hover {
-      color: var(--danger);
-      transform: translateX(2px);
-    }
-
-    /* ================= 2. MAIN WORKSPACE ================= */
-    .admin-main {
-      margin-left: 270px;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .top-navbar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 90;
-    }
-
-    .admin-body {
-      padding: 2.25rem 2rem;
-    }
-
-    .page-title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 2rem;
-    }
-
-    .page-title-row h1 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-
-    .page-title-row p {
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      margin-top: 0.2rem;
-    }
-
-    .settings-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      align-items: start;
-    }
-
-    .settings-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .card-heading {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.85rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-
-    .card-heading i {
-      color: var(--accent);
-    }
-
-    .card-heading.danger i {
-      color: var(--danger);
-    }
-
-    .setting-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 0;
-      border-bottom: 1px solid #f1f5f9;
-    }
-
-    .setting-item:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .setting-text strong {
-      display: block;
-      font-size: 0.92rem;
-      color: var(--text-main);
-      margin-bottom: 0.2rem;
-    }
-
-    .setting-text p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 42px;
-      height: 24px;
-      flex-shrink: 0;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background-color: #cbd5e1;
-      transition: 0.25s;
-      border-radius: 24px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: 0.25s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: var(--danger);
-    }
-
-    input:checked + .slider.safe {
-      background-color: var(--success);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(18px);
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 0.45rem;
-      color: var(--text-main);
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 0.75rem 0.95rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      outline: none;
-      background: #ffffff;
-      transition: all 0.2s;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
-    }
-
-    .btn-save-settings {
-      padding: 0.75rem 1.5rem;
-      background: var(--primary);
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.88rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
-    }
-
-    .btn-save-settings:hover {
-      background: var(--primary-hover);
-    }
-
-    .btn-danger-outline {
-      padding: 0.65rem 1.2rem;
-      background: transparent;
-      color: var(--danger);
-      border: 1px solid #fca5a5;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-danger-outline:hover {
-      background: #fee2e2;
-      border-color: var(--danger);
-    }
-
-    .admin-toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--primary);
-      color: #fff;
-      padding: 0.85rem 1.25rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.25s ease;
-      z-index: 2000;
-    }
-
-    .admin-toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    @media (max-width: 900px) {
+    <style>
+      :root {
+        --sidebar-bg: #070b13;
+        --sidebar-hover: #0f172a;
+        --sidebar-border: #131b2e;
+        --sidebar-text: #94a3b8;
+        --sidebar-heading: #475569;
+        --sidebar-active-bg: #2563eb;
+        --sidebar-active-text: #ffffff;
+        --primary: #0f172a;
+        --primary-hover: #1e293b;
+        --accent: #2563eb;
+        --surface: #ffffff;
+        --bg: #f8fafc;
+        --border: #e2e8f0;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --radius: 12px;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+      }
+      .admin-sidebar {
+        width: 270px;
+        background: var(--sidebar-bg);
+        color: var(--sidebar-text);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        border-right: 1px solid var(--sidebar-border);
+      }
+      .sidebar-header {
+        padding: 1.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+      }
+      .sidebar-brand-dot {
+        width: 9px;
+        height: 9px;
+        background-color: #38bdf8;
+        border-radius: 50%;
+      }
+      .sidebar-brand-title {
+        color: #ffffff;
+        font-size: 1.35rem;
+        font-weight: 800;
+        text-decoration: none;
+      }
+      .sidebar-nav-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.5rem 1rem;
+      }
+      .sidebar-section-title {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--sidebar-heading);
+        padding: 1.25rem 0.75rem 0.5rem;
+      }
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 0.75rem 0.95rem;
+        border-radius: 10px;
+        color: var(--sidebar-text);
+        text-decoration: none;
+        font-size: 0.92rem;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+      }
+      .sidebar-link i {
+        font-size: 1rem;
+        width: 20px;
+        text-align: center;
+      }
+      .sidebar-link:hover {
+        color: #ffffff;
+        background: var(--sidebar-hover);
+      }
+      .sidebar-link.active {
+        background: var(--sidebar-active-bg);
+        color: var(--sidebar-active-text);
+      }
+      .sidebar-footer {
+        padding: 1.25rem;
+        border-top: 1px solid var(--sidebar-border);
+        display: flex;
+        justify-content: space-between;
+        background: #060910;
+      }
+      .sidebar-user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .sidebar-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #1e293b;
+        color: #38bdf8;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sidebar-user-name {
+        color: #ffffff;
+        font-size: 0.88rem;
+        font-weight: 700;
+        display: block;
+      }
+      .sidebar-logout-btn {
+        background: none;
+        border: none;
+        color: #64748b;
+        font-size: 1.15rem;
+        cursor: pointer;
+      }
+      .admin-main {
+        margin-left: 270px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .top-navbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+      }
+      .admin-body {
+        padding: 2.25rem 2rem;
+      }
+      .page-title-row {
+        margin-bottom: 2rem;
+      }
+      .page-title-row h1 {
+        font-size: 1.6rem;
+        font-weight: 800;
+      }
       .settings-grid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
       }
-    }
-  </style>
-  <link rel="stylesheet" href="../assets/css/responsive.css" />
-</head>
-<body>
-
-  <!-- ================= 1. PRECISION DARK SIDEBAR ================= -->
-  <aside class="admin-sidebar">
-    <div class="sidebar-header">
-      <span class="sidebar-brand-dot"></span>
-      <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
+      .settings-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow-sm);
+      }
+      .card-heading {
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.85rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 0.6rem;
+      }
+      .card-heading i {
+        color: var(--accent);
+      }
+      .card-heading.danger i {
+        color: var(--danger);
+      }
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .setting-text strong {
+        display: block;
+        font-size: 0.92rem;
+        margin-bottom: 0.2rem;
+      }
+      .setting-text p {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+      .switch {
+        position: relative;
+        width: 42px;
+        height: 24px;
+        flex-shrink: 0;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background-color: #cbd5e1;
+        border-radius: 24px;
+        transition: 0.25s;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: 0.25s;
+      }
+      input:checked + .slider {
+        background-color: var(--danger);
+      }
+      input:checked + .slider.safe {
+        background-color: var(--success);
+      }
+      input:checked + .slider:before {
+        transform: translateX(18px);
+      }
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+      .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 0.45rem;
+      }
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.9rem;
+      }
+      .btn-save-settings {
+        padding: 0.75rem 1.5rem;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .admin-toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--primary);
+        color: #fff;
+        padding: 0.85rem 1.25rem;
+        border-radius: 8px;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.25s;
+        z-index: 2000;
+      }
+      .admin-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .auth-gate-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 5000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.75rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 🔒 OVERLAY -->
+    <div class="auth-gate-overlay" id="authGateOverlay">
+      <i
+        class="fa-solid fa-spinner fa-spin"
+        style="font-size: 1.4rem; color: var(--primary)"
+      ></i>
+      <span>Verifying admin session...</span>
     </div>
 
-    <div class="sidebar-nav-scroll">
-      <div class="sidebar-section-title">Storefront Catalog</div>
-
-      <a href="index.html" class="sidebar-link">
-        <i class="fa-solid fa-boxes-stacked"></i>
-        <span>Products</span>
-        <span class="sidebar-badge" id="sideBadgeProducts">0</span>
-      </a>
-
-      <a href="index.html?filter=published" class="sidebar-link sidebar-sublink">
-        <i class="fa-solid fa-circle-check"></i>
-        <span>Publish</span>
-      </a>
-
-      <a href="index.html?filter=draft" class="sidebar-link sidebar-sublink">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>Draft</span>
-      </a>
-
-      <a href="add-product.html" class="sidebar-link">
-        <i class="fa-solid fa-circle-plus"></i>
-        <span>Add New Product</span>
-      </a>
-
-      <div class="sidebar-section-title">Management & Sales</div>
-
-      <a href="brochures.html" class="sidebar-link">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>Brochures</span>
-      </a>
-
-      <a href="orders.html" class="sidebar-link">
-        <i class="fa-solid fa-truck-ramp-box"></i>
-        <span>Orders</span>
-        <span class="sidebar-badge" id="sideBadgeOrders">0</span>
-      </a>
-
-      <a href="returns.html" class="sidebar-link">
-        <i class="fa-solid fa-rotate-left"></i>
-        <span>Returns</span>
-        <span class="sidebar-badge" id="sideBadgeReturns">0</span>
-      </a>
-
-      <a href="inquiries.html" class="sidebar-link">
-        <i class="fa-solid fa-envelope-open-text"></i>
-        <span>Contact Request</span>
-        <span class="sidebar-badge" id="sideBadgeInquiries">0</span>
-      </a>
-
-      <a href="analytics.html" class="sidebar-link">
-        <i class="fa-solid fa-chart-pie"></i>
-        <span>Store Analysis</span>
-      </a>
-
-      <a href="settings.html" class="sidebar-link active">
-        <i class="fa-solid fa-gears"></i>
-        <span>System Maintenance</span>
-      </a>
-
-      <div class="sidebar-section-title">Live Preview</div>
-
-      <a href="../index.html" target="_blank" class="sidebar-link">
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        <span>Live Storefront</span>
-      </a>
-    </div>
-
-    <div class="sidebar-footer">
-      <div class="sidebar-user-info">
-        <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
-        <div class="sidebar-meta">
-          <span class="sidebar-user-name" id="sideUserName">Administrator</span>
-          <span class="sidebar-user-email" id="sideUserEmail">admin@prizam.com</span>
-        </div>
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-brand-dot"></span
+        ><a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
       </div>
-      <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-      </button>
-    </div>
-  </aside>
-
-  <!-- ================= 2. MAIN CONTENT ================= -->
-  <main class="admin-main">
-    <header class="top-navbar">
-      <div style="font-size: 0.95rem; font-weight: 800; color: var(--text-main);">
-        <i class="fa-solid fa-screwdriver-wrench" style="color: var(--accent); margin-right: 0.4rem;"></i> Store Controls
+      <div class="sidebar-nav-scroll">
+        <div class="sidebar-section-title">Storefront Catalog</div>
+        <a href="index.html" class="sidebar-link"
+          ><i class="fa-solid fa-boxes-stacked"></i><span>Products</span></a
+        >
+        <a href="add-product.html" class="sidebar-link"
+          ><i class="fa-solid fa-circle-plus"></i
+          ><span>Add New Product</span></a
+        >
+        <div class="sidebar-section-title">Management & Sales</div>
+        <a href="brochures.html" class="sidebar-link"
+          ><i class="fa-solid fa-file-lines"></i><span>Brochures</span></a
+        >
+        <a href="orders.html" class="sidebar-link"
+          ><i class="fa-solid fa-truck-ramp-box"></i><span>Orders</span></a
+        >
+        <a href="returns.html" class="sidebar-link"
+          ><i class="fa-solid fa-rotate-left"></i><span>Returns</span></a
+        >
+        <a href="inquiries.html" class="sidebar-link"
+          ><i class="fa-solid fa-envelope-open-text"></i
+          ><span>Contact Request</span></a
+        >
+        <a href="analytics.html" class="sidebar-link"
+          ><i class="fa-solid fa-chart-pie"></i><span>Store Analysis</span></a
+        >
+        <a href="settings.html" class="sidebar-link active"
+          ><i class="fa-solid fa-gears"></i><span>System Maintenance</span></a
+        >
+        <div class="sidebar-section-title">Live Preview</div>
+        <a href="../index.html" target="_blank" class="sidebar-link"
+          ><i class="fa-solid fa-arrow-up-right-from-square"></i
+          ><span>Live Storefront</span></a
+        >
       </div>
-      <a href="../index.html" target="_blank" style="text-decoration:none; background:#f1f5f9; padding:0.5rem 1rem; border-radius:6px; font-size:0.85rem; font-weight:700; color:var(--text-main);">
-        <i class="fa-solid fa-eye"></i> Store Preview
-      </a>
-    </header>
-
-    <div class="admin-body">
-      <div class="page-title-row">
-        <div>
-          <h1>System & Maintenance Configuration</h1>
-          <p>Real-time Firestore sync for site availability, promotional announcement ribbons, and complete database snapshots.</p>
-        </div>
-      </div>
-
-      <div class="settings-grid">
-        
-        <!-- Left: Maintenance & System Status -->
-        <div style="display:flex; flex-direction:column; gap:2rem;">
-          
-          <div class="settings-card">
-            <div class="card-heading danger">
-              <i class="fa-solid fa-triangle-exclamation"></i> Maintenance Mode
-            </div>
-            
-            <div class="setting-item">
-              <div class="setting-text">
-                <strong>Enable Site-Wide Maintenance</strong>
-                <p>Locks the public storefront and directs visitors to a maintenance screen. Admin panel remains active.</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="toggleMaintenance" />
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="setting-item" style="margin-top:1rem;">
-              <div class="setting-text">
-                <strong>Halt Checkout Pipeline</strong>
-                <p>Allows browsing the catalog but prevents placing orders during audits or inventory verification.</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="toggleHaltCheckout" />
-                <span class="slider"></span>
-              </label>
-            </div>
+      <div class="sidebar-footer">
+        <div class="sidebar-user-info">
+          <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
+          <div class="sidebar-meta">
+            <span class="sidebar-user-name" id="sideUserName"
+              >Administrator</span
+            >
           </div>
+        </div>
+        <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
 
-          <!-- Announcement Strip -->
-          <div class="settings-card">
-            <div class="card-heading">
-              <i class="fa-solid fa-bullhorn"></i> Live Announcement Banner
-            </div>
+    <main class="admin-main">
+      <header class="top-navbar">
+        <div style="font-weight: 800">
+          <i
+            class="fa-solid fa-screwdriver-wrench"
+            style="color: var(--accent)"
+          ></i>
+          Store Controls
+        </div>
+        <a
+          href="../index.html"
+          target="_blank"
+          style="
+            text-decoration: none;
+            background: #f1f5f9;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 700;
+            color: var(--text-main);
+          "
+          ><i class="fa-solid fa-eye"></i> Store Preview</a
+        >
+      </header>
 
-            <div class="setting-item" style="margin-bottom:1.25rem;">
-              <div class="setting-text">
-                <strong>Display Announcement Ribbon</strong>
-                <p>Show a prominent ribbon above the navigation bar for trade notices or promotions.</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="toggleAnnouncement" />
-                <span class="slider safe"></span>
-              </label>
-            </div>
-
-            <div class="form-group">
-              <label for="announcementText">Banner Message</label>
-              <input type="text" id="announcementText" placeholder="e.g. Free Express Shipping Across Gujarat on All Orders Over ₹1,499!" />
-            </div>
-
-            <button type="button" class="btn-save-settings" id="saveAnnouncementBtn">
-              <i class="fa-solid fa-floppy-disk"></i> Update Announcement
-            </button>
+      <div class="admin-body">
+        <div class="page-title-row">
+          <div>
+            <h1>System & Maintenance Configuration</h1>
+            <p>
+              Real-time Firestore sync for site availability and announcements.
+            </p>
           </div>
-
         </div>
 
-        <!-- Right: Business Desk & Database Actions -->
-        <div style="display:flex; flex-direction:column; gap:2rem;">
-          
-          <div class="settings-card">
-            <div class="card-heading">
-              <i class="fa-solid fa-building-circle-check"></i> Factory & Office Meta
-            </div>
-
-            <div class="form-group">
-              <label for="plantPhone">Factory Hotline Phone</label>
-              <input type="text" id="plantPhone" value="+91 98765 43210" />
-            </div>
-
-            <div class="form-group">
-              <label for="plantEmail">Support & B2B Email</label>
-              <input type="email" id="plantEmail" value="support@prizam.com" />
-            </div>
-
-            <div class="form-group">
-              <label for="plantAddress">Plant Address (Metoda GIDC)</label>
-              <textarea id="plantAddress" rows="3">Plot No. 48, GIDC Lodhika Industrial Area, Metoda, Rajkot, Gujarat 360021, India</textarea>
-            </div>
-
-            <button type="button" class="btn-save-settings" id="saveMetaBtn">
-              <i class="fa-solid fa-floppy-disk"></i> Save Contact Details
-            </button>
-          </div>
-
-          <!-- Backup & Data Flush -->
-          <div class="settings-card">
-            <div class="card-heading">
-              <i class="fa-solid fa-database"></i> Database Operations
-            </div>
-
-            <div class="setting-item">
-              <div class="setting-text">
-                <strong>Download Full JSON Backup</strong>
-                <p>Queries live Firestore collections (Products, Orders, Inquiries, Returns) into a downloadable snapshot.</p>
+        <div class="settings-grid">
+          <div style="display: flex; flex-direction: column; gap: 2rem">
+            <div class="settings-card">
+              <div class="card-heading danger">
+                <i class="fa-solid fa-triangle-exclamation"></i> Maintenance
+                Mode
               </div>
-              <button class="btn-save-settings" id="exportBackupBtn" style="background:#f1f5f9; color:var(--text-main); border:1px solid var(--border);">
-                <i class="fa-solid fa-download"></i> Export
+              <div class="setting-item">
+                <div class="setting-text">
+                  <strong>Enable Site-Wide Maintenance</strong>
+                </div>
+                <label class="switch"
+                  ><input type="checkbox" id="toggleMaintenance" /><span
+                    class="slider"
+                  ></span
+                ></label>
+              </div>
+              <div class="setting-item">
+                <div class="setting-text">
+                  <strong>Halt Checkout Pipeline</strong>
+                </div>
+                <label class="switch"
+                  ><input type="checkbox" id="toggleHaltCheckout" /><span
+                    class="slider"
+                  ></span
+                ></label>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <div class="card-heading">
+                <i class="fa-solid fa-bullhorn"></i> Live Announcement Banner
+              </div>
+              <div class="setting-item">
+                <div class="setting-text">
+                  <strong>Display Announcement Ribbon</strong>
+                </div>
+                <label class="switch"
+                  ><input type="checkbox" id="toggleAnnouncement" /><span
+                    class="slider safe"
+                  ></span
+                ></label>
+              </div>
+              <div class="form-group">
+                <label>Banner Message</label>
+                <input
+                  type="text"
+                  id="announcementText"
+                  placeholder="e.g. Free Shipping!"
+                />
+              </div>
+              <button
+                type="button"
+                class="btn-save-settings"
+                id="saveAnnouncementBtn"
+              >
+                <i class="fa-solid fa-floppy-disk"></i> Update Announcement
               </button>
             </div>
+          </div>
 
-            <div class="setting-item" style="margin-top:1rem;">
-              <div class="setting-text">
-                <strong>Purge Local Order Cache</strong>
-                <p>Clears stale order copies stored in local browser storage. Cloud Firestore documents remain untouched.</p>
+          <div style="display: flex; flex-direction: column; gap: 2rem">
+            <div class="settings-card">
+              <div class="card-heading">
+                <i class="fa-solid fa-building-circle-check"></i> Factory &
+                Office Meta
               </div>
-              <button class="btn-danger-outline" id="purgeOrdersBtn">
-                <i class="fa-solid fa-trash-can"></i> Purge Cache
+              <div class="form-group">
+                <label>Factory Hotline</label
+                ><input type="text" id="plantPhone" value="+91 98765 43210" />
+              </div>
+              <div class="form-group">
+                <label>Support Email</label
+                ><input
+                  type="email"
+                  id="plantEmail"
+                  value="support@prizam.com"
+                />
+              </div>
+              <div class="form-group">
+                <label>Plant Address</label
+                ><textarea id="plantAddress" rows="3">Metoda, Rajkot</textarea>
+              </div>
+              <button type="button" class="btn-save-settings" id="saveMetaBtn">
+                <i class="fa-solid fa-floppy-disk"></i> Save Contact Details
               </button>
             </div>
           </div>
-
         </div>
-
       </div>
-    </div>
-  </main>
+    </main>
 
-  <div class="admin-toast" id="adminToast">Settings updated</div>
+    <div class="admin-toast" id="adminToast">Settings updated</div>
 
-  <!-- Real-Time Cloud Firestore Sync Controller -->
-  <script type="module">
-    import { db, auth } from "../assets/js/firebase-config.js";
-    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-    import { 
-      doc, 
-      setDoc, 
-      onSnapshot, 
-      collection, 
-      getDocs 
-    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    <script type="module">
+      import { db, auth } from "../assets/js/firebase-config.js";
+      import {
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+      import {
+        doc,
+        setDoc,
+        onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-    // 1. Authentication Check
-    if (localStorage.getItem("prizam_admin_logged_in") !== "true") {
-      window.location.href = "login.html";
-    }
+      // 🔒 AUTH GUARD & OVERLAY REMOVER
+      onAuthStateChanged(auth, (user) => {
+        if (!user || user.email !== "admin@prizam.com") {
+          sessionStorage.removeItem("prizam_admin_logged_in");
+          window.location.replace("login.html");
+          return;
+        }
+        const authGateOverlay = document.getElementById("authGateOverlay");
+        if (authGateOverlay) authGateOverlay.style.display = "none";
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("sideUserName").textContent = user.displayName || "Administrator";
-        document.getElementById("sideUserEmail").textContent = user.email || "admin@prizam.com";
-        const initials = (user.displayName || user.email || "AD").substring(0, 2).toUpperCase();
+        document.getElementById("sideUserName").textContent =
+          user.displayName || "Administrator";
+        const initials = (user.displayName || user.email || "AD")
+          .substring(0, 2)
+          .toUpperCase();
         document.getElementById("sideUserAvatar").textContent = initials;
+      });
+
+      const toast = document.getElementById("adminToast");
+      function showToast(text) {
+        toast.textContent = text;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2200);
       }
-    });
 
-    const toast = document.getElementById("adminToast");
-    function showToast(text) {
-      toast.textContent = text;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 2200);
-    }
+      const settingsDocRef = doc(db, "settings", "system");
 
-    // 2. Real-Time Sidebar Counter Listeners
-    onSnapshot(collection(db, "products"), (snap) => {
-      const b = document.getElementById("sideBadgeProducts");
-      if (b) b.textContent = snap.size;
-    }, () => {});
-
-    onSnapshot(collection(db, "orders"), (snap) => {
-      const b = document.getElementById("sideBadgeOrders");
-      if (b) b.textContent = snap.size;
-    }, () => {});
-
-    onSnapshot(collection(db, "returns"), (snap) => {
-      const b = document.getElementById("sideBadgeReturns");
-      if (b) b.textContent = snap.size;
-    }, () => {});
-
-    onSnapshot(collection(db, "inquiries"), (snap) => {
-      const b = document.getElementById("sideBadgeInquiries");
-      if (b) b.textContent = snap.size;
-    }, () => {});
-
-    // 3. Real-Time Cloud Settings Stream
-    const settingsDocRef = doc(db, "settings", "system");
-
-    onSnapshot(settingsDocRef, (snap) => {
-      if (snap.exists()) {
-        const data = snap.data();
-
-        document.getElementById("toggleMaintenance").checked = !!data.maintenanceMode;
-        document.getElementById("toggleHaltCheckout").checked = !!data.haltCheckout;
-        document.getElementById("toggleAnnouncement").checked = !!data.showAnnouncement;
-
-        if (data.announcementText !== undefined) {
-          document.getElementById("announcementText").value = data.announcementText;
+      onSnapshot(settingsDocRef, (snap) => {
+        if (snap.exists()) {
+          const data = snap.data();
+          document.getElementById("toggleMaintenance").checked =
+            !!data.maintenanceMode;
+          document.getElementById("toggleHaltCheckout").checked =
+            !!data.haltCheckout;
+          document.getElementById("toggleAnnouncement").checked =
+            !!data.showAnnouncement;
+          if (data.announcementText)
+            document.getElementById("announcementText").value =
+              data.announcementText;
+          if (data.plantPhone)
+            document.getElementById("plantPhone").value = data.plantPhone;
+          if (data.plantEmail)
+            document.getElementById("plantEmail").value = data.plantEmail;
+          if (data.plantAddress)
+            document.getElementById("plantAddress").value = data.plantAddress;
         }
-        if (data.plantPhone) {
-          document.getElementById("plantPhone").value = data.plantPhone;
-        }
-        if (data.plantEmail) {
-          document.getElementById("plantEmail").value = data.plantEmail;
-        }
-        if (data.plantAddress) {
-          document.getElementById("plantAddress").value = data.plantAddress;
-        }
+      });
 
-        // Mirror locally for storefront access
-        localStorage.setItem("prizam_maintenance_mode", !!data.maintenanceMode);
-        localStorage.setItem("prizam_halt_checkout", !!data.haltCheckout);
-        localStorage.setItem("prizam_show_announcement", !!data.showAnnouncement);
-        localStorage.setItem("prizam_announcement_text", data.announcementText || "");
-      }
-    }, (err) => {
-      console.warn("Settings listener error, fallback to local:", err);
-      // Fallback local loader
-      document.getElementById("toggleMaintenance").checked = localStorage.getItem("prizam_maintenance_mode") === "true";
-      document.getElementById("toggleHaltCheckout").checked = localStorage.getItem("prizam_halt_checkout") === "true";
-      document.getElementById("toggleAnnouncement").checked = localStorage.getItem("prizam_show_announcement") === "true";
-      document.getElementById("announcementText").value = localStorage.getItem("prizam_announcement_text") || "";
-    });
-
-    // 4. Update Settings in Firestore
-    async function updateSettingField(payload, message) {
-      try {
-        await setDoc(settingsDocRef, { ...payload, updatedAt: new Date().toISOString() }, { merge: true });
+      async function updateSettingField(payload, message) {
+        await setDoc(
+          settingsDocRef,
+          { ...payload, updatedAt: new Date().toISOString() },
+          { merge: true },
+        );
         showToast(message);
-      } catch (err) {
-        console.error("Firestore settings update failed:", err);
-        showToast("Error updating settings in cloud.");
       }
-    }
 
-    document.getElementById("toggleMaintenance").addEventListener("change", (e) => {
-      const isMaint = e.target.checked;
-      localStorage.setItem("prizam_maintenance_mode", isMaint);
-      updateSettingField({ maintenanceMode: isMaint }, `Maintenance Mode: ${isMaint ? "ENABLED" : "DISABLED"}`);
-    });
+      document
+        .getElementById("toggleMaintenance")
+        .addEventListener("change", (e) => {
+          updateSettingField(
+            { maintenanceMode: e.target.checked },
+            "Maintenance Mode Updated",
+          );
+        });
 
-    document.getElementById("toggleHaltCheckout").addEventListener("change", (e) => {
-      const isHalt = e.target.checked;
-      localStorage.setItem("prizam_halt_checkout", isHalt);
-      updateSettingField({ haltCheckout: isHalt }, `Checkout Pipeline: ${isHalt ? "HALTED" : "ONLINE"}`);
-    });
+      document
+        .getElementById("toggleHaltCheckout")
+        .addEventListener("change", (e) => {
+          updateSettingField(
+            { haltCheckout: e.target.checked },
+            "Checkout Pipeline Updated",
+          );
+        });
 
-    document.getElementById("saveAnnouncementBtn").addEventListener("click", () => {
-      const show = document.getElementById("toggleAnnouncement").checked;
-      const text = document.getElementById("announcementText").value.trim();
+      document
+        .getElementById("saveAnnouncementBtn")
+        .addEventListener("click", () => {
+          updateSettingField(
+            {
+              showAnnouncement:
+                document.getElementById("toggleAnnouncement").checked,
+              announcementText: document
+                .getElementById("announcementText")
+                .value.trim(),
+            },
+            "Announcement ribbon updated",
+          );
+        });
 
-      localStorage.setItem("prizam_show_announcement", show);
-      localStorage.setItem("prizam_announcement_text", text);
+      document.getElementById("saveMetaBtn").addEventListener("click", () => {
+        updateSettingField(
+          {
+            plantPhone: document.getElementById("plantPhone").value.trim(),
+            plantEmail: document.getElementById("plantEmail").value.trim(),
+            plantAddress: document.getElementById("plantAddress").value.trim(),
+          },
+          "Factory details saved",
+        );
+      });
 
-      updateSettingField({ showAnnouncement: show, announcementText: text }, "Announcement ribbon updated");
-    });
-
-    document.getElementById("saveMetaBtn").addEventListener("click", () => {
-      const phone = document.getElementById("plantPhone").value.trim();
-      const email = document.getElementById("plantEmail").value.trim();
-      const address = document.getElementById("plantAddress").value.trim();
-
-      localStorage.setItem("prizam_meta_phone", phone);
-      localStorage.setItem("prizam_meta_email", email);
-      localStorage.setItem("prizam_meta_address", address);
-
-      updateSettingField({ plantPhone: phone, plantEmail: email, plantAddress: address }, "Factory details saved to Firestore");
-    });
-
-    // 5. Full Database Export from Firestore
-    document.getElementById("exportBackupBtn").addEventListener("click", async () => {
-      const exportBtn = document.getElementById("exportBackupBtn");
-      exportBtn.disabled = true;
-      exportBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Querying Firestore...`;
-
-      try {
-        const [prodSnap, orderSnap, inqSnap, retSnap] = await Promise.all([
-          getDocs(collection(db, "products")),
-          getDocs(collection(db, "orders")),
-          getDocs(collection(db, "inquiries")),
-          getDocs(collection(db, "returns"))
-        ]);
-
-        const backupData = {
-          database: "prizam-firestore",
-          exportedAt: new Date().toISOString(),
-          products: prodSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-          orders: orderSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-          inquiries: inqSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-          returns: retSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-        };
-
-        const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `prizam_cloud_backup_${Date.now()}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-        showToast("Full cloud backup exported successfully!");
-      } catch (err) {
-        console.error("Backup export failed:", err);
-        showToast("Export failed: " + err.message);
-      } finally {
-        exportBtn.disabled = false;
-        exportBtn.innerHTML = `<i class="fa-solid fa-download"></i> Export`;
-      }
-    });
-
-    // 6. Purge Local Stale Cache
-    document.getElementById("purgeOrdersBtn").addEventListener("click", () => {
-      if (confirm("Clear local offline orders from this browser? Cloud Firestore orders remain safe.")) {
-        localStorage.removeItem("prizam_local_orders");
-        localStorage.removeItem("prizam_cart");
-        showToast("Local browser cache purged");
-      }
-    });
-
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-      if (confirm("Sign out of Admin Portal?")) {
-        localStorage.removeItem("prizam_admin_logged_in");
-        await signOut(auth);
-        window.location.href = "login.html";
-      }
-    });
-  </script>
-</body>
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async () => {
+          if (confirm("Sign out of Admin Portal?")) {
+            sessionStorage.removeItem("prizam_admin_logged_in");
+            localStorage.removeItem("admin_heartbeat");
+            await signOut(auth);
+            window.location.replace("login.html");
+          }
+        });
+    </script>
+  </body>
 </html>

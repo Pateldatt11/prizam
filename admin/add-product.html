@@ -1,1556 +1,1473 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prizam Admin | Create Product</title>
-
-  <!-- Typography & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <!-- Quill Rich Text Editor (MS Word, Bold, Headings, Lists, Font Size Engine) -->
-  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-
-  <style>
-    :root {
-      --sidebar-bg: #070b13;
-      --sidebar-hover: #0f172a;
-      --sidebar-border: #131b2e;
-      --sidebar-text: #94a3b8;
-      --sidebar-heading: #475569;
-      --sidebar-active-bg: #2563eb;
-      --sidebar-active-text: #ffffff;
-      --primary: #0f172a;
-      --primary-hover: #1e293b;
-      --accent: #2563eb;
-      --surface: #ffffff;
-      --bg: #f8fafc;
-      --border: #e2e8f0;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --radius: 12px;
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
-      --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Plus Jakarta Sans", sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-    }
-
-    /* ================= PRECISION DARK SIDEBAR ================= */
-    .admin-sidebar {
-      width: 270px;
-      background: var(--sidebar-bg);
-      color: var(--sidebar-text);
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 1000;
-      border-right: 1px solid var(--sidebar-border);
-      user-select: none;
-      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .sidebar-header {
-      padding: 1.75rem 1.5rem 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-
-    .sidebar-brand-dot {
-      width: 9px;
-      height: 9px;
-      background-color: #38bdf8;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
-      flex-shrink: 0;
-    }
-
-    .sidebar-brand-title {
-      color: #ffffff;
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      text-decoration: none;
-    }
-
-    .sidebar-nav-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0.5rem 1rem 1.5rem;
-    }
-
-    .sidebar-nav-scroll::-webkit-scrollbar {
-      width: 5px;
-    }
-    .sidebar-nav-scroll::-webkit-scrollbar-thumb {
-      background: #1e293b;
-      border-radius: 4px;
-    }
-
-    .sidebar-section-title {
-      font-size: 0.72rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--sidebar-heading);
-      padding: 1.25rem 0.75rem 0.5rem;
-    }
-
-    .sidebar-link {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      padding: 0.75rem 0.95rem;
-      border-radius: 10px;
-      color: var(--sidebar-text);
-      text-decoration: none;
-      font-size: 0.92rem;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      margin-bottom: 0.2rem;
-    }
-
-    .sidebar-link i {
-      font-size: 1rem;
-      width: 20px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .sidebar-link:hover {
-      color: #ffffff;
-      background: var(--sidebar-hover);
-    }
-
-    .sidebar-link.active {
-      background: var(--sidebar-active-bg);
-      color: var(--sidebar-active-text);
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
-    }
-
-    .sidebar-badge {
-      margin-left: auto;
-      background: rgba(0, 0, 0, 0.25);
-      color: #ffffff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.15rem 0.55rem;
-      border-radius: 12px;
-      min-width: 22px;
-      text-align: center;
-    }
-
-    .sidebar-link.active .sidebar-badge {
-      background: rgba(0, 0, 0, 0.35);
-    }
-
-    .sidebar-sublink {
-      padding-left: 1.15rem;
-    }
-
-    .sidebar-footer {
-      padding: 1.25rem 1.25rem;
-      border-top: 1px solid var(--sidebar-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #060910;
-    }
-
-    .sidebar-user-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      overflow: hidden;
-    }
-
-    .sidebar-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #1e293b;
-      color: #38bdf8;
-      font-weight: 800;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .sidebar-meta {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .sidebar-user-name {
-      color: #ffffff;
-      font-size: 0.88rem;
-      font-weight: 700;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .sidebar-user-email {
-      color: #64748b;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .sidebar-logout-btn {
-      background: none;
-      border: none;
-      color: #64748b;
-      font-size: 1.15rem;
-      cursor: pointer;
-      padding: 0.4rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-
-    .sidebar-logout-btn:hover {
-      color: var(--danger);
-      transform: translateX(2px);
-    }
-
-    .sidebar-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 998;
-      display: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .sidebar-backdrop.active {
-      display: block;
-      opacity: 1;
-    }
-
-    /* ================= MAIN AREA ================= */
-    .admin-main {
-      margin-left: 270px;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .top-navbar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 90;
-    }
-
-    .nav-left-group {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-    }
-
-    .mobile-menu-toggle {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: none;
-      border: none;
-      font-size: 1.25rem;
-      color: var(--primary);
-      cursor: pointer;
-      padding: 0.4rem;
-      min-width: 40px;
-      min-height: 40px;
-    }
-
-    .breadcrumbs {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.88rem;
-      font-weight: 600;
-    }
-
-    .breadcrumbs a {
-      color: var(--text-muted);
-      text-decoration: none;
-    }
-
-    .breadcrumbs a:hover {
-      color: var(--text-main);
-    }
-
-    .breadcrumbs span {
-      color: #cbd5e1;
-    }
-
-    .breadcrumbs .current {
-      color: var(--text-main);
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .btn-action-secondary {
-      background: #f1f5f9;
-      color: var(--text-main);
-      border: 1px solid var(--border);
-      padding: 0.55rem 1rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-action-secondary:hover {
-      background: #e2e8f0;
-    }
-
-    .btn-action-primary {
-      background: var(--primary);
-      color: #ffffff;
-      border: none;
-      padding: 0.55rem 1.25rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn-action-primary:hover {
-      background: var(--primary-hover);
-    }
-
-    .btn-action-primary:disabled,
-    .btn-action-secondary:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .admin-body {
-      padding: 2rem;
-    }
-
-    .editor-layout {
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 2rem;
-      align-items: start;
-    }
-
-    .form-column {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .panel-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.75rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .panel-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .panel-title i {
-      color: var(--accent);
-      font-size: 1rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-group:last-child {
-      margin-bottom: 0;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 0.45rem;
-      color: var(--text-main);
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 0.75rem 0.95rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      color: var(--text-main);
-      outline: none;
-      background: #ffffff;
-      transition: all 0.2s;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    /* ================= QUILL WORD-COMPATIBLE EDITOR STYLES ================= */
-    .editor-wrapper {
-      background: #ffffff;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .ql-toolbar.ql-snow {
-      border: 1px solid var(--border) !important;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-      background: #f8fafc;
-      padding: 0.65rem 0.75rem;
-      font-family: inherit;
-    }
-
-    .ql-container.ql-snow {
-      border: 1px solid var(--border) !important;
-      border-top: none !important;
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.92rem;
-      background: #ffffff;
-      min-height: 200px;
-    }
-
-    .ql-editor {
-      min-height: 200px;
-      line-height: 1.65;
-      color: var(--text-main);
-      padding: 1rem;
-    }
-
-    .ql-editor.ql-blank::before {
-      color: #94a3b8;
-      font-style: normal;
-    }
-
-    .ql-editor p {
-      margin-bottom: 0.75rem;
-    }
-
-    .ql-editor h1, .ql-editor h2, .ql-editor h3 {
-      font-weight: 800;
-      margin-top: 0.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--text-main);
-    }
-
-    .ql-editor h1 { font-size: 1.55rem; }
-    .ql-editor h2 { font-size: 1.35rem; }
-    .ql-editor h3 { font-size: 1.15rem; }
-
-    .ql-editor ul, .ql-editor ol {
-      padding-left: 1.25rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .ql-editor strong, .ql-editor b {
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .editor-hint {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    /* File Dropzone */
-    .dropzone {
-      border: 2px dashed #cbd5e1;
-      border-radius: 10px;
-      padding: 2.25rem 1.5rem;
-      text-align: center;
-      background: #fafafa;
-      cursor: pointer;
-      position: relative;
-      transition: all 0.2s ease;
-    }
-
-    .dropzone.dragover {
-      border-color: var(--accent);
-      background: #eff6ff;
-    }
-
-    .dropzone i {
-      font-size: 2.4rem;
-      color: #94a3b8;
-      margin-bottom: 0.6rem;
-    }
-
-    .dropzone p {
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: #334155;
-      margin-bottom: 0.2rem;
-    }
-
-    .dropzone small {
-      font-size: 0.8rem;
-      color: #94a3b8;
-    }
-
-    .dropzone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-
-    .admin-thumbnails-grid {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-
-    .admin-thumb-preview {
-      width: 76px;
-      height: 76px;
-      border-radius: 8px;
-      border: 2px solid var(--border);
-      position: relative;
-      overflow: hidden;
-      background: #f1f5f9;
-    }
-
-    .admin-thumb-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .admin-thumb-preview .remove-thumb-btn {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background: rgba(15, 23, 42, 0.75);
-      color: #fff;
-      border: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      font-size: 0.7rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .admin-thumb-preview .remove-thumb-btn:hover {
-      background: var(--danger);
-    }
-
-    .url-input-row {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .btn-add-url {
-      padding: 0 1.25rem;
-      background: #f1f5f9;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-add-url:hover {
-      background: #e2e8f0;
-    }
-
-    .divider-text {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 1.25rem 0;
-    }
-
-    .divider-text::before,
-    .divider-text::after {
-      content: "";
-      flex: 1;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .divider-text span {
-      padding: 0 0.75rem;
-    }
-
-    .toggle-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-
-    .toggle-meta strong {
-      display: block;
-      font-size: 0.88rem;
-      color: var(--text-main);
-    }
-
-    .toggle-meta small {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 38px;
-      height: 22px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background-color: #cbd5e1;
-      transition: 0.25s;
-      border-radius: 22px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: 0.25s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: var(--success);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(16px);
-    }
-
-    .preview-column {
-      position: sticky;
-      top: 90px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .preview-card-wrap {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .preview-label-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-
-    .preview-badge-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: #dcfce7;
-      color: #15803d;
-    }
-
-    .preview-badge-status.draft {
-      background: #fef3c7;
-      color: #b45309;
-    }
-
-    .mock-store-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: var(--shadow-md);
-    }
-
-    .mock-thumb-box {
-      position: relative;
-      width: 100%;
-      height: 230px;
-      background: #f1f5f9;
-      overflow: hidden;
-    }
-
-    .mock-thumb {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .mock-badge-tag {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background: var(--primary);
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 4px 9px;
-      border-radius: 6px;
-    }
-
-    .mock-content {
-      padding: 1.25rem;
-    }
-
-    .mock-cat-tag {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
-    }
-
-    .mock-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 0.6rem;
-      line-height: 1.35;
-    }
-
-    .mock-prices {
-      display: flex;
-      align-items: baseline;
-      gap: 0.6rem;
-      margin-bottom: 1.1rem;
-    }
-
-    .mock-current-price {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .mock-old-price {
-      font-size: 0.9rem;
-      text-decoration: line-through;
-      color: #94a3b8;
-    }
-
-    .mock-btn-cart {
-      width: 100%;
-      padding: 0.75rem;
-      background: var(--primary);
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-
-    .admin-toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--primary);
-      color: #fff;
-      padding: 0.85rem 1.25rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.25s ease;
-      z-index: 2000;
-    }
-
-    .admin-toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    /* Smartphone Responsive Layout */
-    @media (max-width: 900px) {
-      .admin-sidebar {
-        transform: translateX(-100%);
-        box-shadow: 10px 0 35px rgba(0, 0, 0, 0.3);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prizam Admin | Create Product</title>
+
+    <!-- 🔒 HEARTBEAT SCRIPT -->
+    <script>
+      (function () {
+        const lastHb = localStorage.getItem("admin_heartbeat");
+        const now = Date.now();
+        if (
+          !sessionStorage.getItem("prizam_admin_logged_in") ||
+          (lastHb && now - parseInt(lastHb) > 15000)
+        ) {
+          sessionStorage.removeItem("prizam_admin_logged_in");
+          window.location.replace("login.html");
+        } else {
+          localStorage.setItem("admin_heartbeat", now.toString());
+          setInterval(() => {
+            localStorage.setItem("admin_heartbeat", Date.now().toString());
+          }, 3000);
+        }
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --sidebar-bg: #070b13;
+        --sidebar-hover: #0f172a;
+        --sidebar-border: #131b2e;
+        --sidebar-text: #94a3b8;
+        --sidebar-heading: #475569;
+        --sidebar-active-bg: #2563eb;
+        --sidebar-active-text: #ffffff;
+        --primary: #0f172a;
+        --primary-hover: #1e293b;
+        --accent: #2563eb;
+        --surface: #ffffff;
+        --bg: #f8fafc;
+        --border: #e2e8f0;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --radius: 12px;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
+        --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
       }
-
-      .admin-sidebar.active {
-        transform: translateX(0);
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        -webkit-tap-highlight-color: transparent;
       }
-
-      .admin-main {
-        margin-left: 0;
-      }
-
-      .top-navbar {
-        padding: 0 1rem;
-      }
-
-      .mobile-menu-toggle {
+      body {
+        background: var(--bg);
+        color: var(--text-main);
+        min-height: 100vh;
         display: flex;
       }
-
-      .admin-body {
-        padding: 1.25rem 1rem;
+      .admin-sidebar {
+        width: 270px;
+        background: var(--sidebar-bg);
+        color: var(--sidebar-text);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        border-right: 1px solid var(--sidebar-border);
+        user-select: none;
+        transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
       }
-
-      .breadcrumbs span:not(.current),
-      .breadcrumbs a {
+      .sidebar-header {
+        padding: 1.75rem 1.5rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+      }
+      .sidebar-brand-dot {
+        width: 9px;
+        height: 9px;
+        background-color: #38bdf8;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        flex-shrink: 0;
+      }
+      .sidebar-brand-title {
+        color: #ffffff;
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        text-decoration: none;
+      }
+      .sidebar-nav-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.5rem 1rem 1.5rem;
+      }
+      .sidebar-nav-scroll::-webkit-scrollbar {
+        width: 5px;
+      }
+      .sidebar-nav-scroll::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 4px;
+      }
+      .sidebar-section-title {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--sidebar-heading);
+        padding: 1.25rem 0.75rem 0.5rem;
+      }
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 0.75rem 0.95rem;
+        border-radius: 10px;
+        color: var(--sidebar-text);
+        text-decoration: none;
+        font-size: 0.92rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        margin-bottom: 0.2rem;
+      }
+      .sidebar-link i {
+        font-size: 1rem;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .sidebar-link:hover {
+        color: #ffffff;
+        background: var(--sidebar-hover);
+      }
+      .sidebar-link.active {
+        background: var(--sidebar-active-bg);
+        color: var(--sidebar-active-text);
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      }
+      .sidebar-badge {
+        margin-left: auto;
+        background: rgba(0, 0, 0, 0.25);
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.15rem 0.55rem;
+        border-radius: 12px;
+        min-width: 22px;
+        text-align: center;
+      }
+      .sidebar-link.active .sidebar-badge {
+        background: rgba(0, 0, 0, 0.35);
+      }
+      .sidebar-sublink {
+        padding-left: 1.15rem;
+      }
+      .sidebar-footer {
+        padding: 1.25rem 1.25rem;
+        border-top: 1px solid var(--sidebar-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #060910;
+      }
+      .sidebar-user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        overflow: hidden;
+      }
+      .sidebar-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #1e293b;
+        color: #38bdf8;
+        font-weight: 800;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .sidebar-meta {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .sidebar-user-name {
+        color: #ffffff;
+        font-size: 0.88rem;
+        font-weight: 700;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .sidebar-user-email {
+        color: #64748b;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .sidebar-logout-btn {
+        background: none;
+        border: none;
+        color: #64748b;
+        font-size: 1.15rem;
+        cursor: pointer;
+        padding: 0.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .sidebar-logout-btn:hover {
+        color: var(--danger);
+        transform: translateX(2px);
+      }
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 998;
         display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
       }
-    }
-
-    @media (max-width: 1024px) {
+      .sidebar-backdrop.active {
+        display: block;
+        opacity: 1;
+      }
+      .admin-main {
+        margin-left: 270px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .top-navbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 90;
+      }
+      .nav-left-group {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+      }
+      .mobile-menu-toggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        font-size: 1.25rem;
+        color: var(--primary);
+        cursor: pointer;
+        padding: 0.4rem;
+        min-width: 40px;
+        min-height: 40px;
+      }
+      .breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.88rem;
+        font-weight: 600;
+      }
+      .breadcrumbs a {
+        color: var(--text-muted);
+        text-decoration: none;
+      }
+      .breadcrumbs a:hover {
+        color: var(--text-main);
+      }
+      .breadcrumbs span {
+        color: #cbd5e1;
+      }
+      .breadcrumbs .current {
+        color: var(--text-main);
+      }
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .btn-action-secondary {
+        background: #f1f5f9;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        padding: 0.55rem 1rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-action-secondary:hover {
+        background: #e2e8f0;
+      }
+      .btn-action-primary {
+        background: var(--primary);
+        color: #ffffff;
+        border: none;
+        padding: 0.55rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn-action-primary:hover {
+        background: var(--primary-hover);
+      }
+      .btn-action-primary:disabled,
+      .btn-action-secondary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .admin-body {
+        padding: 2rem;
+      }
       .editor-layout {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 2rem;
+        align-items: start;
+      }
+      .form-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .panel-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.75rem;
+        box-shadow: var(--shadow-sm);
+      }
+      .panel-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .panel-title i {
+        color: var(--accent);
+        font-size: 1rem;
+      }
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+      .form-group:last-child {
+        margin-bottom: 0;
+      }
+      .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.45rem;
+        color: var(--text-main);
+      }
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 0.75rem 0.95rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        outline: none;
+        background: #ffffff;
+        transition: all 0.2s;
+      }
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      .editor-wrapper {
+        background: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .ql-toolbar.ql-snow {
+        border: 1px solid var(--border) !important;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        background: #f8fafc;
+        padding: 0.65rem 0.75rem;
+        font-family: inherit;
+      }
+      .ql-container.ql-snow {
+        border: 1px solid var(--border) !important;
+        border-top: none !important;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.92rem;
+        background: #ffffff;
+        min-height: 200px;
+      }
+      .ql-editor {
+        min-height: 200px;
+        line-height: 1.65;
+        color: var(--text-main);
+        padding: 1rem;
+      }
+      .editor-hint {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .dropzone {
+        border: 2px dashed #cbd5e1;
+        border-radius: 10px;
+        padding: 2.25rem 1.5rem;
+        text-align: center;
+        background: #fafafa;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+      }
+      .dropzone.dragover {
+        border-color: var(--accent);
+        background: #eff6ff;
+      }
+      .dropzone i {
+        font-size: 2.4rem;
+        color: #94a3b8;
+        margin-bottom: 0.6rem;
+      }
+      .dropzone p {
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 0.2rem;
+      }
+      .dropzone small {
+        font-size: 0.8rem;
+        color: #94a3b8;
+      }
+      .dropzone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .admin-thumbnails-grid {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+      }
+      .admin-thumb-preview {
+        width: 76px;
+        height: 76px;
+        border-radius: 8px;
+        border: 2px solid var(--border);
+        position: relative;
+        overflow: hidden;
+        background: #f1f5f9;
+      }
+      .admin-thumb-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .admin-thumb-preview .remove-thumb-btn {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(15, 23, 42, 0.75);
+        color: #fff;
+        border: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        font-size: 0.7rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .admin-thumb-preview .remove-thumb-btn:hover {
+        background: var(--danger);
+      }
+      .url-input-row {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .btn-add-url {
+        padding: 0 1.25rem;
+        background: #f1f5f9;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn-add-url:hover {
+        background: #e2e8f0;
+      }
+      .divider-text {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 1.25rem 0;
+      }
+      .divider-text::before,
+      .divider-text::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--border);
+      }
+      .divider-text span {
+        padding: 0 0.75rem;
+      }
+      .toggle-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem;
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      .toggle-meta strong {
+        display: block;
+        font-size: 0.88rem;
+        color: var(--text-main);
+      }
+      .toggle-meta small {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 38px;
+        height: 22px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background-color: #cbd5e1;
+        transition: 0.25s;
+        border-radius: 22px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.25s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: var(--success);
+      }
+      input:checked + .slider:before {
+        transform: translateX(16px);
       }
       .preview-column {
-        position: static;
+        position: sticky;
+        top: 90px;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
       }
-    }
-
-    @media (max-width: 640px) {
-      .form-row {
-        grid-template-columns: 1fr;
+      .preview-card-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-sm);
       }
-      .top-actions .btn-action-secondary {
-        display: none;
+      .preview-label-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
       }
-    }
-  </style>
-  <link rel="stylesheet" href="../assets/css/responsive.css" />
-</head>
-<body>
-
-  <!-- Backdrop overlay for mobile drawer -->
-  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-
-  <!-- ================= 1. PRECISION DARK SIDEBAR ================= -->
-  <aside class="admin-sidebar" id="adminSidebar">
-    <div class="sidebar-header">
-      <span class="sidebar-brand-dot"></span>
-      <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
-    </div>
-
-    <div class="sidebar-nav-scroll">
-      <div class="sidebar-section-title">Storefront Catalog</div>
-
-      <a href="index.html" class="sidebar-link">
-        <i class="fa-solid fa-boxes-stacked"></i>
-        <span>Products</span>
-        <span class="sidebar-badge" id="sideBadgeProducts">0</span>
-      </a>
-
-      <a href="index.html?filter=published" class="sidebar-link sidebar-sublink">
-        <i class="fa-solid fa-circle-check"></i>
-        <span>Publish</span>
-      </a>
-
-      <a href="index.html?filter=draft" class="sidebar-link sidebar-sublink">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>Draft</span>
-      </a>
-
-      <a href="add-product.html" class="sidebar-link active">
-        <i class="fa-solid fa-circle-plus"></i>
-        <span>Add New Product</span>
-      </a>
-
-      <div class="sidebar-section-title">Management & Sales</div>
-
-      <a href="brochures.html" class="sidebar-link">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>Brochures</span>
-      </a>
-
-      <a href="orders.html" class="sidebar-link">
-        <i class="fa-solid fa-truck-ramp-box"></i>
-        <span>Orders</span>
-        <span class="sidebar-badge" id="sideBadgeOrders">0</span>
-      </a>
-
-      <a href="returns.html" class="sidebar-link">
-        <i class="fa-solid fa-rotate-left"></i>
-        <span>Returns</span>
-      </a>
-
-      <a href="inquiries.html" class="sidebar-link">
-        <i class="fa-solid fa-envelope-open-text"></i>
-        <span>Contact Request</span>
-      </a>
-
-      <a href="analytics.html" class="sidebar-link">
-        <i class="fa-solid fa-chart-pie"></i>
-        <span>Store Analysis</span>
-      </a>
-
-      <a href="settings.html" class="sidebar-link">
-        <i class="fa-solid fa-gears"></i>
-        <span>System Maintenance</span>
-      </a>
-
-      <div class="sidebar-section-title">Live Preview</div>
-
-      <a href="../index.html" target="_blank" class="sidebar-link">
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        <span>Live Preview</span>
-      </a>
-    </div>
-
-    <div class="sidebar-footer">
-      <div class="sidebar-user-info">
-        <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
-        <div class="sidebar-meta">
-          <span class="sidebar-user-name" id="sideUserName">Administrator</span>
-          <span class="sidebar-user-email" id="sideUserEmail">admin@prizam.com</span>
-        </div>
-      </div>
-      <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-      </button>
-    </div>
-  </aside>
-
-  <!-- ================= 2. MAIN WORKSPACE ================= -->
-  <main class="admin-main">
-
-    <!-- Top Navbar -->
-    <header class="top-navbar">
-      <div class="nav-left-group">
-        <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
-          <i class="fa-solid fa-bars" id="menuIcon"></i>
-        </button>
-
-        <div class="breadcrumbs">
-          <a href="index.html">Catalog</a>
-          <span>/</span>
-          <span class="current">Add Product</span>
-        </div>
-      </div>
-
-      <div class="top-actions">
-        <a href="index.html" class="btn-action-secondary">
-          <i class="fa-solid fa-xmark"></i> Cancel
-        </a>
-        <button type="button" class="btn-action-secondary" id="saveDraftBtn">
-          <i class="fa-regular fa-file"></i> Save as Draft
-        </button>
-        <button type="button" class="btn-action-primary" id="topPublishBtn">
-          <i class="fa-solid fa-cloud-arrow-up"></i> Publish Listing
-        </button>
-      </div>
-    </header>
-
-    <!-- Workspace -->
-    <div class="admin-body">
-      <form id="productEntryForm" onsubmit="return false;">
-        <div class="editor-layout">
-
-          <!-- Left Column -->
-          <div class="form-column">
-
-            <!-- Panel 1: Info & MS Word-Compatible Rich Description -->
-            <div class="panel-card">
-              <div class="panel-title">
-                <i class="fa-solid fa-tag"></i> General Information
-              </div>
-
-              <div class="form-group">
-                <label for="pTitle">Product Name</label>
-                <input type="text" id="pTitle" placeholder="e.g. Linear Shower Drain 600mm" required />
-              </div>
-
-              <!-- Rich Text Description (MS Word Paste, Bold, Sizes, Headings, Lists) -->
-              <div class="form-group">
-                <label>Product Description (Formatted Text / Paste from Word)</label>
-                <div class="editor-wrapper">
-                  <div id="pDescriptionEditor"></div>
-                </div>
-                <div class="editor-hint">
-                  <i class="fa-solid fa-circle-info"></i>
-                  <span>Supports direct copy-paste from MS Word. Retains bold, paragraphs, font sizes, headings, and bullet points automatically.</span>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="pCategory">Category</label>
-                  <select id="pCategory">
-                    <option value="Bathroom Drains">Bathroom Drains</option>
-                    <option value="Kitchen Drains">Kitchen Drains</option>
-                    <option value="Outdoor Drains">Outdoor Drains</option>
-                    <option value="Accessories">Accessories</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="pMaterial">Material Grade</label>
-                  <select id="pMaterial">
-                    <option value="304 Stainless Steel">304 Stainless Steel</option>
-                    <option value="Solid Brass">Solid Brass</option>
-                    <option value="ABS Polymer">ABS Polymer</option>
-                    <option value="Cast Iron">Cast Iron</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <!-- Panel 2: Multi-Image Photography Support -->
-            <div class="panel-card">
-              <div class="panel-title">
-                <i class="fa-solid fa-images"></i> Product Photography (Multiple Thumbnails)
-              </div>
-
-              <div class="dropzone" id="dropzoneBox">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <p>Drag & drop multiple product images here (Cover + Gallery)</p>
-                <small>PNG, JPG, or WEBP (Multiple selection supported)</small>
-                <input type="file" id="fileInput" accept="image/*" multiple />
-              </div>
-
-              <div class="divider-text">
-                <span>OR ADD DIRECT IMAGE URLS</span>
-              </div>
-
-              <div class="form-group">
-                <div class="url-input-row">
-                  <input type="url" id="pDirectUrl" placeholder="https://images.unsplash.com/..." />
-                  <button type="button" class="btn-add-url" id="addUrlBtn">Add URL</button>
-                </div>
-              </div>
-
-              <div class="admin-thumbnails-grid" id="adminThumbnailsGrid"></div>
-            </div>
-
-            <!-- Panel 3: Specs -->
-            <div class="panel-card">
-              <div class="panel-title">
-                <i class="fa-solid fa-indian-rupee-sign"></i> Pricing & Specifications
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="pPrice">Selling Price (₹)</label>
-                  <input type="number" id="pPrice" placeholder="2499" min="0" required />
-                </div>
-                <div class="form-group">
-                  <label for="pOldPrice">Original / MRP (₹)</label>
-                  <input type="number" id="pOldPrice" placeholder="3499" min="0" />
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="pDimensions">Dimensions</label>
-                  <input type="text" id="pDimensions" placeholder="600mm x 70mm x 20mm" />
-                </div>
-                <div class="form-group">
-                  <label for="pFlowRate">Discharge Flow Rate</label>
-                  <input type="text" id="pFlowRate" placeholder="40 L/min" />
-                </div>
-              </div>
-            </div>
-
-            <!-- Panel 4: Section Controls -->
-            <div class="panel-card">
-              <div class="panel-title">
-                <i class="fa-solid fa-sliders"></i> Storefront Section Control
-              </div>
-
-              <div class="toggle-list">
-                <div class="toggle-row">
-                  <div class="toggle-meta">
-                    <strong>Feature in "Top Picks"</strong>
-                    <small>Showcase prominently on the homepage hero row</small>
-                  </div>
-                  <label class="switch">
-                    <input type="checkbox" id="flagTopPick" />
-                    <span class="slider"></span>
-                  </label>
-                </div>
-
-                <div class="toggle-row">
-                  <div class="toggle-meta">
-                    <strong>Feature in "Best Sellers"</strong>
-                    <small>Highlight in high-conversion sales sections</small>
-                  </div>
-                  <label class="switch">
-                    <input type="checkbox" id="flagTopSeller" />
-                    <span class="slider"></span>
-                  </label>
-                </div>
-
-                <div class="toggle-row">
-                  <div class="toggle-meta">
-                    <strong>Feature in "Upcoming Catalog"</strong>
-                    <small>Pre-launch exhibition badge for arriving stock</small>
-                  </div>
-                  <label class="switch">
-                    <input type="checkbox" id="flagUpcoming" />
-                    <span class="slider"></span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Right Column: Live Card Preview -->
-          <div class="preview-column">
-            <div class="preview-card-wrap">
-              <div class="preview-label-header">
-                <span style="font-size: 0.88rem; font-weight: 700; color: var(--text-muted);">LIVE CARD PREVIEW</span>
-                <span class="preview-badge-status" id="previewStatusBadge">Published</span>
-              </div>
-
-              <div class="mock-store-card">
-                <div class="mock-thumb-box">
-                  <span class="mock-badge-tag" id="previewCardBadge">Featured</span>
-                  <img class="mock-thumb" id="previewCardImg" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80" alt="Preview" />
-                </div>
-                <div class="mock-content">
-                  <div class="mock-cat-tag" id="previewCardCategory">Bathroom Drains</div>
-                  <h4 class="mock-title" id="previewCardTitle">Linear Shower Drain 600mm</h4>
-                  <div class="mock-prices">
-                    <span class="mock-current-price" id="previewCardPrice">₹2,499</span>
-                    <span class="mock-old-price" id="previewCardOldPrice">₹3,499</span>
-                  </div>
-                  <button type="button" class="mock-btn-cart">Add to Cart</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </form>
-    </div>
-  </main>
-
-  <div class="admin-toast" id="adminToast">Product saved</div>
-
-  <!-- Quill JS Core Engine -->
-  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-
-  <!-- Primary Firestore Cloud Controller & Real-Time Sync -->
-  <script type="module">
-    import { db, auth } from "../assets/js/firebase-config.js";
-    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-    import { 
-      doc, 
-      setDoc, 
-      collection, 
-      onSnapshot 
-    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-
-    // 1. Authentication Check
-    if (localStorage.getItem("prizam_admin_logged_in") !== "true") {
-      window.location.href = "login.html";
-    }
-
-    // 2. Initialize Quill Rich Text Editor (Word-Paste & Styling Compatible)
-    const quill = new Quill('#pDescriptionEditor', {
-      theme: 'snow',
-      placeholder: 'Write description or paste directly from Microsoft Word / Google Docs (bold, big/small text, paragraphs and bullets are preserved)...',
-      modules: {
-        toolbar: [
-          [{ 'header': [1, 2, 3, false] }],
-          [{ 'size': ['small', false, 'large', 'huge'] }],
-          ['bold', 'italic', 'underline', 'strike'],
-          [{ 'color': [] }, { 'background': [] }],
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-          [{ 'align': [] }],
-          ['clean']
-        ]
+      .preview-badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: #dcfce7;
+        color: #15803d;
       }
-    });
-
-    // Mobile Navigation Drawer Toggle Handler
-    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-    const adminSidebar = document.getElementById("adminSidebar");
-    const sidebarBackdrop = document.getElementById("sidebarBackdrop");
-    const menuIcon = document.getElementById("menuIcon");
-
-    function toggleMobileMenu() {
-      const isOpen = adminSidebar.classList.toggle("active");
-      sidebarBackdrop.classList.toggle("active", isOpen);
-      menuIcon.className = isOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars";
-    }
-
-    if (mobileMenuBtn) {
-      mobileMenuBtn.addEventListener("click", toggleMobileMenu);
-    }
-    if (sidebarBackdrop) {
-      sidebarBackdrop.addEventListener("click", toggleMobileMenu);
-    }
-
-    // Auto-close drawer on link click in mobile view
-    document.querySelectorAll(".sidebar-link").forEach(link => {
-      link.addEventListener("click", () => {
-        if (window.innerWidth <= 900) {
-          adminSidebar.classList.remove("active");
-          sidebarBackdrop.classList.remove("active");
-          menuIcon.className = "fa-solid fa-bars";
+      .preview-badge-status.draft {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .mock-store-card {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+      }
+      .mock-thumb-box {
+        position: relative;
+        width: 100%;
+        height: 230px;
+        background: #f1f5f9;
+        overflow: hidden;
+      }
+      .mock-thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .mock-badge-tag {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: var(--primary);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 4px 9px;
+        border-radius: 6px;
+      }
+      .mock-content {
+        padding: 1.25rem;
+      }
+      .mock-cat-tag {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 0.3rem;
+      }
+      .mock-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 0.6rem;
+        line-height: 1.35;
+      }
+      .mock-prices {
+        display: flex;
+        align-items: baseline;
+        gap: 0.6rem;
+        margin-bottom: 1.1rem;
+      }
+      .mock-current-price {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--text-main);
+      }
+      .mock-old-price {
+        font-size: 0.9rem;
+        text-decoration: line-through;
+        color: #94a3b8;
+      }
+      .mock-btn-cart {
+        width: 100%;
+        padding: 0.75rem;
+        background: var(--primary);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+      }
+      .admin-toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--primary);
+        color: #fff;
+        padding: 0.85rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.25s ease;
+        z-index: 2000;
+      }
+      .admin-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .auth-gate-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 5000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.75rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+      @media (max-width: 900px) {
+        .admin-sidebar {
+          transform: translateX(-100%);
+          box-shadow: 10px 0 35px rgba(0, 0, 0, 0.3);
         }
-      });
-    });
-
-    // Input fields
-    const pTitle = document.getElementById("pTitle");
-    const pCategory = document.getElementById("pCategory");
-    const pMaterial = document.getElementById("pMaterial");
-    const pPrice = document.getElementById("pPrice");
-    const pOldPrice = document.getElementById("pOldPrice");
-    const pDimensions = document.getElementById("pDimensions");
-    const pFlowRate = document.getElementById("pFlowRate");
-    const flagTopPick = document.getElementById("flagTopPick");
-    const flagTopSeller = document.getElementById("flagTopSeller");
-    const flagUpcoming = document.getElementById("flagUpcoming");
-
-    // Multi-Image Upload fields
-    const fileInput = document.getElementById("fileInput");
-    const dropzoneBox = document.getElementById("dropzoneBox");
-    const directUrlInput = document.getElementById("pDirectUrl");
-    const addUrlBtn = document.getElementById("addUrlBtn");
-    const adminThumbnailsGrid = document.getElementById("adminThumbnailsGrid");
-
-    // Preview fields
-    const previewTitle = document.getElementById("previewCardTitle");
-    const previewCategory = document.getElementById("previewCardCategory");
-    const previewPrice = document.getElementById("previewCardPrice");
-    const previewOldPrice = document.getElementById("previewCardOldPrice");
-    const previewBadge = document.getElementById("previewCardBadge");
-    const previewImg = document.getElementById("previewCardImg");
-    const previewStatusBadge = document.getElementById("previewStatusBadge");
-
-    // Action buttons
-    const topPublishBtn = document.getElementById("topPublishBtn");
-    const saveDraftBtn = document.getElementById("saveDraftBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const toast = document.getElementById("adminToast");
-
-    let productImages = [
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80"
-    ];
-    let currentPublicationStatus = "published";
-
-    function showToast(msg) {
-      toast.textContent = msg;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 2200);
-    }
-
-    // Live Badge Counter Streams for Sidebar
-    onSnapshot(collection(db, "products"), (snap) => {
-      const b = document.getElementById("sideBadgeProducts");
-      if (b) b.textContent = snap.size;
-    }, () => {});
-
-    onSnapshot(collection(db, "orders"), (snap) => {
-      const b = document.getElementById("sideBadgeOrders");
-      if (b) b.textContent = snap.size;
-    }, () => {});
-
-    // Profile listener
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("sideUserName").textContent = user.displayName || "Administrator";
-        document.getElementById("sideUserEmail").textContent = user.email || "admin@prizam.com";
-        const initials = (user.displayName || user.email || "AD").substring(0, 2).toUpperCase();
-        document.getElementById("sideUserAvatar").textContent = initials;
+        .admin-sidebar.active {
+          transform: translateX(0);
+        }
+        .admin-main {
+          margin-left: 0;
+        }
+        .top-navbar {
+          padding: 0 1rem;
+        }
+        .mobile-menu-toggle {
+          display: flex;
+        }
+        .admin-body {
+          padding: 1.25rem 1rem;
+        }
+        .breadcrumbs span:not(.current),
+        .breadcrumbs a {
+          display: none;
+        }
       }
-    });
+      @media (max-width: 1024px) {
+        .editor-layout {
+          grid-template-columns: 1fr;
+        }
+        .preview-column {
+          position: static;
+        }
+      }
+      @media (max-width: 640px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .top-actions .btn-action-secondary {
+          display: none;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+  </head>
+  <body>
+    <!-- 🔒 OVERLAY -->
+    <div class="auth-gate-overlay" id="authGateOverlay">
+      <i
+        class="fa-solid fa-spinner fa-spin"
+        style="font-size: 1.4rem; color: var(--primary)"
+      ></i>
+      <span>Verifying admin session...</span>
+    </div>
 
-    // Render Admin Gallery Previews
-    function renderAdminGallery() {
-      adminThumbnailsGrid.innerHTML = "";
-      productImages.forEach((imgSrc, index) => {
-        const thumbDiv = document.createElement("div");
-        thumbDiv.className = "admin-thumb-preview";
-        thumbDiv.innerHTML = `
-          <img src="${imgSrc}" alt="Thumb ${index + 1}" />
-          <button type="button" class="remove-thumb-btn" data-index="${index}" title="Remove image">
-            <i class="fa-solid fa-xmark"></i>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-brand-dot"></span>
+        <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
+      </div>
+      <div class="sidebar-nav-scroll">
+        <div class="sidebar-section-title">Storefront Catalog</div>
+        <a href="index.html" class="sidebar-link"
+          ><i class="fa-solid fa-boxes-stacked"></i><span>Products</span
+          ><span class="sidebar-badge" id="sideBadgeProducts">0</span></a
+        >
+        <a
+          href="index.html?filter=published"
+          class="sidebar-link sidebar-sublink"
+          ><i class="fa-solid fa-circle-check"></i><span>Publish</span></a
+        >
+        <a href="index.html?filter=draft" class="sidebar-link sidebar-sublink"
+          ><i class="fa-solid fa-file-lines"></i><span>Draft</span></a
+        >
+        <a href="add-product.html" class="sidebar-link active"
+          ><i class="fa-solid fa-circle-plus"></i
+          ><span>Add New Product</span></a
+        >
+        <div class="sidebar-section-title">Management & Sales</div>
+        <a href="brochures.html" class="sidebar-link"
+          ><i class="fa-solid fa-file-lines"></i><span>Brochures</span></a
+        >
+        <a href="orders.html" class="sidebar-link"
+          ><i class="fa-solid fa-truck-ramp-box"></i><span>Orders</span
+          ><span class="sidebar-badge" id="sideBadgeOrders">0</span></a
+        >
+        <a href="returns.html" class="sidebar-link"
+          ><i class="fa-solid fa-rotate-left"></i><span>Returns</span></a
+        >
+        <a href="inquiries.html" class="sidebar-link"
+          ><i class="fa-solid fa-envelope-open-text"></i
+          ><span>Contact Request</span></a
+        >
+        <a href="analytics.html" class="sidebar-link"
+          ><i class="fa-solid fa-chart-pie"></i><span>Store Analysis</span></a
+        >
+        <a href="settings.html" class="sidebar-link"
+          ><i class="fa-solid fa-gears"></i><span>System Maintenance</span></a
+        >
+        <div class="sidebar-section-title">Live Preview</div>
+        <a href="../index.html" target="_blank" class="sidebar-link"
+          ><i class="fa-solid fa-arrow-up-right-from-square"></i
+          ><span>Live Preview</span></a
+        >
+      </div>
+      <div class="sidebar-footer">
+        <div class="sidebar-user-info">
+          <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
+          <div class="sidebar-meta">
+            <span class="sidebar-user-name" id="sideUserName"
+              >Administrator</span
+            >
+            <span class="sidebar-user-email" id="sideUserEmail"
+              >admin@prizam.com</span
+            >
+          </div>
+        </div>
+        <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="top-navbar">
+        <div class="nav-left-group">
+          <button
+            class="mobile-menu-toggle"
+            id="mobileMenuBtn"
+            aria-label="Toggle Navigation Menu"
+          >
+            <i class="fa-solid fa-bars" id="menuIcon"></i>
           </button>
-        `;
-        adminThumbnailsGrid.appendChild(thumbDiv);
+          <div class="breadcrumbs">
+            <a href="index.html">Catalog</a><span>/</span
+            ><span class="current">Add Product</span>
+          </div>
+        </div>
+        <div class="top-actions">
+          <a href="index.html" class="btn-action-secondary"
+            ><i class="fa-solid fa-xmark"></i> Cancel</a
+          >
+          <button type="button" class="btn-action-secondary" id="saveDraftBtn">
+            <i class="fa-regular fa-file"></i> Save as Draft
+          </button>
+          <button type="button" class="btn-action-primary" id="topPublishBtn">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Publish Listing
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-body">
+        <form id="productEntryForm" onsubmit="return false;">
+          <div class="editor-layout">
+            <div class="form-column">
+              <div class="panel-card">
+                <div class="panel-title">
+                  <i class="fa-solid fa-tag"></i> General Information
+                </div>
+                <div class="form-group">
+                  <label for="pTitle">Product Name</label>
+                  <input
+                    type="text"
+                    id="pTitle"
+                    placeholder="e.g. Linear Shower Drain 600mm"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label
+                    >Product Description (Formatted Text / Paste from
+                    Word)</label
+                  >
+                  <div class="editor-wrapper">
+                    <div id="pDescriptionEditor"></div>
+                  </div>
+                  <div class="editor-hint">
+                    <i class="fa-solid fa-circle-info"></i
+                    ><span
+                      >Supports direct copy-paste from MS Word. Retains bold,
+                      paragraphs, font sizes, headings, and bullet points
+                      automatically.</span
+                    >
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="pCategory">Category</label>
+                    <select id="pCategory">
+                      <option value="Bathroom Drains">Bathroom Drains</option>
+                      <option value="Kitchen Drains">Kitchen Drains</option>
+                      <option value="Outdoor Drains">Outdoor Drains</option>
+                      <option value="Accessories">Accessories</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="pMaterial">Material Grade</label>
+                    <select id="pMaterial">
+                      <option value="304 Stainless Steel">
+                        304 Stainless Steel
+                      </option>
+                      <option value="Solid Brass">Solid Brass</option>
+                      <option value="ABS Polymer">ABS Polymer</option>
+                      <option value="Cast Iron">Cast Iron</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-card">
+                <div class="panel-title">
+                  <i class="fa-solid fa-images"></i> Product Photography
+                  (Multiple Thumbnails)
+                </div>
+                <div class="dropzone" id="dropzoneBox">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <p>
+                    Drag & drop multiple product images here (Cover + Gallery)
+                  </p>
+                  <small
+                    >PNG, JPG, or WEBP (Multiple selection supported)</small
+                  >
+                  <input type="file" id="fileInput" accept="image/*" multiple />
+                </div>
+                <div class="divider-text">
+                  <span>OR ADD DIRECT IMAGE URLS</span>
+                </div>
+                <div class="form-group">
+                  <div class="url-input-row">
+                    <input
+                      type="url"
+                      id="pDirectUrl"
+                      placeholder="https://images.unsplash.com/..."
+                    />
+                    <button type="button" class="btn-add-url" id="addUrlBtn">
+                      Add URL
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="admin-thumbnails-grid"
+                  id="adminThumbnailsGrid"
+                ></div>
+              </div>
+
+              <div class="panel-card">
+                <div class="panel-title">
+                  <i class="fa-solid fa-indian-rupee-sign"></i> Pricing &
+                  Specifications
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="pPrice">Selling Price (₹)</label>
+                    <input
+                      type="number"
+                      id="pPrice"
+                      placeholder="2499"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="pOldPrice">Original / MRP (₹)</label>
+                    <input
+                      type="number"
+                      id="pOldPrice"
+                      placeholder="3499"
+                      min="0"
+                    />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="pDimensions">Dimensions</label>
+                    <input
+                      type="text"
+                      id="pDimensions"
+                      placeholder="600mm x 70mm x 20mm"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="pFlowRate">Discharge Flow Rate</label>
+                    <input type="text" id="pFlowRate" placeholder="40 L/min" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-card">
+                <div class="panel-title">
+                  <i class="fa-solid fa-sliders"></i> Storefront Section Control
+                </div>
+                <div class="toggle-list">
+                  <div class="toggle-row">
+                    <div class="toggle-meta">
+                      <strong>Feature in "Top Picks"</strong
+                      ><small
+                        >Showcase prominently on the homepage hero row</small
+                      >
+                    </div>
+                    <label class="switch"
+                      ><input type="checkbox" id="flagTopPick" /><span
+                        class="slider"
+                      ></span
+                    ></label>
+                  </div>
+                  <div class="toggle-row">
+                    <div class="toggle-meta">
+                      <strong>Feature in "Best Sellers"</strong
+                      ><small
+                        >Highlight in high-conversion sales sections</small
+                      >
+                    </div>
+                    <label class="switch"
+                      ><input type="checkbox" id="flagTopSeller" /><span
+                        class="slider"
+                      ></span
+                    ></label>
+                  </div>
+                  <div class="toggle-row">
+                    <div class="toggle-meta">
+                      <strong>Feature in "Upcoming Catalog"</strong
+                      ><small
+                        >Pre-launch exhibition badge for arriving stock</small
+                      >
+                    </div>
+                    <label class="switch"
+                      ><input type="checkbox" id="flagUpcoming" /><span
+                        class="slider"
+                      ></span
+                    ></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-column">
+              <div class="preview-card-wrap">
+                <div class="preview-label-header">
+                  <span
+                    style="
+                      font-size: 0.88rem;
+                      font-weight: 700;
+                      color: var(--text-muted);
+                    "
+                    >LIVE CARD PREVIEW</span
+                  >
+                  <span class="preview-badge-status" id="previewStatusBadge"
+                    >Published</span
+                  >
+                </div>
+                <div class="mock-store-card">
+                  <div class="mock-thumb-box">
+                    <span class="mock-badge-tag" id="previewCardBadge"
+                      >Featured</span
+                    >
+                    <img
+                      class="mock-thumb"
+                      id="previewCardImg"
+                      src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80"
+                      alt="Preview"
+                    />
+                  </div>
+                  <div class="mock-content">
+                    <div class="mock-cat-tag" id="previewCardCategory">
+                      Bathroom Drains
+                    </div>
+                    <h4 class="mock-title" id="previewCardTitle">
+                      Linear Shower Drain 600mm
+                    </h4>
+                    <div class="mock-prices">
+                      <span class="mock-current-price" id="previewCardPrice"
+                        >₹2,499</span
+                      >
+                      <span class="mock-old-price" id="previewCardOldPrice"
+                        >₹3,499</span
+                      >
+                    </div>
+                    <button type="button" class="mock-btn-cart">
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <div class="admin-toast" id="adminToast">Product saved</div>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script type="module">
+      import { db, auth } from "../assets/js/firebase-config.js";
+      import {
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+      import {
+        doc,
+        setDoc,
+        collection,
+        onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+      // 🔒 AUTH GUARD & OVERLAY REMOVER
+      onAuthStateChanged(auth, (user) => {
+        if (!user || user.email !== "admin@prizam.com") {
+          sessionStorage.removeItem("prizam_admin_logged_in");
+          window.location.replace("login.html");
+          return;
+        }
+        const authGateOverlay = document.getElementById("authGateOverlay");
+        if (authGateOverlay) authGateOverlay.style.display = "none";
+
+        document.getElementById("sideUserName").textContent =
+          user.displayName || "Administrator";
+        document.getElementById("sideUserEmail").textContent =
+          user.email || "admin@prizam.com";
+        const initials = (user.displayName || user.email || "AD")
+          .substring(0, 2)
+          .toUpperCase();
+        document.getElementById("sideUserAvatar").textContent = initials;
       });
 
-      if (productImages.length > 0) {
-        previewImg.src = productImages[0];
-      }
+      const quill = new Quill("#pDescriptionEditor", {
+        theme: "snow",
+        placeholder:
+          "Write description or paste directly from Microsoft Word / Google Docs...",
+        modules: {
+          toolbar: [
+            [{ header: [1, 2, 3, false] }],
+            [{ size: ["small", false, "large", "huge"] }],
+            ["bold", "italic", "underline", "strike"],
+            [{ color: [] }, { background: [] }],
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ align: [] }],
+            ["clean"],
+          ],
+        },
+      });
 
-      adminThumbnailsGrid.querySelectorAll(".remove-thumb-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const idx = Number(btn.getAttribute("data-index"));
-          productImages.splice(idx, 1);
-          if (productImages.length === 0) {
-            productImages.push("https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80");
+      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+      const adminSidebar = document.getElementById("adminSidebar");
+      const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+      const menuIcon = document.getElementById("menuIcon");
+      function toggleMobileMenu() {
+        const isOpen = adminSidebar.classList.toggle("active");
+        sidebarBackdrop.classList.toggle("active", isOpen);
+        menuIcon.className = isOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+      }
+      if (mobileMenuBtn)
+        mobileMenuBtn.addEventListener("click", toggleMobileMenu);
+      if (sidebarBackdrop)
+        sidebarBackdrop.addEventListener("click", toggleMobileMenu);
+
+      document.querySelectorAll(".sidebar-link").forEach((link) => {
+        link.addEventListener("click", () => {
+          if (window.innerWidth <= 900) {
+            adminSidebar.classList.remove("active");
+            sidebarBackdrop.classList.remove("active");
+            menuIcon.className = "fa-solid fa-bars";
           }
-          renderAdminGallery();
         });
       });
-    }
 
-    // Live Card Synchronization
-    function updatePreview() {
-      previewTitle.textContent = pTitle.value.trim() || "Linear Shower Drain 600mm";
-      previewCategory.textContent = pCategory.value;
-      previewPrice.textContent = pPrice.value ? "₹" + Number(pPrice.value).toLocaleString() : "₹2,499";
-      previewOldPrice.textContent = pOldPrice.value ? "₹" + Number(pOldPrice.value).toLocaleString() : "";
+      const pTitle = document.getElementById("pTitle"),
+        pCategory = document.getElementById("pCategory"),
+        pMaterial = document.getElementById("pMaterial"),
+        pPrice = document.getElementById("pPrice"),
+        pOldPrice = document.getElementById("pOldPrice"),
+        pDimensions = document.getElementById("pDimensions"),
+        pFlowRate = document.getElementById("pFlowRate"),
+        flagTopPick = document.getElementById("flagTopPick"),
+        flagTopSeller = document.getElementById("flagTopSeller"),
+        flagUpcoming = document.getElementById("flagUpcoming");
+      const fileInput = document.getElementById("fileInput"),
+        dropzoneBox = document.getElementById("dropzoneBox"),
+        directUrlInput = document.getElementById("pDirectUrl"),
+        addUrlBtn = document.getElementById("addUrlBtn"),
+        adminThumbnailsGrid = document.getElementById("adminThumbnailsGrid");
+      const previewTitle = document.getElementById("previewCardTitle"),
+        previewCategory = document.getElementById("previewCardCategory"),
+        previewPrice = document.getElementById("previewCardPrice"),
+        previewOldPrice = document.getElementById("previewCardOldPrice"),
+        previewBadge = document.getElementById("previewCardBadge"),
+        previewImg = document.getElementById("previewCardImg"),
+        previewStatusBadge = document.getElementById("previewStatusBadge");
+      const topPublishBtn = document.getElementById("topPublishBtn"),
+        saveDraftBtn = document.getElementById("saveDraftBtn"),
+        logoutBtn = document.getElementById("logoutBtn"),
+        toast = document.getElementById("adminToast");
 
-      if (flagTopPick.checked) previewBadge.textContent = "Top Pick";
-      else if (flagTopSeller.checked) previewBadge.textContent = "Best Seller";
-      else if (flagUpcoming.checked) previewBadge.textContent = "Upcoming";
-      else previewBadge.textContent = "Featured";
+      let productImages = [
+        "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
+      ];
+      let currentPublicationStatus = "published";
 
-      previewStatusBadge.textContent = currentPublicationStatus === "published" ? "Published" : "Draft";
-      previewStatusBadge.className = "preview-badge-status " + currentPublicationStatus;
-    }
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2200);
+      }
 
-    [pTitle, pCategory, pPrice, pOldPrice, flagTopPick, flagTopSeller, flagUpcoming].forEach(el => {
-      el.addEventListener("input", updatePreview);
-      el.addEventListener("change", updatePreview);
-    });
+      onSnapshot(
+        collection(db, "products"),
+        (snap) => {
+          const b = document.getElementById("sideBadgeProducts");
+          if (b) b.textContent = snap.size;
+        },
+        () => {},
+      );
+      onSnapshot(
+        collection(db, "orders"),
+        (snap) => {
+          const b = document.getElementById("sideBadgeOrders");
+          if (b) b.textContent = snap.size;
+        },
+        () => {},
+      );
 
-    // Handle Image Files
-    function processSelectedFiles(files) {
-      Array.from(files).forEach(file => {
-        if (file && file.type.startsWith("image/")) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            productImages.push(e.target.result);
-            renderAdminGallery();
-          };
-          reader.readAsDataURL(file);
-        }
+      function renderAdminGallery() {
+        adminThumbnailsGrid.innerHTML = "";
+        productImages.forEach((imgSrc, index) => {
+          const thumbDiv = document.createElement("div");
+          thumbDiv.className = "admin-thumb-preview";
+          thumbDiv.innerHTML = `<img src="${imgSrc}" alt="Thumb" /><button type="button" class="remove-thumb-btn" data-index="${index}"><i class="fa-solid fa-xmark"></i></button>`;
+          adminThumbnailsGrid.appendChild(thumbDiv);
+        });
+        if (productImages.length > 0) previewImg.src = productImages[0];
+        adminThumbnailsGrid
+          .querySelectorAll(".remove-thumb-btn")
+          .forEach((btn) => {
+            btn.addEventListener("click", () => {
+              productImages.splice(Number(btn.getAttribute("data-index")), 1);
+              if (productImages.length === 0)
+                productImages.push(
+                  "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
+                );
+              renderAdminGallery();
+            });
+          });
+      }
+
+      function updatePreview() {
+        previewTitle.textContent =
+          pTitle.value.trim() || "Linear Shower Drain 600mm";
+        previewCategory.textContent = pCategory.value;
+        previewPrice.textContent = pPrice.value
+          ? "₹" + Number(pPrice.value).toLocaleString()
+          : "₹2,499";
+        previewOldPrice.textContent = pOldPrice.value
+          ? "₹" + Number(pOldPrice.value).toLocaleString()
+          : "";
+        if (flagTopPick.checked) previewBadge.textContent = "Top Pick";
+        else if (flagTopSeller.checked)
+          previewBadge.textContent = "Best Seller";
+        else if (flagUpcoming.checked) previewBadge.textContent = "Upcoming";
+        else previewBadge.textContent = "Featured";
+        previewStatusBadge.textContent =
+          currentPublicationStatus === "published" ? "Published" : "Draft";
+        previewStatusBadge.className =
+          "preview-badge-status " + currentPublicationStatus;
+      }
+
+      [
+        pTitle,
+        pCategory,
+        pPrice,
+        pOldPrice,
+        flagTopPick,
+        flagTopSeller,
+        flagUpcoming,
+      ].forEach((el) => {
+        el.addEventListener("input", updatePreview);
+        el.addEventListener("change", updatePreview);
       });
-    }
 
-    fileInput.addEventListener("change", (e) => {
-      if (e.target.files && e.target.files.length > 0) {
-        processSelectedFiles(e.target.files);
-      }
-    });
-
-    dropzoneBox.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      dropzoneBox.classList.add("dragover");
-    });
-    dropzoneBox.addEventListener("dragleave", () => dropzoneBox.classList.remove("dragover"));
-    dropzoneBox.addEventListener("drop", (e) => {
-      e.preventDefault();
-      dropzoneBox.classList.remove("dragover");
-      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-        processSelectedFiles(e.dataTransfer.files);
-      }
-    });
-
-    // Add Direct URL to Gallery
-    addUrlBtn.addEventListener("click", () => {
-      const url = directUrlInput.value.trim();
-      if (url.startsWith("http")) {
-        productImages.push(url);
-        directUrlInput.value = "";
-        renderAdminGallery();
-      } else {
-        alert("Please enter a valid image URL starting with http.");
-      }
-    });
-
-    // Save Product Directly to Firestore with HTML formatting preserved
-    async function handleSave(status) {
-      currentPublicationStatus = status;
-      updatePreview();
-
-      const title = pTitle.value.trim();
-      const price = Number(pPrice.value);
-
-      if (!title) {
-        alert("Please enter a product title.");
-        pTitle.focus();
-        return;
-      }
-      if (!price || isNaN(price)) {
-        alert("Please enter a valid price.");
-        pPrice.focus();
-        return;
+      function processSelectedFiles(files) {
+        Array.from(files).forEach((file) => {
+          if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              productImages.push(e.target.result);
+              renderAdminGallery();
+            };
+            reader.readAsDataURL(file);
+          }
+        });
       }
 
-      // Extracts the exact styled HTML with tags like <strong>, <p>, <h1>, <h3>, <ul> preserved
-      const richDescription = quill.root.innerHTML.trim();
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files.length > 0)
+          processSelectedFiles(e.target.files);
+      });
+      dropzoneBox.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropzoneBox.classList.add("dragover");
+      });
+      dropzoneBox.addEventListener("dragleave", () =>
+        dropzoneBox.classList.remove("dragover"),
+      );
+      dropzoneBox.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropzoneBox.classList.remove("dragover");
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0)
+          processSelectedFiles(e.dataTransfer.files);
+      });
 
-      const coverImageUrl = productImages[0];
-      const additionalGalleryImages = productImages.slice(1);
-      const productId = "prz_prod_" + Date.now();
+      addUrlBtn.addEventListener("click", () => {
+        const url = directUrlInput.value.trim();
+        if (url.startsWith("http")) {
+          productImages.push(url);
+          directUrlInput.value = "";
+          renderAdminGallery();
+        } else alert("Please enter a valid image URL starting with http.");
+      });
 
-      const newProduct = {
-        id: productId,
-        title: title,
-        description: richDescription === '<p><br></p>' ? '' : richDescription,
-        category: pCategory.value,
-        material: pMaterial.value,
-        price: price,
-        originalPrice: Number(pOldPrice.value) || null,
-        dimensions: pDimensions.value.trim() || "Standard",
-        flowRate: pFlowRate.value.trim() || "35 L/min",
-        imageUrl: coverImageUrl,
-        additionalImages: additionalGalleryImages,
-        status: status,
-        isTopPick: flagTopPick.checked,
-        isTopSeller: flagTopSeller.checked,
-        isUpcoming: flagUpcoming.checked,
-        createdAt: new Date().toISOString()
-      };
+      async function handleSave(status) {
+        currentPublicationStatus = status;
+        updatePreview();
+        const title = pTitle.value.trim();
+        const price = Number(pPrice.value);
+        if (!title) {
+          alert("Please enter a product title.");
+          pTitle.focus();
+          return;
+        }
+        if (!price || isNaN(price)) {
+          alert("Please enter a valid price.");
+          pPrice.focus();
+          return;
+        }
 
-      topPublishBtn.disabled = true;
-      saveDraftBtn.disabled = true;
-      topPublishBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving to Cloud...`;
+        const richDescription = quill.root.innerHTML.trim();
+        const productId = "prz_prod_" + Date.now();
+        const newProduct = {
+          id: productId,
+          title: title,
+          description: richDescription === "<p><br></p>" ? "" : richDescription,
+          category: pCategory.value,
+          material: pMaterial.value,
+          price: price,
+          originalPrice: Number(pOldPrice.value) || null,
+          dimensions: pDimensions.value.trim() || "Standard",
+          flowRate: pFlowRate.value.trim() || "35 L/min",
+          imageUrl: productImages[0],
+          additionalImages: productImages.slice(1),
+          status: status,
+          isTopPick: flagTopPick.checked,
+          isTopSeller: flagTopSeller.checked,
+          isUpcoming: flagUpcoming.checked,
+          createdAt: new Date().toISOString(),
+        };
 
-      try {
-        await setDoc(doc(db, "products", productId), newProduct);
+        topPublishBtn.disabled = true;
+        saveDraftBtn.disabled = true;
+        topPublishBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving to Cloud...`;
 
         try {
-          const catalog = JSON.parse(localStorage.getItem("prizam_local_catalog")) || [];
-          catalog.unshift(newProduct);
-          localStorage.setItem("prizam_local_catalog", JSON.stringify(catalog));
-        } catch (e) {}
-
-        showToast(status === "published" ? "Product Published Live to Firestore!" : "Draft Saved in Firestore!");
-
-        setTimeout(() => {
-          window.location.href = "index.html";
-        }, 700);
-
-      } catch (fbErr) {
-        console.error("Firestore product write failed:", fbErr);
-        alert("Failed to write product to Firestore: " + fbErr.message + "\nPlease verify your Firestore security rules.");
-        topPublishBtn.disabled = false;
-        saveDraftBtn.disabled = false;
-        topPublishBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Publish Listing`;
+          await setDoc(doc(db, "products", productId), newProduct);
+          showToast(
+            status === "published" ? "Product Published Live!" : "Draft Saved!",
+          );
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 700);
+        } catch (fbErr) {
+          alert("Failed to write product to Firestore. Verify rules.");
+          topPublishBtn.disabled = false;
+          saveDraftBtn.disabled = false;
+          topPublishBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Publish Listing`;
+        }
       }
-    }
 
-    topPublishBtn.addEventListener("click", () => handleSave("published"));
-    saveDraftBtn.addEventListener("click", () => handleSave("draft"));
+      topPublishBtn.addEventListener("click", () => handleSave("published"));
+      saveDraftBtn.addEventListener("click", () => handleSave("draft"));
 
-    logoutBtn.addEventListener("click", async () => {
-      if (confirm("Sign out of Admin Portal?")) {
-        localStorage.removeItem("prizam_admin_logged_in");
-        await signOut(auth);
-        window.location.href = "login.html";
-      }
-    });
+      logoutBtn.addEventListener("click", async () => {
+        if (confirm("Sign out of Admin Portal?")) {
+          sessionStorage.removeItem("prizam_admin_logged_in");
+          localStorage.removeItem("admin_heartbeat");
+          await signOut(auth);
+          window.location.href = "login.html";
+        }
+      });
 
-    renderAdminGallery();
-  </script>
-</body>
+      renderAdminGallery();
+    </script>
+  </body>
 </html>

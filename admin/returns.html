@@ -1,836 +1,607 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prizam Admin | Returns & Replacements</title>
-
-  <!-- Typography & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <style>
-    :root {
-      --sidebar-bg: #070b13;
-      --sidebar-hover: #0f172a;
-      --sidebar-border: #131b2e;
-      --sidebar-text: #94a3b8;
-      --sidebar-heading: #475569;
-      --sidebar-active-bg: #2563eb;
-      --sidebar-active-text: #ffffff;
-      --primary: #0f172a;
-      --primary-hover: #1e293b;
-      --accent: #2563eb;
-      --surface: #ffffff;
-      --bg: #f8fafc;
-      --border: #e2e8f0;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Plus Jakarta Sans", sans-serif;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-    }
-
-    /* ================= 1. PRECISION DARK SIDEBAR ================= */
-    .admin-sidebar {
-      width: 270px;
-      background: var(--sidebar-bg);
-      color: var(--sidebar-text);
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 100;
-      border-right: 1px solid var(--sidebar-border);
-      user-select: none;
-    }
-
-    .sidebar-header {
-      padding: 1.75rem 1.5rem 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-
-    .sidebar-brand-dot {
-      width: 9px;
-      height: 9px;
-      background-color: #38bdf8;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
-      flex-shrink: 0;
-    }
-
-    .sidebar-brand-title {
-      color: #ffffff;
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      text-decoration: none;
-    }
-
-    .sidebar-nav-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0.5rem 1rem 1.5rem;
-    }
-
-    .sidebar-nav-scroll::-webkit-scrollbar {
-      width: 5px;
-    }
-    .sidebar-nav-scroll::-webkit-scrollbar-thumb {
-      background: #1e293b;
-      border-radius: 4px;
-    }
-
-    .sidebar-section-title {
-      font-size: 0.72rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--sidebar-heading);
-      padding: 1.25rem 0.75rem 0.5rem;
-    }
-
-    .sidebar-link {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      padding: 0.75rem 0.95rem;
-      border-radius: 10px;
-      color: var(--sidebar-text);
-      text-decoration: none;
-      font-size: 0.92rem;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      margin-bottom: 0.2rem;
-    }
-
-    .sidebar-link i {
-      font-size: 1rem;
-      width: 20px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .sidebar-link:hover {
-      color: #ffffff;
-      background: var(--sidebar-hover);
-    }
-
-    .sidebar-link.active {
-      background: var(--sidebar-active-bg);
-      color: var(--sidebar-active-text);
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
-    }
-
-    .sidebar-badge {
-      margin-left: auto;
-      background: rgba(0, 0, 0, 0.25);
-      color: #ffffff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.15rem 0.55rem;
-      border-radius: 12px;
-      min-width: 22px;
-      text-align: center;
-    }
-
-    .sidebar-link.active .sidebar-badge {
-      background: rgba(0, 0, 0, 0.35);
-    }
-
-    .sidebar-sublink {
-      padding-left: 1.15rem;
-    }
-
-    .sidebar-footer {
-      padding: 1.25rem 1.25rem;
-      border-top: 1px solid var(--sidebar-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #060910;
-    }
-
-    .sidebar-user-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      overflow: hidden;
-    }
-
-    .sidebar-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #1e293b;
-      color: #38bdf8;
-      font-weight: 800;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .sidebar-meta {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .sidebar-user-name {
-      color: #ffffff;
-      font-size: 0.88rem;
-      font-weight: 700;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .sidebar-user-email {
-      color: #64748b;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .sidebar-logout-btn {
-      background: none;
-      border: none;
-      color: #64748b;
-      font-size: 1.15rem;
-      cursor: pointer;
-      padding: 0.4rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-
-    .sidebar-logout-btn:hover {
-      color: var(--danger);
-      transform: translateX(2px);
-    }
-
-    /* ================= 2. MAIN WORKSPACE ================= */
-    .admin-main {
-      margin-left: 270px;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .top-navbar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 90;
-    }
-
-    .nav-search {
-      position: relative;
-      width: 340px;
-    }
-
-    .nav-search i {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .nav-search input {
-      width: 100%;
-      padding: 0.55rem 1rem 0.55rem 2.5rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.88rem;
-      background: #f8fafc;
-      outline: none;
-      transition: all 0.2s;
-    }
-
-    .nav-search input:focus {
-      border-color: var(--primary);
-      background: #fff;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-    }
-
-    .btn-action {
-      background: #f1f5f9;
-      color: var(--text-main);
-      border: 1px solid var(--border);
-      padding: 0.55rem 1rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: all 0.2s;
-      text-decoration: none;
-    }
-
-    .btn-action:hover { background: #e2e8f0; }
-
-    .admin-body { padding: 2rem; }
-
-    .page-title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 1.75rem;
-    }
-
-    .page-title-row h1 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-
-    .page-title-row p {
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      margin-top: 0.2rem;
-    }
-
-    /* Filter Tabs */
-    .filter-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.75rem;
-    }
-
-    .tab-btn {
-      background: none;
-      border: none;
-      padding: 0.5rem 1rem;
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      cursor: pointer;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
-    }
-
-    .tab-btn:hover {
-      color: var(--text-main);
-      background: #f1f5f9;
-    }
-
-    .tab-btn.active {
-      color: var(--primary);
-      background: #e2e8f0;
-    }
-
-    .tab-badge {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      font-size: 0.75rem;
-      padding: 1px 7px;
-      border-radius: 12px;
-    }
-
-    /* Table Container */
-    .table-container {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    th {
-      background: #f8fafc;
-      padding: 0.9rem 1.25rem;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      font-weight: 800;
-      border-bottom: 1px solid var(--border);
-    }
-
-    td {
-      padding: 1.15rem 1.25rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.88rem;
-      vertical-align: middle;
-    }
-
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fcfcfd; }
-
-    .return-status-select {
-      padding: 0.4rem 0.75rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      outline: none;
-      cursor: pointer;
-      border: 1.5px solid transparent;
-      transition: all 0.2s ease;
-    }
-
-    .return-status-select.Requested { background: #fef3c7; color: #b45309; border-color: #fde68a; }
-    .return-status-select.Approved { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
-    .return-status-select.ReplacementDispatched { background: #e0e7ff; color: #4338ca; border-color: #c7d2fe; }
-    .return-status-select.Refunded { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
-    .return-status-select.Rejected { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
-
-    .btn-delete-row {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
-      font-size: 0.95rem;
-      padding: 0.35rem;
-      transition: color 0.2s;
-    }
-
-    .btn-delete-row:hover {
-      color: var(--danger);
-    }
-
-    .admin-toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--primary);
-      color: #fff;
-      padding: 0.85rem 1.25rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.25s ease;
-      z-index: 3000;
-    }
-
-    .admin-toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  </style>
-  <link rel="stylesheet" href="../assets/css/responsive.css" />
-</head>
-<body>
-
-  <!-- ================= 1. PRECISION DARK SIDEBAR ================= -->
-  <aside class="admin-sidebar">
-    <div class="sidebar-header">
-      <span class="sidebar-brand-dot"></span>
-      <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
-    </div>
-
-    <div class="sidebar-nav-scroll">
-      <div class="sidebar-section-title">Storefront Catalog</div>
-
-      <a href="index.html" class="sidebar-link">
-        <i class="fa-solid fa-boxes-stacked"></i>
-        <span>Products</span>
-        <span class="sidebar-badge" id="sideBadgeProducts">0</span>
-      </a>
-
-      <a href="index.html?filter=published" class="sidebar-link sidebar-sublink">
-        <i class="fa-solid fa-circle-check"></i>
-        <span>Publish</span>
-      </a>
-
-      <a href="index.html?filter=draft" class="sidebar-link sidebar-sublink">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>Draft</span>
-      </a>
-
-      <a href="add-product.html" class="sidebar-link">
-        <i class="fa-solid fa-circle-plus"></i>
-        <span>Add New Product</span>
-      </a>
-
-      <div class="sidebar-section-title">Management & Sales</div>
-
-      <a href="brochures.html" class="sidebar-link">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>Brochures</span>
-      </a>
-
-      <a href="orders.html" class="sidebar-link">
-        <i class="fa-solid fa-truck-ramp-box"></i>
-        <span>Orders</span>
-        <span class="sidebar-badge" id="sideBadgeOrders">0</span>
-      </a>
-
-      <a href="returns.html" class="sidebar-link active">
-        <i class="fa-solid fa-rotate-left"></i>
-        <span>Returns</span>
-        <span class="sidebar-badge" id="sideBadgeReturns">0</span>
-      </a>
-
-      <a href="inquiries.html" class="sidebar-link">
-        <i class="fa-solid fa-envelope-open-text"></i>
-        <span>Contact Request</span>
-        <span class="sidebar-badge" id="sideBadgeInquiries">0</span>
-      </a>
-
-      <a href="analytics.html" class="sidebar-link">
-        <i class="fa-solid fa-chart-pie"></i>
-        <span>Store Analysis</span>
-      </a>
-
-      <a href="settings.html" class="sidebar-link">
-        <i class="fa-solid fa-gears"></i>
-        <span>System Maintenance</span>
-      </a>
-
-      <div class="sidebar-section-title">Live Preview</div>
-
-      <a href="../index.html" target="_blank" class="sidebar-link">
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        <span>Live Preview</span>
-      </a>
-    </div>
-
-    <div class="sidebar-footer">
-      <div class="sidebar-user-info">
-        <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
-        <div class="sidebar-meta">
-          <span class="sidebar-user-name" id="sideUserName">Administrator</span>
-          <span class="sidebar-user-email" id="sideUserEmail">admin@prizam.com</span>
-        </div>
-      </div>
-      <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-      </button>
-    </div>
-  </aside>
-
-  <!-- ================= 2. MAIN WORKSPACE ================= -->
-  <main class="admin-main">
-    <header class="top-navbar">
-      <div class="nav-search">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="returnSearch" placeholder="Search by Return ID, Order ID, customer, phone..." />
-      </div>
-      <div class="top-actions">
-        <a href="../index.html" target="_blank" class="btn-action">
-          <i class="fa-solid fa-eye"></i> View Store
-        </a>
-      </div>
-    </header>
-
-    <div class="admin-body">
-      <div class="page-title-row">
-        <div>
-          <h1>Customer Return & Replacement Requests</h1>
-          <p>Review 7-day warranty claims, damaged transit reports, and refund tickets streamed live from Firestore Database.</p>
-        </div>
-      </div>
-
-      <div class="filter-tabs">
-        <button class="tab-btn active" id="tabAll">
-          All Requests <span class="tab-badge" id="badgeAll">0</span>
-        </button>
-        <button class="tab-btn" id="tabRequested">
-          Requested <span class="tab-badge" id="badgeRequested">0</span>
-        </button>
-        <button class="tab-btn" id="tabApproved">
-          Approved <span class="tab-badge" id="badgeApproved">0</span>
-        </button>
-        <button class="tab-btn" id="tabReplacementDispatched">
-          Dispatched <span class="tab-badge" id="badgeDispatched">0</span>
-        </button>
-        <button class="tab-btn" id="tabRefunded">
-          Refunded <span class="tab-badge" id="badgeRefunded">0</span>
-        </button>
-      </div>
-
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Return ID</th>
-              <th>Order ID</th>
-              <th>Customer</th>
-              <th>Item & Issue</th>
-              <th>Request Date</th>
-              <th>Resolution Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="returnsTableBody">
-            <tr>
-              <td colspan="7" style="text-align:center; padding: 3rem; color: var(--text-muted);">
-                <i class="fa-solid fa-spinner fa-spin" style="margin-right:0.5rem;"></i> Streaming returns from Firestore...
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </main>
-
-  <div class="admin-toast" id="adminToast">Status updated</div>
-
-  <!-- Real-Time Cloud Firestore Sync Controller -->
-  <script type="module">
-    import { db, auth } from "../assets/js/firebase-config.js";
-    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-    import { 
-      collection, 
-      onSnapshot, 
-      doc, 
-      updateDoc, 
-      deleteDoc 
-    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-
-    // 1. Authentication Guard
-    if (localStorage.getItem("prizam_admin_logged_in") !== "true") {
-      window.location.href = "login.html";
-    }
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("sideUserName").textContent = user.displayName || "Administrator";
-        document.getElementById("sideUserEmail").textContent = user.email || "admin@prizam.com";
-        const initials = (user.displayName || user.email || "AD").substring(0, 2).toUpperCase();
-        document.getElementById("sideUserAvatar").textContent = initials;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prizam Admin | Returns & Replacements</title>
+
+    <!-- 🔒 HEARTBEAT SCRIPT -->
+    <script>
+      (function () {
+        const lastHb = localStorage.getItem("admin_heartbeat");
+        const now = Date.now();
+        if (
+          !sessionStorage.getItem("prizam_admin_logged_in") ||
+          (lastHb && now - parseInt(lastHb) > 15000)
+        ) {
+          sessionStorage.removeItem("prizam_admin_logged_in");
+          window.location.replace("login.html");
+        } else {
+          localStorage.setItem("admin_heartbeat", now.toString());
+          setInterval(() => {
+            localStorage.setItem("admin_heartbeat", Date.now().toString());
+          }, 3000);
+        }
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --sidebar-bg: #070b13;
+        --sidebar-hover: #0f172a;
+        --sidebar-border: #131b2e;
+        --sidebar-text: #94a3b8;
+        --sidebar-heading: #475569;
+        --sidebar-active-bg: #2563eb;
+        --sidebar-active-text: #ffffff;
+        --primary: #0f172a;
+        --primary-hover: #1e293b;
+        --accent: #2563eb;
+        --surface: #ffffff;
+        --bg: #f8fafc;
+        --border: #e2e8f0;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --radius: 12px;
       }
-    });
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+      }
+      .admin-sidebar {
+        width: 270px;
+        background: var(--sidebar-bg);
+        color: var(--sidebar-text);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        border-right: 1px solid var(--sidebar-border);
+      }
+      .sidebar-header {
+        padding: 1.75rem 1.5rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+      }
+      .sidebar-brand-dot {
+        width: 9px;
+        height: 9px;
+        background-color: #38bdf8;
+        border-radius: 50%;
+      }
+      .sidebar-brand-title {
+        color: #ffffff;
+        font-size: 1.35rem;
+        font-weight: 800;
+        text-decoration: none;
+      }
+      .sidebar-nav-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.5rem 1rem;
+      }
+      .sidebar-section-title {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--sidebar-heading);
+        padding: 1.25rem 0.75rem 0.5rem;
+      }
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 0.75rem 0.95rem;
+        border-radius: 10px;
+        color: var(--sidebar-text);
+        text-decoration: none;
+        font-size: 0.92rem;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+      }
+      .sidebar-link i {
+        font-size: 1rem;
+        width: 20px;
+        text-align: center;
+      }
+      .sidebar-link:hover {
+        color: #ffffff;
+        background: var(--sidebar-hover);
+      }
+      .sidebar-link.active {
+        background: var(--sidebar-active-bg);
+        color: var(--sidebar-active-text);
+      }
+      .sidebar-footer {
+        padding: 1.25rem;
+        border-top: 1px solid var(--sidebar-border);
+        display: flex;
+        justify-content: space-between;
+        background: #060910;
+      }
+      .sidebar-user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .sidebar-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #1e293b;
+        color: #38bdf8;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sidebar-user-name {
+        color: #ffffff;
+        font-size: 0.88rem;
+        font-weight: 700;
+        display: block;
+      }
+      .sidebar-user-email {
+        color: #64748b;
+        font-size: 0.75rem;
+      }
+      .sidebar-logout-btn {
+        background: none;
+        border: none;
+        color: #64748b;
+        font-size: 1.15rem;
+        cursor: pointer;
+      }
+      .admin-main {
+        margin-left: 270px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .top-navbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        height: 70px;
+        display: flex;
+        align-items: center;
+        padding: 0 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 90;
+      }
+      .admin-body {
+        padding: 2rem;
+      }
+      .page-title-row {
+        margin-bottom: 1.75rem;
+      }
+      .page-title-row h1 {
+        font-size: 1.6rem;
+        font-weight: 800;
+      }
+      .filter-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0.75rem;
+      }
+      .tab-btn {
+        background: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        cursor: pointer;
+        border-radius: 6px;
+      }
+      .tab-btn.active {
+        color: var(--primary);
+        background: #e2e8f0;
+      }
+      .table-container {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+      th {
+        background: #f8fafc;
+        padding: 0.9rem 1.25rem;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border);
+      }
+      td {
+        padding: 1.15rem 1.25rem;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.88rem;
+      }
+      .return-status-select {
+        padding: 0.4rem 0.75rem;
+        border-radius: 6px;
+        font-weight: 700;
+        border: 1.5px solid transparent;
+      }
+      .return-status-select.Requested {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .return-status-select.Approved {
+        background: #eff6ff;
+        color: #1d4ed8;
+      }
+      .return-status-select.ReplacementDispatched {
+        background: #e0e7ff;
+        color: #4338ca;
+      }
+      .return-status-select.Refunded {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .return-status-select.Rejected {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .btn-delete-row {
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 0.95rem;
+      }
+      .admin-toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--primary);
+        color: #fff;
+        padding: 0.85rem 1.25rem;
+        border-radius: 8px;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.25s ease;
+        z-index: 3000;
+      }
+      .admin-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .auth-gate-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 5000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.75rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+    </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+  </head>
+  <body>
+    <!-- 🔒 OVERLAY -->
+    <div class="auth-gate-overlay" id="authGateOverlay">
+      <i
+        class="fa-solid fa-spinner fa-spin"
+        style="font-size: 1.4rem; color: var(--primary)"
+      ></i>
+      <span>Verifying admin session...</span>
+    </div>
 
-    let returnsList = [];
-    let currentFilter = "all";
-    let searchQuery = "";
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-brand-dot"></span
+        ><a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
+      </div>
+      <div class="sidebar-nav-scroll">
+        <div class="sidebar-section-title">Storefront Catalog</div>
+        <a href="index.html" class="sidebar-link"
+          ><i class="fa-solid fa-boxes-stacked"></i><span>Products</span></a
+        >
+        <a href="add-product.html" class="sidebar-link"
+          ><i class="fa-solid fa-circle-plus"></i
+          ><span>Add New Product</span></a
+        >
+        <div class="sidebar-section-title">Management & Sales</div>
+        <a href="brochures.html" class="sidebar-link"
+          ><i class="fa-solid fa-file-lines"></i><span>Brochures</span></a
+        >
+        <a href="orders.html" class="sidebar-link"
+          ><i class="fa-solid fa-truck-ramp-box"></i><span>Orders</span></a
+        >
+        <a href="returns.html" class="sidebar-link active"
+          ><i class="fa-solid fa-rotate-left"></i><span>Returns</span></a
+        >
+        <a href="inquiries.html" class="sidebar-link"
+          ><i class="fa-solid fa-envelope-open-text"></i
+          ><span>Contact Request</span></a
+        >
+        <a href="analytics.html" class="sidebar-link"
+          ><i class="fa-solid fa-chart-pie"></i><span>Store Analysis</span></a
+        >
+        <a href="settings.html" class="sidebar-link"
+          ><i class="fa-solid fa-gears"></i><span>System Maintenance</span></a
+        >
+        <div class="sidebar-section-title">Live Preview</div>
+        <a href="../index.html" target="_blank" class="sidebar-link"
+          ><i class="fa-solid fa-arrow-up-right-from-square"></i
+          ><span>Live Storefront</span></a
+        >
+      </div>
+      <div class="sidebar-footer">
+        <div class="sidebar-user-info">
+          <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
+          <div class="sidebar-meta">
+            <span class="sidebar-user-name" id="sideUserName"
+              >Administrator</span
+            ><span class="sidebar-user-email" id="sideUserEmail"
+              >admin@prizam.com</span
+            >
+          </div>
+        </div>
+        <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
 
-    const tableBody = document.getElementById("returnsTableBody");
-    const toast = document.getElementById("adminToast");
+    <main class="admin-main">
+      <header class="top-navbar">
+        <input
+          type="text"
+          id="returnSearch"
+          placeholder="Search by Return ID..."
+          oninput="handleSearch()"
+          style="
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+          "
+        />
+      </header>
 
-    function showToast(msg) {
-      toast.textContent = msg;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 2200);
-    }
+      <div class="admin-body">
+        <div class="page-title-row">
+          <div>
+            <h1>Customer Return & Replacement Requests</h1>
+            <p>
+              Review 7-day warranty claims, damaged transit reports, and refund
+              tickets.
+            </p>
+          </div>
+        </div>
 
-    // 2. Real-Time Sidebar Counter Listeners
-    onSnapshot(collection(db, "products"), (snap) => {
-      const b = document.getElementById("sideBadgeProducts");
-      if (b) b.textContent = snap.size;
-    }, () => {});
+        <div class="filter-tabs">
+          <button class="tab-btn active" id="tabAll">All Requests</button>
+          <button class="tab-btn" id="tabRequested">Requested</button>
+          <button class="tab-btn" id="tabApproved">Approved</button>
+          <button class="tab-btn" id="tabReplacementDispatched">
+            Dispatched
+          </button>
+          <button class="tab-btn" id="tabRefunded">Refunded</button>
+        </div>
 
-    onSnapshot(collection(db, "orders"), (snap) => {
-      const b = document.getElementById("sideBadgeOrders");
-      if (b) b.textContent = snap.size;
-    }, () => {});
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Return ID</th>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Item & Issue</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="returnsTableBody">
+              <tr>
+                <td colspan="7" style="text-align: center; padding: 3rem">
+                  <i class="fa-solid fa-spinner fa-spin"></i> Streaming
+                  returns...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
 
-    onSnapshot(collection(db, "inquiries"), (snap) => {
-      const b = document.getElementById("sideBadgeInquiries");
-      if (b) b.textContent = snap.size;
-    }, () => {});
+    <div class="admin-toast" id="adminToast">Status updated</div>
 
-    // 3. Real-Time Stream: Returns Collection
-    onSnapshot(collection(db, "returns"), (snapshot) => {
-      returnsList = [];
-      snapshot.forEach((docSnap) => {
-        returnsList.push({ id: docSnap.id, ...docSnap.data() });
+    <script type="module">
+      import { db, auth } from "../assets/js/firebase-config.js";
+      import {
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+      import {
+        collection,
+        onSnapshot,
+        doc,
+        updateDoc,
+        deleteDoc,
+      } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+      // 🔒 AUTH GUARD & OVERLAY REMOVER
+      onAuthStateChanged(auth, (user) => {
+        if (!user || user.email !== "admin@prizam.com") {
+          sessionStorage.removeItem("prizam_admin_logged_in");
+          window.location.replace("login.html");
+          return;
+        }
+        const authGateOverlay = document.getElementById("authGateOverlay");
+        if (authGateOverlay) authGateOverlay.style.display = "none";
+
+        document.getElementById("sideUserName").textContent =
+          user.displayName || "Administrator";
+        document.getElementById("sideUserEmail").textContent =
+          user.email || "admin@prizam.com";
+        const initials = (user.displayName || user.email || "AD")
+          .substring(0, 2)
+          .toUpperCase();
+        document.getElementById("sideUserAvatar").textContent = initials;
       });
 
-      // Sort newest return request first
-      returnsList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      let returnsList = [];
+      let currentFilter = "all";
+      let searchQuery = "";
+      const tableBody = document.getElementById("returnsTableBody"),
+        toast = document.getElementById("adminToast");
 
-      // Local storage mirror
-      try {
-        localStorage.setItem("prizam_local_returns", JSON.stringify(returnsList));
-      } catch (e) {}
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2200);
+      }
 
-      updateBadges();
-      renderTable();
-    }, (error) => {
-      console.warn("Firestore returns listener error, falling back to local storage:", error);
-      returnsList = JSON.parse(localStorage.getItem("prizam_local_returns")) || [];
-      updateBadges();
-      renderTable();
-    });
+      onSnapshot(collection(db, "returns"), (snapshot) => {
+        returnsList = [];
+        snapshot.forEach((docSnap) => {
+          returnsList.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        returnsList.sort(
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+        );
+        renderTable();
+      });
 
-    function updateBadges() {
-      const total = returnsList.length;
-      const reqCount = returnsList.filter(r => (r.status || "Requested") === "Requested").length;
-      const appCount = returnsList.filter(r => r.status === "Approved").length;
-      const dispCount = returnsList.filter(r => r.status === "ReplacementDispatched").length;
-      const refCount = returnsList.filter(r => r.status === "Refunded").length;
+      function setFilter(f) {
+        currentFilter = f;
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        if (f === "all")
+          document.getElementById("tabAll").classList.add("active");
+        else document.getElementById(`tab${f}`).classList.add("active");
+        renderTable();
+      }
+      document
+        .getElementById("tabAll")
+        .addEventListener("click", () => setFilter("all"));
+      document
+        .getElementById("tabRequested")
+        .addEventListener("click", () => setFilter("Requested"));
+      document
+        .getElementById("tabApproved")
+        .addEventListener("click", () => setFilter("Approved"));
+      document
+        .getElementById("tabReplacementDispatched")
+        .addEventListener("click", () => setFilter("ReplacementDispatched"));
+      document
+        .getElementById("tabRefunded")
+        .addEventListener("click", () => setFilter("Refunded"));
 
-      document.getElementById("badgeAll").textContent = total;
-      document.getElementById("badgeRequested").textContent = reqCount;
-      document.getElementById("badgeApproved").textContent = appCount;
-      document.getElementById("badgeDispatched").textContent = dispCount;
-      document.getElementById("badgeRefunded").textContent = refCount;
+      window.handleSearch = function () {
+        searchQuery = document
+          .getElementById("returnSearch")
+          .value.trim()
+          .toLowerCase();
+        renderTable();
+      };
 
-      const sideReturnsBadge = document.getElementById("sideBadgeReturns");
-      if (sideReturnsBadge) sideReturnsBadge.textContent = reqCount;
-    }
-
-    // Filter Controls
-    function setFilter(f) {
-      currentFilter = f;
-      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-      if (f === "all") document.getElementById("tabAll").classList.add("active");
-      if (f === "Requested") document.getElementById("tabRequested").classList.add("active");
-      if (f === "Approved") document.getElementById("tabApproved").classList.add("active");
-      if (f === "ReplacementDispatched") document.getElementById("tabReplacementDispatched").classList.add("active");
-      if (f === "Refunded") document.getElementById("tabRefunded").classList.add("active");
-      renderTable();
-    }
-
-    document.getElementById("tabAll").addEventListener("click", () => setFilter("all"));
-    document.getElementById("tabRequested").addEventListener("click", () => setFilter("Requested"));
-    document.getElementById("tabApproved").addEventListener("click", () => setFilter("Approved"));
-    document.getElementById("tabReplacementDispatched").addEventListener("click", () => setFilter("ReplacementDispatched"));
-    document.getElementById("tabRefunded").addEventListener("click", () => setFilter("Refunded"));
-
-    document.getElementById("returnSearch").addEventListener("input", (e) => {
-      searchQuery = e.target.value.trim().toLowerCase();
-      renderTable();
-    });
-
-    // 4. Update Status in Firestore
-    window.updateReturnStatus = async function(returnId, newStatus) {
-      try {
+      window.updateReturnStatus = async function (returnId, newStatus) {
         await updateDoc(doc(db, "returns", returnId), { status: newStatus });
         showToast(`Return status set to ${newStatus}`);
-      } catch (err) {
-        console.error("Firestore status update failed:", err);
-        showToast("Failed to update status in cloud.");
-      }
-    };
+      };
 
-    // 5. Delete Return Ticket from Firestore
-    window.deleteReturnTicket = async function(returnId) {
-      if (confirm("Permanently remove this return ticket from Firestore?")) {
-        try {
+      window.deleteReturnTicket = async function (returnId) {
+        if (confirm("Remove this return ticket?")) {
           await deleteDoc(doc(db, "returns", returnId));
           showToast("Return ticket deleted");
-        } catch (err) {
-          console.error("Firestore delete failed:", err);
-          showToast("Failed to delete record.");
         }
-      }
-    };
+      };
 
-    function renderTable() {
-      tableBody.innerHTML = "";
-
-      let filtered = returnsList.filter(item => {
-        const st = item.status || "Requested";
-        if (currentFilter !== "all" && st !== currentFilter) return false;
-        if (searchQuery) {
-          const matchId = (item.id || "").toLowerCase().includes(searchQuery);
-          const matchOrderId = (item.orderId || "").toLowerCase().includes(searchQuery);
-          const matchName = (item.customerName || "").toLowerCase().includes(searchQuery);
-          const matchPhone = (item.customerPhone || "").toLowerCase().includes(searchQuery);
-          const matchItem = (item.itemTitle || "").toLowerCase().includes(searchQuery);
-          return matchId || matchOrderId || matchName || matchPhone || matchItem;
+      function renderTable() {
+        tableBody.innerHTML = "";
+        let filtered = returnsList.filter((item) => {
+          if (
+            currentFilter !== "all" &&
+            (item.status || "Requested") !== currentFilter
+          )
+            return false;
+          if (searchQuery)
+            return (item.id || "").toLowerCase().includes(searchQuery);
+          return true;
+        });
+        if (filtered.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 3rem;">No return requests found.</td></tr>`;
+          return;
         }
-        return true;
-      });
 
-      if (filtered.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 3rem; color: var(--text-muted);">No return requests found under "${currentFilter}".</td></tr>`;
-        return;
-      }
-
-      filtered.forEach(item => {
-        const st = item.status || "Requested";
-        const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "Recent";
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
+        filtered.forEach((item) => {
+          const st = item.status || "Requested";
+          const dateStr = item.createdAt
+            ? new Date(item.createdAt).toLocaleDateString("en-IN")
+            : "Recent";
+          tableBody.innerHTML += `<tr>
           <td><strong>#${item.id}</strong></td>
-          <td>#${item.orderId || 'PRZ-ORD'}</td>
-          <td>
-            <strong>${item.customerName || 'Valued Client'}</strong><br/>
-            <small style="color:var(--text-muted);">${item.customerPhone || 'N/A'}</small>
-          </td>
-          <td>
-            <div><strong>${item.itemTitle || 'Drain Solution'}</strong></div>
-            <small style="color:var(--danger); font-weight:600;">Issue: ${item.reason || 'Warranty replacement'}</small>
-          </td>
+          <td>#${item.orderId || "PRZ-ORD"}</td>
+          <td><strong>${item.customerName || "Client"}</strong><br/><small>${item.customerPhone || "N/A"}</small></td>
+          <td><div><strong>${item.itemTitle || "Item"}</strong></div><small style="color:var(--danger);">Issue: ${item.reason || "Warranty"}</small></td>
           <td>${dateStr}</td>
           <td>
             <select class="return-status-select ${st}" onchange="updateReturnStatus('${item.id}', this.value)">
-              <option value="Requested" ${st === 'Requested' ? 'selected' : ''}>Requested</option>
-              <option value="Approved" ${st === 'Approved' ? 'selected' : ''}>Approved</option>
-              <option value="ReplacementDispatched" ${st === 'ReplacementDispatched' ? 'selected' : ''}>Dispatched</option>
-              <option value="Refunded" ${st === 'Refunded' ? 'selected' : ''}>Refunded</option>
-              <option value="Rejected" ${st === 'Rejected' ? 'selected' : ''}>Rejected</option>
+              <option value="Requested" ${st === "Requested" ? "selected" : ""}>Requested</option>
+              <option value="Approved" ${st === "Approved" ? "selected" : ""}>Approved</option>
+              <option value="ReplacementDispatched" ${st === "ReplacementDispatched" ? "selected" : ""}>Dispatched</option>
+              <option value="Refunded" ${st === "Refunded" ? "selected" : ""}>Refunded</option>
+              <option value="Rejected" ${st === "Rejected" ? "selected" : ""}>Rejected</option>
             </select>
           </td>
-          <td>
-            <button class="btn-delete-row" onclick="deleteReturnTicket('${item.id}')" title="Delete record">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </td>
-        `;
-        tableBody.appendChild(tr);
-      });
-    }
-
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-      if (confirm("Sign out of Admin Portal?")) {
-        localStorage.removeItem("prizam_admin_logged_in");
-        await signOut(auth);
-        window.location.href = "login.html";
+          <td><button class="btn-delete-row" onclick="deleteReturnTicket('${item.id}')"><i class="fa-solid fa-trash"></i></button></td>
+        </tr>`;
+        });
       }
-    });
-  </script>
-</body>
+
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async () => {
+          if (confirm("Sign out of Admin Portal?")) {
+            sessionStorage.removeItem("prizam_admin_logged_in");
+            localStorage.removeItem("admin_heartbeat");
+            await signOut(auth);
+            window.location.replace("login.html");
+          }
+        });
+    </script>
+  </body>
 </html>

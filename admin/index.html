@@ -1,1489 +1,1351 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prizam Admin | Catalog & Section Manager</title>
-
-  <!-- Typography & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <!-- Quill Rich Text Editor (Preserves MS Word bold, sizes, headings & lists) -->
-  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-
-  <style>
-    :root {
-      --sidebar-bg: #070b13;
-      --sidebar-hover: #0f172a;
-      --sidebar-border: #131b2e;
-      --sidebar-text: #94a3b8;
-      --sidebar-heading: #475569;
-      --sidebar-active-bg: #2563eb;
-      --sidebar-active-text: #ffffff;
-      --primary: #0f172a;
-      --primary-hover: #1e293b;
-      --accent: #2563eb;
-      --surface: #ffffff;
-      --bg: #f8fafc;
-      --border: #e2e8f0;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --radius: 12px;
-      --radius-sm: 8px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Plus Jakarta Sans", sans-serif;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-    }
-
-    /* ================= 1. PRECISION DARK SIDEBAR ================= */
-    .admin-sidebar {
-      width: 270px;
-      background: var(--sidebar-bg);
-      color: var(--sidebar-text);
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 100;
-      border-right: 1px solid var(--sidebar-border);
-      user-select: none;
-    }
-
-    .sidebar-header {
-      padding: 1.75rem 1.5rem 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-
-    .sidebar-brand-dot {
-      width: 9px;
-      height: 9px;
-      background-color: #38bdf8;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
-      flex-shrink: 0;
-    }
-
-    .sidebar-brand-title {
-      color: #ffffff;
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      text-decoration: none;
-    }
-
-    .sidebar-nav-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0.5rem 1rem 1.5rem;
-    }
-
-    .sidebar-nav-scroll::-webkit-scrollbar {
-      width: 5px;
-    }
-    .sidebar-nav-scroll::-webkit-scrollbar-thumb {
-      background: #1e293b;
-      border-radius: 4px;
-    }
-
-    .sidebar-section-title {
-      font-size: 0.72rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--sidebar-heading);
-      padding: 1.25rem 0.75rem 0.5rem;
-    }
-
-    .sidebar-link {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      padding: 0.75rem 0.95rem;
-      border-radius: 10px;
-      color: var(--sidebar-text);
-      text-decoration: none;
-      font-size: 0.92rem;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      margin-bottom: 0.2rem;
-    }
-
-    .sidebar-link i {
-      font-size: 1rem;
-      width: 20px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .sidebar-link:hover {
-      color: #ffffff;
-      background: var(--sidebar-hover);
-    }
-
-    .sidebar-link.active {
-      background: var(--sidebar-active-bg);
-      color: var(--sidebar-active-text);
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
-    }
-
-    .sidebar-badge {
-      margin-left: auto;
-      background: rgba(0, 0, 0, 0.25);
-      color: #ffffff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.15rem 0.55rem;
-      border-radius: 12px;
-      min-width: 22px;
-      text-align: center;
-    }
-
-    .sidebar-link.active .sidebar-badge {
-      background: rgba(0, 0, 0, 0.35);
-    }
-
-    .sidebar-sublink {
-      padding-left: 1.15rem;
-    }
-
-    .sidebar-footer {
-      padding: 1.25rem 1.25rem;
-      border-top: 1px solid var(--sidebar-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #060910;
-    }
-
-    .sidebar-user-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      overflow: hidden;
-    }
-
-    .sidebar-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #1e293b;
-      color: #38bdf8;
-      font-weight: 800;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .sidebar-meta {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .sidebar-user-name {
-      color: #ffffff;
-      font-size: 0.88rem;
-      font-weight: 700;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .sidebar-user-email {
-      color: #64748b;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .sidebar-logout-btn {
-      background: none;
-      border: none;
-      color: #64748b;
-      font-size: 1.15rem;
-      cursor: pointer;
-      padding: 0.4rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-
-    .sidebar-logout-btn:hover {
-      color: var(--danger);
-      transform: translateX(2px);
-    }
-
-    /* ================= 2. MAIN WORKSPACE ================= */
-    .admin-main {
-      margin-left: 270px;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .top-navbar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 90;
-    }
-
-    .nav-search {
-      position: relative;
-      width: 320px;
-    }
-
-    .nav-search i {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .nav-search input {
-      width: 100%;
-      padding: 0.55rem 1rem 0.55rem 2.5rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.88rem;
-      background: #f8fafc;
-      outline: none;
-      transition: all 0.2s;
-    }
-
-    .nav-search input:focus {
-      border-color: var(--primary);
-      background: #fff;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .btn-preview-store {
-      background: #f1f5f9;
-      color: var(--text-main);
-      border: 1px solid var(--border);
-      padding: 0.55rem 1rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      transition: all 0.2s ease;
-    }
-
-    .btn-preview-store:hover {
-      background: #e2e8f0;
-    }
-
-    .btn-add {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      padding: 0.55rem 1.15rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn-add:hover {
-      background: var(--primary-hover);
-    }
-
-    .admin-body {
-      padding: 2rem;
-    }
-
-    .page-title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 1.75rem;
-    }
-
-    .page-title-row h1 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-
-    .page-title-row p {
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      margin-top: 0.2rem;
-    }
-
-    /* Filter Tabs */
-    .filter-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.75rem;
-    }
-
-    .tab-btn {
-      background: none;
-      border: none;
-      padding: 0.5rem 1rem;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
-    }
-
-    .tab-btn:hover {
-      color: var(--text-main);
-      background: #f1f5f9;
-    }
-
-    .tab-btn.active {
-      color: var(--primary);
-      background: #e2e8f0;
-    }
-
-    .tab-badge {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      font-size: 0.75rem;
-      padding: 1px 7px;
-      border-radius: 12px;
-    }
-
-    /* Table Container */
-    .table-container {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    th {
-      background: #f8fafc;
-      padding: 0.9rem 1.25rem;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      font-weight: 700;
-      border-bottom: 1px solid var(--border);
-    }
-
-    td {
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.88rem;
-      vertical-align: middle;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    tr:hover td {
-      background: #fcfcfd;
-    }
-
-    .prod-cell {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .prod-thumb {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      object-fit: cover;
-      background: #f1f5f9;
-      border: 1px solid var(--border);
-      cursor: pointer;
-    }
-
-    .prod-meta-title {
-      font-weight: 700;
-      color: var(--text-main);
-      font-size: 0.92rem;
-    }
-
-    .prod-meta-cat {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    /* Status Pill: Draft vs Published */
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.25rem 0.65rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: opacity 0.2s;
-    }
-
-    .status-pill.published {
-      background: #dcfce7;
-      color: #15803d;
-    }
-
-    .status-pill.draft {
-      background: #fef3c7;
-      color: #b45309;
-    }
-
-    .status-pill:hover {
-      opacity: 0.85;
-    }
-
-    .status-pill::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
-    /* Switch Component */
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 38px;
-      height: 22px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background-color: #cbd5e1;
-      transition: 0.25s;
-      border-radius: 22px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: 0.25s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: var(--success);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(16px);
-    }
-
-    /* Action Buttons */
-    .action-group {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .btn-table-action {
-      background: #f1f5f9;
-      border: 1px solid var(--border);
-      color: var(--text-main);
-      padding: 0.45rem 0.65rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      transition: all 0.2s;
-    }
-
-    .btn-table-action:hover {
-      background: #e2e8f0;
-    }
-
-    .btn-table-edit {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: var(--accent);
-    }
-
-    .btn-table-edit:hover {
-      background: #dbeafe;
-    }
-
-    .btn-delete {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
-      padding: 0.45rem;
-      font-size: 0.95rem;
-      transition: color 0.2s;
-    }
-
-    .btn-delete:hover {
-      color: var(--danger);
-    }
-
-    /* ================= 3. MODALS (PREVIEW & EDIT) ================= */
-    .preview-modal-backdrop,
-    .edit-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-
-    .preview-modal-backdrop.active,
-    .edit-modal-backdrop.active {
-      display: flex;
-    }
-
-    .preview-box {
-      background: #ffffff;
-      width: 100%;
-      max-width: 440px;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      animation: modalSlide 0.25s ease-out;
-    }
-
-    .edit-modal-box {
-      background: #ffffff;
-      width: 100%;
-      max-width: 760px;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      animation: modalSlide 0.25s ease-out;
-    }
-
-    @keyframes modalSlide {
-      from { transform: scale(0.95) translateY(10px); opacity: 0; }
-      to { transform: scale(1) translateY(0); opacity: 1; }
-    }
-
-    .preview-header,
-    .edit-modal-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .preview-header h3,
-    .edit-modal-header h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .btn-close-modal {
-      background: none;
-      border: none;
-      font-size: 1.35rem;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .preview-body {
-      padding: 1.75rem;
-      background: #f8fafc;
-    }
-
-    .edit-modal-body {
-      padding: 1.75rem;
-      overflow-y: auto;
-      background: #ffffff;
-    }
-
-    .edit-modal-footer {
-      padding: 1rem 1.5rem;
-      background: #f8fafc;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-    }
-
-    .edit-form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .edit-form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 0.45rem;
-      color: var(--text-main);
-    }
-
-    .edit-form-group input,
-    .edit-form-group select {
-      width: 100%;
-      padding: 0.75rem 0.95rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      color: var(--text-main);
-      outline: none;
-      background: #ffffff;
-      transition: all 0.2s;
-    }
-
-    .edit-form-group input:focus,
-    .edit-form-group select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
-    }
-
-    .edit-form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    /* Quill in Modal */
-    .edit-quill-wrapper {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      background: #ffffff;
-    }
-
-    .edit-quill-wrapper .ql-toolbar {
-      border: none !important;
-      border-bottom: 1px solid var(--border) !important;
-      background: #f8fafc;
-    }
-
-    .edit-quill-wrapper .ql-container {
-      border: none !important;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.92rem;
-      min-height: 220px;
-    }
-
-    .edit-quill-wrapper .ql-editor {
-      min-height: 220px;
-      line-height: 1.65;
-    }
-
-    .mock-store-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .mock-thumb {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      background: #e2e8f0;
-      display: block;
-    }
-
-    .mock-content {
-      padding: 1.25rem;
-    }
-
-    .mock-badge-tag {
-      display: inline-block;
-      background: #0f172a;
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 4px;
-      margin-bottom: 0.6rem;
-    }
-
-    .mock-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #0f172a;
-      margin-bottom: 0.4rem;
-    }
-
-    .mock-prices {
-      display: flex;
-      align-items: baseline;
-      gap: 0.6rem;
-      margin-bottom: 1rem;
-    }
-
-    .mock-current-price {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .mock-old-price {
-      font-size: 0.9rem;
-      text-decoration: line-through;
-      color: #94a3b8;
-    }
-
-    .mock-btn-cart {
-      width: 100%;
-      padding: 0.75rem;
-      background: #0f172a;
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-
-    /* Toast */
-    .admin-toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--primary);
-      color: #fff;
-      padding: 0.85rem 1.25rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.25s ease;
-      z-index: 2000;
-    }
-
-    .admin-toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    @media (max-width: 640px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prizam Admin | Catalog & Section Manager</title>
+
+    <!-- 🔒 HEARTBEAT SCRIPT: આ કોડ દરેક એડમિન પેજમાં હોવો જ જોઈએ -->
+    <script>
+      (function () {
+        const lastHb = localStorage.getItem("admin_heartbeat");
+        const now = Date.now();
+        // જો સેશન ન હોય અથવા પેજ 15 સેકન્ડથી વધુ બંધ રહ્યું હોય, તો જ લોગઆઉટ કરો
+        if (
+          !sessionStorage.getItem("prizam_admin_logged_in") ||
+          (lastHb && now - parseInt(lastHb) > 15000)
+        ) {
+          sessionStorage.removeItem("prizam_admin_logged_in");
+          window.location.replace("login.html");
+        } else {
+          // નહીંતર દર 3 સેકન્ડે હાર્ટબીટ મોકલવાનું ચાલુ રાખો
+          localStorage.setItem("admin_heartbeat", now.toString());
+          setInterval(() => {
+            localStorage.setItem("admin_heartbeat", Date.now().toString());
+          }, 3000);
+        }
+      })();
+    </script>
+
+    <!-- Typography & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --sidebar-bg: #070b13;
+        --sidebar-hover: #0f172a;
+        --sidebar-border: #131b2e;
+        --sidebar-text: #94a3b8;
+        --sidebar-heading: #475569;
+        --sidebar-active-bg: #2563eb;
+        --sidebar-active-text: #ffffff;
+        --primary: #0f172a;
+        --primary-hover: #1e293b;
+        --accent: #2563eb;
+        --surface: #ffffff;
+        --bg: #f8fafc;
+        --border: #e2e8f0;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --radius: 12px;
+        --radius-sm: 8px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+      }
+      .admin-sidebar {
+        width: 270px;
+        background: var(--sidebar-bg);
+        color: var(--sidebar-text);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        border-right: 1px solid var(--sidebar-border);
+        user-select: none;
+      }
+      .sidebar-header {
+        padding: 1.75rem 1.5rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+      }
+      .sidebar-brand-dot {
+        width: 9px;
+        height: 9px;
+        background-color: #38bdf8;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        flex-shrink: 0;
+      }
+      .sidebar-brand-title {
+        color: #ffffff;
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        text-decoration: none;
+      }
+      .sidebar-nav-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.5rem 1rem 1.5rem;
+      }
+      .sidebar-nav-scroll::-webkit-scrollbar {
+        width: 5px;
+      }
+      .sidebar-nav-scroll::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 4px;
+      }
+      .sidebar-section-title {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--sidebar-heading);
+        padding: 1.25rem 0.75rem 0.5rem;
+      }
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 0.75rem 0.95rem;
+        border-radius: 10px;
+        color: var(--sidebar-text);
+        text-decoration: none;
+        font-size: 0.92rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        margin-bottom: 0.2rem;
+      }
+      .sidebar-link i {
+        font-size: 1rem;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .sidebar-link:hover {
+        color: #ffffff;
+        background: var(--sidebar-hover);
+      }
+      .sidebar-link.active {
+        background: var(--sidebar-active-bg);
+        color: var(--sidebar-active-text);
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      }
+      .sidebar-badge {
+        margin-left: auto;
+        background: rgba(0, 0, 0, 0.25);
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.15rem 0.55rem;
+        border-radius: 12px;
+        min-width: 22px;
+        text-align: center;
+      }
+      .sidebar-link.active .sidebar-badge {
+        background: rgba(0, 0, 0, 0.35);
+      }
+      .sidebar-sublink {
+        padding-left: 1.15rem;
+      }
+      .sidebar-footer {
+        padding: 1.25rem 1.25rem;
+        border-top: 1px solid var(--sidebar-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #060910;
+      }
+      .sidebar-user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        overflow: hidden;
+      }
+      .sidebar-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #1e293b;
+        color: #38bdf8;
+        font-weight: 800;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .sidebar-meta {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .sidebar-user-name {
+        color: #ffffff;
+        font-size: 0.88rem;
+        font-weight: 700;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .sidebar-user-email {
+        color: #64748b;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .sidebar-logout-btn {
+        background: none;
+        border: none;
+        color: #64748b;
+        font-size: 1.15rem;
+        cursor: pointer;
+        padding: 0.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .sidebar-logout-btn:hover {
+        color: var(--danger);
+        transform: translateX(2px);
+      }
+      .admin-main {
+        margin-left: 270px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .top-navbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 90;
+      }
+      .nav-search {
+        position: relative;
+        width: 320px;
+      }
+      .nav-search i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+      .nav-search input {
+        width: 100%;
+        padding: 0.55rem 1rem 0.55rem 2.5rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.88rem;
+        background: #f8fafc;
+        outline: none;
+        transition: all 0.2s;
+      }
+      .nav-search input:focus {
+        border-color: var(--primary);
+        background: #fff;
+      }
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .btn-preview-store {
+        background: #f1f5f9;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        padding: 0.55rem 1rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        transition: all 0.2s ease;
+      }
+      .btn-preview-store:hover {
+        background: #e2e8f0;
+      }
+      .btn-add {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 0.55rem 1.15rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn-add:hover {
+        background: var(--primary-hover);
+      }
+      .admin-body {
+        padding: 2rem;
+      }
+      .page-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 1.75rem;
+      }
+      .page-title-row h1 {
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .page-title-row p {
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        margin-top: 0.2rem;
+      }
+      .filter-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0.75rem;
+      }
+      .tab-btn {
+        background: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+      }
+      .tab-btn:hover {
+        color: var(--text-main);
+        background: #f1f5f9;
+      }
+      .tab-btn.active {
+        color: var(--primary);
+        background: #e2e8f0;
+      }
+      .tab-badge {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        font-size: 0.75rem;
+        padding: 1px 7px;
+        border-radius: 12px;
+      }
+      .table-container {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+      th {
+        background: #f8fafc;
+        padding: 0.9rem 1.25rem;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        font-weight: 700;
+        border-bottom: 1px solid var(--border);
+      }
+      td {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.88rem;
+        vertical-align: middle;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr:hover td {
+        background: #fcfcfd;
+      }
+      .prod-cell {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .prod-thumb {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #f1f5f9;
+        border: 1px solid var(--border);
+        cursor: pointer;
+      }
+      .prod-meta-title {
+        font-weight: 700;
+        color: var(--text-main);
+        font-size: 0.92rem;
+      }
+      .prod-meta-cat {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.25rem 0.65rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+        transition: opacity 0.2s;
+      }
+      .status-pill.published {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .status-pill.draft {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .status-pill:hover {
+        opacity: 0.85;
+      }
+      .status-pill::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 38px;
+        height: 22px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background-color: #cbd5e1;
+        transition: 0.25s;
+        border-radius: 22px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.25s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: var(--success);
+      }
+      input:checked + .slider:before {
+        transform: translateX(16px);
+      }
+      .action-group {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .btn-table-action {
+        background: #f1f5f9;
+        border: 1px solid var(--border);
+        color: var(--text-main);
+        padding: 0.45rem 0.65rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: all 0.2s;
+      }
+      .btn-table-action:hover {
+        background: #e2e8f0;
+      }
+      .btn-table-edit {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: var(--accent);
+      }
+      .btn-table-edit:hover {
+        background: #dbeafe;
+      }
+      .btn-delete {
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 0.45rem;
+        font-size: 0.95rem;
+        transition: color 0.2s;
+      }
+      .btn-delete:hover {
+        color: var(--danger);
+      }
+      .preview-modal-backdrop,
+      .edit-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+      }
+      .preview-modal-backdrop.active,
+      .edit-modal-backdrop.active {
+        display: flex;
+      }
+      .preview-box {
+        background: #ffffff;
+        width: 100%;
+        max-width: 440px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        animation: modalSlide 0.25s ease-out;
+      }
+      .edit-modal-box {
+        background: #ffffff;
+        width: 100%;
+        max-width: 760px;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        animation: modalSlide 0.25s ease-out;
+      }
+      @keyframes modalSlide {
+        from {
+          transform: scale(0.95) translateY(10px);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1) translateY(0);
+          opacity: 1;
+        }
+      }
+      .preview-header,
+      .edit-modal-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .preview-header h3,
+      .edit-modal-header h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+      .btn-close-modal {
+        background: none;
+        border: none;
+        font-size: 1.35rem;
+        color: var(--text-muted);
+        cursor: pointer;
+      }
+      .preview-body {
+        padding: 1.75rem;
+        background: #f8fafc;
+      }
+      .edit-modal-body {
+        padding: 1.75rem;
+        overflow-y: auto;
+        background: #ffffff;
+      }
+      .edit-modal-footer {
+        padding: 1rem 1.5rem;
+        background: #f8fafc;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+      }
+      .edit-form-group {
+        margin-bottom: 1.25rem;
+      }
+      .edit-form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 0.45rem;
+        color: var(--text-main);
+      }
+      .edit-form-group input,
+      .edit-form-group select {
+        width: 100%;
+        padding: 0.75rem 0.95rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        outline: none;
+        background: #ffffff;
+        transition: all 0.2s;
+      }
+      .edit-form-group input:focus,
+      .edit-form-group select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+      }
       .edit-form-row {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
       }
-    }
-  </style>
-  <link rel="stylesheet" href="../assets/css/responsive.css" />
-</head>
-<body>
-
-  <!-- ================= 1. PRECISION DARK SIDEBAR ================= -->
-  <aside class="admin-sidebar">
-    <div class="sidebar-header">
-      <span class="sidebar-brand-dot"></span>
-      <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
+      .edit-quill-wrapper {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        background: #ffffff;
+      }
+      .edit-quill-wrapper .ql-toolbar {
+        border: none !important;
+        border-bottom: 1px solid var(--border) !important;
+        background: #f8fafc;
+      }
+      .edit-quill-wrapper .ql-container {
+        border: none !important;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.92rem;
+        min-height: 220px;
+      }
+      .edit-quill-wrapper .ql-editor {
+        min-height: 220px;
+        line-height: 1.65;
+      }
+      .mock-store-card {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      }
+      .mock-thumb {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        background: #e2e8f0;
+        display: block;
+      }
+      .mock-content {
+        padding: 1.25rem;
+      }
+      .mock-badge-tag {
+        display: inline-block;
+        background: #0f172a;
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-bottom: 0.6rem;
+      }
+      .mock-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.4rem;
+      }
+      .mock-prices {
+        display: flex;
+        align-items: baseline;
+        gap: 0.6rem;
+        margin-bottom: 1rem;
+      }
+      .mock-current-price {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #0f172a;
+      }
+      .mock-old-price {
+        font-size: 0.9rem;
+        text-decoration: line-through;
+        color: #94a3b8;
+      }
+      .mock-btn-cart {
+        width: 100%;
+        padding: 0.75rem;
+        background: #0f172a;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+      }
+      .admin-toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--primary);
+        color: #fff;
+        padding: 0.85rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.25s ease;
+        z-index: 2000;
+      }
+      .admin-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .auth-gate-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 5000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.75rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+      @media (max-width: 640px) {
+        .edit-form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+  </head>
+  <body>
+    <div class="auth-gate-overlay" id="authGateOverlay">
+      <i
+        class="fa-solid fa-spinner fa-spin"
+        style="font-size: 1.4rem; color: var(--primary)"
+      ></i>
+      <span>Verifying admin session...</span>
     </div>
 
-    <div class="sidebar-nav-scroll">
-      <div class="sidebar-section-title">Storefront Catalog</div>
-
-      <a href="index.html" class="sidebar-link active" id="sideLinkAll" onclick="setFilter('all'); return false;">
-        <i class="fa-solid fa-boxes-stacked"></i>
-        <span>Products</span>
-        <span class="sidebar-badge" id="sideBadgeProducts">0</span>
-      </a>
-
-      <a href="index.html?filter=published" class="sidebar-link sidebar-sublink" id="sideLinkPublished" onclick="setFilter('published'); return false;">
-        <i class="fa-solid fa-circle-check"></i>
-        <span>Publish</span>
-      </a>
-
-      <a href="index.html?filter=draft" class="sidebar-link sidebar-sublink" id="sideLinkDraft" onclick="setFilter('draft'); return false;">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>Draft</span>
-      </a>
-
-      <a href="add-product.html" class="sidebar-link">
-        <i class="fa-solid fa-circle-plus"></i>
-        <span>Add New Product</span>
-      </a>
-
-      <div class="sidebar-section-title">Management & Sales</div>
-
-      <a href="brochures.html" class="sidebar-link">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>Brochures</span>
-      </a>
-
-      <a href="orders.html" class="sidebar-link">
-        <i class="fa-solid fa-truck-ramp-box"></i>
-        <span>Orders</span>
-        <span class="sidebar-badge" id="sideBadgeOrders">0</span>
-      </a>
-
-      <a href="returns.html" class="sidebar-link">
-        <i class="fa-solid fa-rotate-left"></i>
-        <span>Returns</span>
-      </a>
-
-      <a href="inquiries.html" class="sidebar-link">
-        <i class="fa-solid fa-envelope-open-text"></i>
-        <span>Contact Request</span>
-      </a>
-
-      <a href="analytics.html" class="sidebar-link">
-        <i class="fa-solid fa-chart-pie"></i>
-        <span>Store Analysis</span>
-      </a>
-
-      <a href="settings.html" class="sidebar-link">
-        <i class="fa-solid fa-gears"></i>
-        <span>System Maintenance</span>
-      </a>
-
-      <div class="sidebar-section-title">Live Preview</div>
-
-      <a href="../index.html" target="_blank" class="sidebar-link">
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        <span>Live Preview</span>
-      </a>
-    </div>
-
-    <div class="sidebar-footer">
-      <div class="sidebar-user-info">
-        <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
-        <div class="sidebar-meta">
-          <span class="sidebar-user-name" id="sideUserName">Administrator</span>
-          <span class="sidebar-user-email" id="sideUserEmail">admin@prizam.com</span>
-        </div>
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-brand-dot"></span>
+        <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
       </div>
-      <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-      </button>
-    </div>
-  </aside>
 
-  <!-- ================= 2. MAIN WORKSPACE ================= -->
-  <main class="admin-main">
-
-    <!-- Top Navbar -->
-    <header class="top-navbar">
-      <div class="nav-search">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="catalogSearch" placeholder="Search by title, category, SKU..." oninput="handleSearch()" />
-      </div>
-
-      <div class="top-actions">
-        <a href="../index.html" target="_blank" class="btn-preview-store">
-          <i class="fa-solid fa-eye"></i> Store Preview
+      <div class="sidebar-nav-scroll">
+        <div class="sidebar-section-title">Storefront Catalog</div>
+        <a href="index.html" class="sidebar-link active">
+          <i class="fa-solid fa-boxes-stacked"></i> <span>Products</span>
+          <span class="sidebar-badge" id="sideBadgeProducts">0</span>
         </a>
-        <a href="add-product.html" class="btn-add">
-          <i class="fa-solid fa-plus"></i> Upload Product
+        <a href="add-product.html" class="sidebar-link">
+          <i class="fa-solid fa-circle-plus"></i> <span>Add New Product</span>
         </a>
-      </div>
-    </header>
 
-    <!-- Admin Body -->
-    <div class="admin-body">
-      
-      <div class="page-title-row">
-        <div>
-          <h1>Catalog & Section Controls</h1>
-          <p>Real-time Firestore catalog: toggle showcase placements, switch items between Draft and Published, edit product specs & formatted descriptions, or preview customer appearance.</p>
-        </div>
-      </div>
+        <div class="sidebar-section-title">Management & Sales</div>
+        <a href="brochures.html" class="sidebar-link"
+          ><i class="fa-solid fa-file-lines"></i> <span>Brochures</span></a
+        >
+        <a href="orders.html" class="sidebar-link"
+          ><i class="fa-solid fa-truck-ramp-box"></i> <span>Orders</span>
+          <span class="sidebar-badge" id="sideBadgeOrders">0</span></a
+        >
+        <a href="returns.html" class="sidebar-link"
+          ><i class="fa-solid fa-rotate-left"></i> <span>Returns</span></a
+        >
+        <a href="inquiries.html" class="sidebar-link"
+          ><i class="fa-solid fa-envelope-open-text"></i>
+          <span>Contact Request</span></a
+        >
+        <a href="analytics.html" class="sidebar-link"
+          ><i class="fa-solid fa-chart-pie"></i> <span>Store Analysis</span></a
+        >
+        <a href="settings.html" class="sidebar-link"
+          ><i class="fa-solid fa-gears"></i> <span>System Maintenance</span></a
+        >
 
-      <!-- Quick Filter Tabs -->
-      <div class="filter-tabs">
-        <button class="tab-btn active" id="tabAll" onclick="setFilter('all')">
-          All Products <span class="tab-badge" id="tabBadgeAll">0</span>
-        </button>
-        <button class="tab-btn" id="tabPublished" onclick="setFilter('published')">
-          Published <span class="tab-badge" id="tabBadgePublished">0</span>
-        </button>
-        <button class="tab-btn" id="tabDraft" onclick="setFilter('draft')">
-          Drafts <span class="tab-badge" id="tabBadgeDraft">0</span>
-        </button>
-      </div>
-
-      <!-- Products Table -->
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Product Details</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th>Top Pick</th>
-              <th>Best Seller</th>
-              <th>Upcoming</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="catalogTableBody">
-            <tr>
-              <td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-muted);">
-                <i class="fa-solid fa-spinner fa-spin" style="margin-right: 0.5rem;"></i> Streaming catalog from Firestore...
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="sidebar-section-title">Live Preview</div>
+        <a href="../index.html" target="_blank" class="sidebar-link"
+          ><i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>Live Preview</span></a
+        >
       </div>
 
-    </div>
-  </main>
-
-  <!-- ================= 3. EDIT PRODUCT & DESCRIPTION MODAL ================= -->
-  <div class="edit-modal-backdrop" id="editModal">
-    <div class="edit-modal-box">
-      <div class="edit-modal-header">
-        <h3><i class="fa-solid fa-pen-to-square" style="color:var(--accent); margin-right:0.4rem;"></i> Edit Product & Description</h3>
-        <button class="btn-close-modal" onclick="closeEditModal()">&times;</button>
-      </div>
-
-      <div class="edit-modal-body">
-        <input type="hidden" id="editProductId" />
-
-        <div class="edit-form-group">
-          <label for="editTitle">Product Title</label>
-          <input type="text" id="editTitle" required placeholder="e.g. Linear Shower Drain 600mm" />
-        </div>
-
-        <div class="edit-form-row">
-          <div class="edit-form-group">
-            <label for="editCategory">Category</label>
-            <select id="editCategory">
-              <option value="Bathroom Drains">Bathroom Drains</option>
-              <option value="Kitchen Drains">Kitchen Drains</option>
-              <option value="Outdoor Drains">Outdoor Drains</option>
-              <option value="Accessories">Accessories</option>
-            </select>
-          </div>
-
-          <div class="edit-form-group">
-            <label for="editMaterial">Material Grade</label>
-            <select id="editMaterial">
-              <option value="304 Stainless Steel">304 Stainless Steel</option>
-              <option value="Solid Brass">Solid Brass</option>
-              <option value="ABS Polymer">ABS Polymer</option>
-              <option value="Cast Iron">Cast Iron</option>
-            </select>
+      <div class="sidebar-footer">
+        <div class="sidebar-user-info">
+          <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
+          <div class="sidebar-meta">
+            <span class="sidebar-user-name" id="sideUserName"
+              >Administrator</span
+            >
+            <span class="sidebar-user-email" id="sideUserEmail"
+              >admin@prizam.com</span
+            >
           </div>
         </div>
-
-        <div class="edit-form-row">
-          <div class="edit-form-group">
-            <label for="editPrice">Selling Price (₹)</label>
-            <input type="number" id="editPrice" required min="0" />
-          </div>
-
-          <div class="edit-form-group">
-            <label for="editOldPrice">Original Price / MRP (₹)</label>
-            <input type="number" id="editOldPrice" min="0" />
-          </div>
-        </div>
-
-        <div class="edit-form-row">
-          <div class="edit-form-group">
-            <label for="editDimensions">Dimensions</label>
-            <input type="text" id="editDimensions" placeholder="600mm x 70mm x 20mm" />
-          </div>
-
-          <div class="edit-form-group">
-            <label for="editFlowRate">Hydraulic Discharge Rate</label>
-            <input type="text" id="editFlowRate" placeholder="40 L/min" />
-          </div>
-        </div>
-
-        <!-- Quill Rich Text Editor Container -->
-        <div class="edit-form-group">
-          <label>Product Description (Formatted Text, Bold, Sizes, Headings & Tabs)</label>
-          <div class="edit-quill-wrapper">
-            <div id="editDescriptionQuill"></div>
-          </div>
-          <small style="color:var(--text-muted); font-size:0.78rem; display:block; margin-top:0.35rem;">
-            Supports paste from Microsoft Word, bold formatting, paragraphs, bullet points, font sizes, and indentations.
-          </small>
-        </div>
-      </div>
-
-      <div class="edit-modal-footer">
-        <button type="button" class="btn-table-action" onclick="closeEditModal()">Cancel</button>
-        <button type="button" class="btn-add" id="btnSaveEdit" onclick="saveProductEdit()">
-          <i class="fa-solid fa-floppy-disk"></i> Save Changes
+        <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </button>
       </div>
-    </div>
-  </div>
+    </aside>
 
-  <!-- ================= 4. LIVE PREVIEW MODAL DRAWER ================= -->
-  <div class="preview-modal-backdrop" id="previewModal">
-    <div class="preview-box">
-      <div class="preview-header">
-        <h3>Customer Live Card Preview</h3>
-        <button class="btn-close-modal" onclick="closePreview()">&times;</button>
+    <main class="admin-main">
+      <header class="top-navbar">
+        <div class="nav-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            id="catalogSearch"
+            placeholder="Search by title, category, SKU..."
+            oninput="handleSearch()"
+          />
+        </div>
+        <div class="top-actions">
+          <a href="../index.html" target="_blank" class="btn-preview-store"
+            ><i class="fa-solid fa-eye"></i> Store Preview</a
+          >
+          <a href="add-product.html" class="btn-add"
+            ><i class="fa-solid fa-plus"></i> Upload Product</a
+          >
+        </div>
+      </header>
+
+      <div class="admin-body">
+        <div class="page-title-row">
+          <div>
+            <h1>Catalog & Section Controls</h1>
+            <p>
+              Real-time Firestore catalog: toggle showcase placements, switch
+              items between Draft and Published, edit product specs & formatted
+              descriptions.
+            </p>
+          </div>
+        </div>
+
+        <div class="filter-tabs">
+          <button class="tab-btn active" id="tabAll" onclick="setFilter('all')">
+            All Products <span class="tab-badge" id="tabBadgeAll">0</span>
+          </button>
+          <button
+            class="tab-btn"
+            id="tabPublished"
+            onclick="setFilter('published')"
+          >
+            Published <span class="tab-badge" id="tabBadgePublished">0</span>
+          </button>
+          <button class="tab-btn" id="tabDraft" onclick="setFilter('draft')">
+            Drafts <span class="tab-badge" id="tabBadgeDraft">0</span>
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Product Details</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Top Pick</th>
+                <th>Best Seller</th>
+                <th>Upcoming</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="catalogTableBody">
+              <tr>
+                <td
+                  colspan="8"
+                  style="
+                    text-align: center;
+                    padding: 3rem;
+                    color: var(--text-muted);
+                  "
+                >
+                  <i
+                    class="fa-solid fa-spinner fa-spin"
+                    style="margin-right: 0.5rem"
+                  ></i>
+                  Streaming catalog from Firestore...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="preview-body">
-        <div class="mock-store-card">
-          <img class="mock-thumb" id="previewImg" src="" alt="Product Cover" />
-          <div class="mock-content">
-            <span class="mock-badge-tag" id="previewBadge">Top Pick</span>
-            <h4 class="mock-title" id="previewTitle">Linear Shower Drain</h4>
-            <div class="mock-prices">
-              <span class="mock-current-price" id="previewPrice">₹2,499</span>
-              <span class="mock-old-price" id="previewOldPrice">₹3,499</span>
+    </main>
+
+    <!-- EDIT MODAL -->
+    <div class="edit-modal-backdrop" id="editModal">
+      <div class="edit-modal-box">
+        <div class="edit-modal-header">
+          <h3>
+            <i
+              class="fa-solid fa-pen-to-square"
+              style="color: var(--accent); margin-right: 0.4rem"
+            ></i>
+            Edit Product
+          </h3>
+          <button class="btn-close-modal" onclick="closeEditModal()">
+            &times;
+          </button>
+        </div>
+        <div class="edit-modal-body">
+          <input type="hidden" id="editProductId" />
+          <div class="edit-form-group">
+            <label for="editTitle">Product Title</label>
+            <input type="text" id="editTitle" required />
+          </div>
+          <div class="edit-form-row">
+            <div class="edit-form-group">
+              <label for="editCategory">Category</label>
+              <select id="editCategory">
+                <option value="Bathroom Drains">Bathroom Drains</option>
+                <option value="Kitchen Drains">Kitchen Drains</option>
+                <option value="Outdoor Drains">Outdoor Drains</option>
+                <option value="Accessories">Accessories</option>
+              </select>
             </div>
-            <button class="mock-btn-cart">Add to Cart</button>
+            <div class="edit-form-group">
+              <label for="editMaterial">Material Grade</label>
+              <select id="editMaterial">
+                <option value="304 Stainless Steel">304 Stainless Steel</option>
+                <option value="Solid Brass">Solid Brass</option>
+              </select>
+            </div>
+          </div>
+          <div class="edit-form-row">
+            <div class="edit-form-group">
+              <label for="editPrice">Selling Price (₹)</label>
+              <input type="number" id="editPrice" required min="0" />
+            </div>
+            <div class="edit-form-group">
+              <label for="editOldPrice">Original Price / MRP (₹)</label>
+              <input type="number" id="editOldPrice" min="0" />
+            </div>
+          </div>
+          <div class="edit-form-group">
+            <label>Product Description</label>
+            <div class="edit-quill-wrapper">
+              <div id="editDescriptionQuill"></div>
+            </div>
+          </div>
+        </div>
+        <div class="edit-modal-footer">
+          <button
+            type="button"
+            class="btn-table-action"
+            onclick="closeEditModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn-add"
+            id="btnSaveEdit"
+            onclick="saveProductEdit()"
+          >
+            <i class="fa-solid fa-floppy-disk"></i> Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREVIEW MODAL -->
+    <div class="preview-modal-backdrop" id="previewModal">
+      <div class="preview-box">
+        <div class="preview-header">
+          <h3>Preview</h3>
+          <button class="btn-close-modal" onclick="closePreview()">
+            &times;
+          </button>
+        </div>
+        <div class="preview-body">
+          <div class="mock-store-card">
+            <img
+              class="mock-thumb"
+              id="previewImg"
+              src=""
+              alt="Product Cover"
+            />
+            <div class="mock-content">
+              <span class="mock-badge-tag" id="previewBadge">Top Pick</span>
+              <h4 class="mock-title" id="previewTitle">Linear Shower Drain</h4>
+              <div class="mock-prices">
+                <span class="mock-current-price" id="previewPrice">₹2,499</span>
+                <span class="mock-old-price" id="previewOldPrice">₹3,499</span>
+              </div>
+              <button class="mock-btn-cart">Add to Cart</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="admin-toast" id="adminToast">Notice updated</div>
+    <div class="admin-toast" id="adminToast">Notice updated</div>
 
-  <!-- Quill JS Core Engine -->
-  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script type="module">
+      import { db, auth } from "../assets/js/firebase-config.js";
+      import {
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+      import {
+        collection,
+        onSnapshot,
+        doc,
+        updateDoc,
+        deleteDoc,
+      } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-  <!-- Real-Time Cloud Firestore Sync Controller -->
-  <script type="module">
-    import { db, auth } from "../assets/js/firebase-config.js";
-    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-    import { 
-      collection, 
-      onSnapshot, 
-      doc, 
-      updateDoc, 
-      deleteDoc 
-    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+      let catalogListenersStarted = false;
 
-    // 1. Auth Guard
-    if (localStorage.getItem("prizam_admin_logged_in") !== "true") {
-      window.location.href = "login.html";
-    }
+      // 🔒 AUTH GUARD & OVERLAY REMOVER
+      onAuthStateChanged(auth, (user) => {
+        if (!user || user.email !== "admin@prizam.com") {
+          sessionStorage.removeItem("prizam_admin_logged_in");
+          window.location.replace("login.html");
+          return;
+        }
 
-    // 2. Initialize Quill Rich Text Editor for Edit Modal
-    const editQuill = new Quill('#editDescriptionQuill', {
-      theme: 'snow',
-      placeholder: 'Edit product description or paste directly from Microsoft Word...',
-      modules: {
-        toolbar: [
-          [{ 'header': [1, 2, 3, false] }],
-          [{ 'size': ['small', false, 'large', 'huge'] }],
-          ['bold', 'italic', 'underline', 'strike'],
-          [{ 'color': [] }, { 'background': [] }],
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-          [{ 'indent': '-1' }, { 'indent': '+1' }],
-          ['clean']
-        ]
-      }
-    });
+        // Remove Loading Overlay
+        const authGateOverlay = document.getElementById("authGateOverlay");
+        if (authGateOverlay) authGateOverlay.style.display = "none";
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("sideUserName").textContent = user.displayName || "Administrator";
-        document.getElementById("sideUserEmail").textContent = user.email || "admin@prizam.com";
-        const initials = (user.displayName || user.email || "AD").substring(0, 2).toUpperCase();
-        document.getElementById("sideUserAvatar").textContent = initials;
-      }
-    });
+        // Setup User Info in Sidebar
+        document.getElementById("sideUserName").textContent =
+          user.displayName || "Administrator";
+        document.getElementById("sideUserEmail").textContent =
+          user.email || "admin@prizam.com";
+        document.getElementById("sideUserAvatar").textContent = (
+          user.displayName ||
+          user.email ||
+          "AD"
+        )
+          .substring(0, 2)
+          .toUpperCase();
 
-    let products = [];
-    let currentFilter = "all";
-    let searchQuery = "";
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialFilter = urlParams.get("filter");
-    if (initialFilter === "published" || initialFilter === "draft") {
-      currentFilter = initialFilter;
-    }
-
-    function showToast(text) {
-      const toast = document.getElementById("adminToast");
-      toast.textContent = text;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 2200);
-    }
-
-    function updateCounts() {
-      const total = products.length;
-      const pubCount = products.filter(p => (p.status || "published") === "published").length;
-      const draftCount = products.filter(p => p.status === "draft").length;
-
-      const sideProducts = document.getElementById("sideBadgeProducts");
-      if (sideProducts) sideProducts.textContent = total;
-
-      document.getElementById("tabBadgeAll").textContent = total;
-      document.getElementById("tabBadgePublished").textContent = pubCount;
-      document.getElementById("tabBadgeDraft").textContent = draftCount;
-    }
-
-    // Orders Counter Stream
-    onSnapshot(collection(db, "orders"), (snap) => {
-      const sideOrders = document.getElementById("sideBadgeOrders");
-      if (sideOrders) sideOrders.textContent = snap.size;
-    }, () => {});
-
-    // Real-Time Products Listener from Firestore
-    onSnapshot(collection(db, "products"), (snapshot) => {
-      products = [];
-      snapshot.forEach((docSnap) => {
-        products.push({ id: docSnap.id, ...docSnap.data() });
+        if (!catalogListenersStarted) {
+          catalogListenersStarted = true;
+          startCatalogListeners();
+        }
       });
 
-      products.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      const editQuill = new Quill("#editDescriptionQuill", {
+        theme: "snow",
+        modules: {
+          toolbar: [
+            [{ header: [1, 2, 3, false] }],
+            ["bold", "italic", "underline"],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["clean"],
+          ],
+        },
+      });
 
-      try {
-        localStorage.setItem("prizam_local_catalog", JSON.stringify(products));
-      } catch (e) {}
+      let products = [];
+      let currentFilter = "all";
+      let searchQuery = "";
 
-      updateCounts();
-      renderTable();
-    }, (error) => {
-      console.warn("Firestore listener error, falling back to local cache:", error);
-      products = JSON.parse(localStorage.getItem("prizam_local_catalog")) || [];
-      updateCounts();
-      renderTable();
-    });
+      // Escapes text before it is inserted into innerHTML, so a malicious
+      // product title/category can't inject HTML/JS into the admin table.
+      const esc = (v) =>
+        String(v ?? "").replace(
+          /[&<>'"]/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              "'": "&#39;",
+              '"': "&quot;",
+            })[c],
+        );
 
-    window.setFilter = function(filter) {
-      currentFilter = filter;
+      function showToast(text) {
+        const toast = document.getElementById("adminToast");
+        toast.textContent = text;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2200);
+      }
 
-      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-      if (filter === "all" && document.getElementById("tabAll")) document.getElementById("tabAll").classList.add("active");
-      if (filter === "published" && document.getElementById("tabPublished")) document.getElementById("tabPublished").classList.add("active");
-      if (filter === "draft" && document.getElementById("tabDraft")) document.getElementById("tabDraft").classList.add("active");
+      function updateCounts() {
+        const total = products.length;
+        const pubCount = products.filter(
+          (p) => (p.status || "published") === "published",
+        ).length;
+        const draftCount = products.filter((p) => p.status === "draft").length;
+        if (document.getElementById("sideBadgeProducts"))
+          document.getElementById("sideBadgeProducts").textContent = total;
+        document.getElementById("tabBadgeAll").textContent = total;
+        document.getElementById("tabBadgePublished").textContent = pubCount;
+        document.getElementById("tabBadgeDraft").textContent = draftCount;
+      }
 
-      document.querySelectorAll(".sidebar-link").forEach(link => link.classList.remove("active"));
-      if (filter === "all" && document.getElementById("sideLinkAll")) document.getElementById("sideLinkAll").classList.add("active");
-      if (filter === "published" && document.getElementById("sideLinkPublished")) document.getElementById("sideLinkPublished").classList.add("active");
-      if (filter === "draft" && document.getElementById("sideLinkDraft")) document.getElementById("sideLinkDraft").classList.add("active");
+      function startCatalogListeners() {
+        onSnapshot(
+          collection(db, "orders"),
+          (snap) => {
+            if (document.getElementById("sideBadgeOrders"))
+              document.getElementById("sideBadgeOrders").textContent =
+                snap.size;
+          },
+          () => {},
+        );
 
-      renderTable();
-    };
+        onSnapshot(
+          collection(db, "products"),
+          (snapshot) => {
+            products = [];
+            snapshot.forEach((docSnap) => {
+              products.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            updateCounts();
+            renderTable();
+          },
+          (error) => {
+            console.error("Firestore Error:", error);
+          },
+        );
+      }
 
-    window.handleSearch = function() {
-      searchQuery = document.getElementById("catalogSearch").value.trim().toLowerCase();
-      renderTable();
-    };
+      window.setFilter = function (filter) {
+        currentFilter = filter;
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        if (filter === "all")
+          document.getElementById("tabAll").classList.add("active");
+        if (filter === "published")
+          document.getElementById("tabPublished").classList.add("active");
+        if (filter === "draft")
+          document.getElementById("tabDraft").classList.add("active");
+        renderTable();
+      };
 
-    window.toggleStatus = async function(productId) {
-      const target = products.find(p => p.id === productId);
-      if (!target) return;
+      window.handleSearch = function () {
+        searchQuery = document
+          .getElementById("catalogSearch")
+          .value.trim()
+          .toLowerCase();
+        renderTable();
+      };
 
-      const current = target.status || "published";
-      const updated = current === "published" ? "draft" : "published";
-
-      try {
+      window.toggleStatus = async function (productId) {
+        const target = products.find((p) => p.id === productId);
+        if (!target) return;
+        const updated =
+          (target.status || "published") === "published"
+            ? "draft"
+            : "published";
         await updateDoc(doc(db, "products", productId), { status: updated });
         showToast(`Status set to ${updated.toUpperCase()}`);
-      } catch (err) {
-        console.error("Firestore status update failed:", err);
-        showToast("Error updating status in cloud.");
-      }
-    };
+      };
 
-    window.toggleSection = async function(productId, field, value) {
-      try {
+      window.toggleSection = async function (productId, field, value) {
         await updateDoc(doc(db, "products", productId), { [field]: value });
         showToast(`Updated placement: ${field}`);
-      } catch (err) {
-        console.error("Firestore flag update failed:", err);
-        showToast("Error updating placement in cloud.");
-      }
-    };
+      };
 
-    window.deleteItem = async function(productId) {
-      const target = products.find(p => p.id === productId);
-      if (!target) return;
-
-      if (confirm(`Are you sure you want to remove "${target.title}"?`)) {
-        try {
+      window.deleteItem = async function (productId) {
+        if (confirm("Are you sure you want to remove this product?")) {
           await deleteDoc(doc(db, "products", productId));
           showToast("Product deleted from Firestore");
-        } catch (err) {
-          console.error("Firestore delete failed:", err);
-          showToast("Error deleting product from cloud.");
         }
-      }
-    };
+      };
 
-    // ================= EDIT MODAL CONTROLLERS =================
-    window.openEditModal = function(productId) {
-      const item = products.find(p => p.id === productId);
-      if (!item) return;
+      window.openEditModal = function (productId) {
+        const item = products.find((p) => p.id === productId);
+        if (!item) return;
+        document.getElementById("editProductId").value = item.id;
+        document.getElementById("editTitle").value = item.title || "";
+        document.getElementById("editCategory").value =
+          item.category || "Bathroom Drains";
+        // FIX: Material Grade was never loaded into the dropdown.
+        document.getElementById("editMaterial").value =
+          item.material || "304 Stainless Steel";
+        document.getElementById("editPrice").value = item.price || "";
+        document.getElementById("editOldPrice").value =
+          item.originalPrice || "";
+        editQuill.root.innerHTML = item.description || "";
+        document.getElementById("editModal").classList.add("active");
+      };
 
-      document.getElementById("editProductId").value = item.id;
-      document.getElementById("editTitle").value = item.title || "";
-      document.getElementById("editCategory").value = item.category || "Bathroom Drains";
-      document.getElementById("editMaterial").value = item.material || "304 Stainless Steel";
-      document.getElementById("editPrice").value = item.price !== undefined ? item.price : "";
-      document.getElementById("editOldPrice").value = item.originalPrice !== undefined && item.originalPrice !== null ? item.originalPrice : "";
-      document.getElementById("editDimensions").value = item.dimensions || "";
-      document.getElementById("editFlowRate").value = item.flowRate || "";
+      window.closeEditModal = function () {
+        document.getElementById("editModal").classList.remove("active");
+      };
 
-      // Load formatted HTML description into Quill
-      editQuill.root.innerHTML = item.description || "";
+      window.saveProductEdit = async function () {
+        const productId = document.getElementById("editProductId").value;
+        const saveBtn = document.getElementById("btnSaveEdit");
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
 
-      document.getElementById("editModal").classList.add("active");
-    };
+        try {
+          await updateDoc(doc(db, "products", productId), {
+            title: document.getElementById("editTitle").value.trim(),
+            category: document.getElementById("editCategory").value,
+            // FIX: Material Grade was never saved back to Firestore.
+            material: document.getElementById("editMaterial").value,
+            price: Number(document.getElementById("editPrice").value),
+            originalPrice:
+              Number(document.getElementById("editOldPrice").value) || null,
+            description: editQuill.root.innerHTML.trim(),
+          });
+          showToast("Product updated successfully!");
+          closeEditModal();
+        } catch (err) {
+          showToast("Error updating product.");
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save Changes`;
+        }
+      };
 
-    window.closeEditModal = function() {
-      document.getElementById("editModal").classList.remove("active");
-    };
+      window.openPreview = function (productId) {
+        const item = products.find((p) => p.id === productId);
+        if (!item) return;
+        document.getElementById("previewImg").src =
+          item.imageUrl || "assets/images/logo/prizam.png";
+        document.getElementById("previewTitle").textContent = item.title;
+        document.getElementById("previewPrice").textContent = `₹${item.price}`;
+        document.getElementById("previewOldPrice").textContent =
+          item.originalPrice ? `₹${item.originalPrice}` : "";
+        document.getElementById("previewModal").classList.add("active");
+      };
 
-    window.saveProductEdit = async function() {
-      const productId = document.getElementById("editProductId").value;
-      const title = document.getElementById("editTitle").value.trim();
-      const price = Number(document.getElementById("editPrice").value);
-      const originalPrice = Number(document.getElementById("editOldPrice").value) || null;
-      const category = document.getElementById("editCategory").value;
-      const material = document.getElementById("editMaterial").value;
-      const dimensions = document.getElementById("editDimensions").value.trim();
-      const flowRate = document.getElementById("editFlowRate").value.trim();
-      
-      const richDescription = editQuill.root.innerHTML.trim();
+      window.closePreview = function () {
+        document.getElementById("previewModal").classList.remove("active");
+      };
 
-      if (!title) {
-        alert("Please provide a product title.");
-        return;
-      }
-      if (isNaN(price) || price < 0) {
-        alert("Please enter a valid price.");
-        return;
-      }
-
-      const saveBtn = document.getElementById("btnSaveEdit");
-      saveBtn.disabled = true;
-      saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
-
-      try {
-        await updateDoc(doc(db, "products", productId), {
-          title,
-          category,
-          material,
-          price,
-          originalPrice,
-          dimensions: dimensions || "Standard",
-          flowRate: flowRate || "35 L/min",
-          description: richDescription === '<p><br></p>' ? '' : richDescription
+      function renderTable() {
+        const tbody = document.getElementById("catalogTableBody");
+        tbody.innerHTML = "";
+        let filtered = products.filter((p) => {
+          const status = p.status || "published";
+          if (currentFilter === "published" && status !== "published")
+            return false;
+          if (currentFilter === "draft" && status !== "draft") return false;
+          if (searchQuery)
+            return (p.title || "").toLowerCase().includes(searchQuery);
+          return true;
         });
 
-        showToast("Product & formatted description updated!");
-        closeEditModal();
-      } catch (err) {
-        console.error("Failed to update product in Firestore:", err);
-        showToast("Error updating product in cloud.");
-      } finally {
-        saveBtn.disabled = false;
-        saveBtn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save Changes`;
-      }
-    };
-
-    // Live Preview Controllers
-    window.openPreview = function(productId) {
-      const item = products.find(p => p.id === productId);
-      if (!item) return;
-
-      document.getElementById("previewImg").src = item.imageUrl || "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80";
-      document.getElementById("previewTitle").textContent = item.title || "Product";
-      document.getElementById("previewPrice").textContent = `₹${Number(item.price || 0).toLocaleString()}`;
-      document.getElementById("previewOldPrice").textContent = item.originalPrice ? `₹${Number(item.originalPrice).toLocaleString()}` : "";
-
-      let badge = "Featured Product";
-      if (item.isTopPick) badge = "Top Pick";
-      else if (item.isTopSeller) badge = "Best Seller";
-      else if (item.isUpcoming) badge = "Upcoming";
-      document.getElementById("previewBadge").textContent = badge;
-
-      document.getElementById("previewModal").classList.add("active");
-    };
-
-    window.closePreview = function() {
-      document.getElementById("previewModal").classList.remove("active");
-    };
-
-    function renderTable() {
-      const tbody = document.getElementById("catalogTableBody");
-      tbody.innerHTML = "";
-
-      let filtered = products.filter(p => {
-        const status = p.status || "published";
-        if (currentFilter === "published" && status !== "published") return false;
-        if (currentFilter === "draft" && status !== "draft") return false;
-        if (searchQuery) {
-          const matchTitle = (p.title || "").toLowerCase().includes(searchQuery);
-          const matchCat = (p.category || "").toLowerCase().includes(searchQuery);
-          const matchId = (p.id || "").toLowerCase().includes(searchQuery);
-          return matchTitle || matchCat || matchId;
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 3.5rem 1rem;">No products found.</td></tr>`;
+          return;
         }
-        return true;
-      });
 
-      if (filtered.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="8" style="text-align:center; padding: 3.5rem 1rem; color: var(--text-muted);">
-              No products found under "${currentFilter}" filter.
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      filtered.forEach((item) => {
-        const status = item.status || "published";
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>
-            <div class="prod-cell">
-              <img src="${item.imageUrl || 'assets/images/logo/prizam.png'}" class="prod-thumb" alt="${item.title}" onclick="openPreview('${item.id}')" />
-              <div>
-                <div class="prod-meta-title">${item.title}</div>
-                <div class="prod-meta-cat">ID: ${item.id}</div>
-              </div>
-            </div>
-          </td>
-          <td>${item.category || 'Drain'}</td>
+        filtered.forEach((item) => {
+          const status = item.status || "published";
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+          <td><div class="prod-cell"><img src="${item.imageUrl || "assets/images/logo/prizam.png"}" class="prod-thumb" onclick="openPreview('${item.id}')" /><div><div class="prod-meta-title">${esc(item.title)}</div><div class="prod-meta-cat">ID: ${esc(item.id)}</div></div></div></td>
+          <td>${esc(item.category || "Drain")}</td>
           <td><strong>₹${Number(item.price || 0).toLocaleString()}</strong></td>
-          <td>
-            <button class="status-pill ${status}" onclick="toggleStatus('${item.id}')" title="Click to toggle Published / Draft">
-              ${status === "published" ? "Published" : "Draft"}
-            </button>
-          </td>
-          <td>
-            <label class="switch">
-              <input type="checkbox" ${item.isTopPick ? 'checked' : ''} onchange="toggleSection('${item.id}', 'isTopPick', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </td>
-          <td>
-            <label class="switch">
-              <input type="checkbox" ${item.isTopSeller ? 'checked' : ''} onchange="toggleSection('${item.id}', 'isTopSeller', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </td>
-          <td>
-            <label class="switch">
-              <input type="checkbox" ${item.isUpcoming ? 'checked' : ''} onchange="toggleSection('${item.id}', 'isUpcoming', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </td>
+          <td><button class="status-pill ${status}" onclick="toggleStatus('${item.id}')">${status === "published" ? "Published" : "Draft"}</button></td>
+          <td><label class="switch"><input type="checkbox" ${item.isTopPick ? "checked" : ""} onchange="toggleSection('${item.id}', 'isTopPick', this.checked)"><span class="slider"></span></label></td>
+          <td><label class="switch"><input type="checkbox" ${item.isTopSeller ? "checked" : ""} onchange="toggleSection('${item.id}', 'isTopSeller', this.checked)"><span class="slider"></span></label></td>
+          <td><label class="switch"><input type="checkbox" ${item.isUpcoming ? "checked" : ""} onchange="toggleSection('${item.id}', 'isUpcoming', this.checked)"><span class="slider"></span></label></td>
           <td>
             <div class="action-group">
-              <button class="btn-table-action btn-table-edit" onclick="openEditModal('${item.id}')" title="Edit Specs & Description">
-                <i class="fa-solid fa-pen-to-square"></i> Edit
-              </button>
-              <button class="btn-table-action" onclick="openPreview('${item.id}')" title="Preview Storefront Card">
-                <i class="fa-solid fa-eye"></i> Live
-              </button>
-              <button class="btn-delete" onclick="deleteItem('${item.id}')" title="Delete Product">
-                <i class="fa-solid fa-trash"></i>
-              </button>
+              <button class="btn-table-action btn-table-edit" onclick="openEditModal('${item.id}')"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+              <button class="btn-delete" onclick="deleteItem('${item.id}')"><i class="fa-solid fa-trash"></i></button>
             </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    // Modal dismiss on backdrop click
-    document.getElementById("previewModal").addEventListener("click", (e) => {
-      if (e.target.id === "previewModal") closePreview();
-    });
-
-    document.getElementById("editModal").addEventListener("click", (e) => {
-      if (e.target.id === "editModal") closeEditModal();
-    });
-
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-      if (confirm("Sign out of Admin Portal?")) {
-        localStorage.removeItem("prizam_admin_logged_in");
-        await signOut(auth);
-        window.location.href = "login.html";
+          </td>`;
+          tbody.appendChild(tr);
+        });
       }
-    });
 
-    // Initial filter setup
-    setFilter(currentFilter);
-  </script>
-</body>
+      document.getElementById("previewModal").addEventListener("click", (e) => {
+        if (e.target.id === "previewModal") closePreview();
+      });
+      document.getElementById("editModal").addEventListener("click", (e) => {
+        if (e.target.id === "editModal") closeEditModal();
+      });
+
+      // Logout Function
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async () => {
+          if (confirm("Sign out of Admin Portal?")) {
+            try {
+              sessionStorage.removeItem("prizam_admin_logged_in");
+              localStorage.removeItem("admin_heartbeat");
+            } catch (e) {}
+            await signOut(auth);
+            window.location.href = "login.html";
+          }
+        });
+    </script>
+  </body>
 </html>
