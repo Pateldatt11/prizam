@@ -455,6 +455,8 @@
       top: 10px;
       left: auto;
       right: 10px;
+      box-shadow: 0 8px 18px rgba(22, 163, 74, 0.28);
+      white-space: nowrap;
     }
 
     .product-info {
@@ -557,6 +559,17 @@
       }
       .filter-sidebar {
         position: static;
+      }
+
+      /* Move the High Demand sticker away from the top badges on phones */
+      .badge-tag.demand {
+        top: auto;
+        right: auto;
+        left: 10px;
+        bottom: 10px;
+        font-size: 0.62rem;
+        padding: 4px 7px;
+        border-radius: 999px;
       }
     }
   </style>
