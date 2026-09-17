@@ -316,8 +316,14 @@
         signOut,
       } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
+      // NOTE: ADMIN_PASSWORD is now only used as the "default" password to
+      // auto-create the admin account the very first time it doesn't exist.
+      // It is NOT used to block sign-in anymore — real sign-in always goes
+      // straight to Firebase, so it works with whatever password is
+      // actually set on the admin account in Firebase Auth.
       const ADMIN_EMAIL = "admin@prizam.com";
       const ADMIN_PASSWORD = "admin123";
+
       const loginForm = document.getElementById("adminLoginForm");
       const errorMsg = document.getElementById("loginErrorMsg");
       const errorText = document.getElementById("errorText");
@@ -328,7 +334,7 @@
 
       // Check Auto-Login with Heartbeat
       onAuthStateChanged(auth, async (user) => {
-        if (user && user.email === "admin@prizam.com") {
+        if (user && user.email === ADMIN_EMAIL) {
           const lastHb = localStorage.getItem("admin_heartbeat");
           const now = Date.now();
 
@@ -351,6 +357,11 @@
           : "fa-regular fa-eye";
       });
 
+      function showError(message) {
+        errorText.textContent = message;
+        errorMsg.style.display = "flex";
+      }
+
       loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         errorMsg.style.display = "none";
@@ -361,38 +372,55 @@
         const password = passwordInput.value;
 
         try {
-          if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
-            throw new Error("Use the configured admin credentials.");
+          if (email.toLowerCase() !== ADMIN_EMAIL) {
+            showError("This email is not the admin account.");
+            return;
           }
 
           await setPersistence(auth, browserSessionPersistence);
 
           let credential;
           try {
+            // Sign in with whatever password the user actually typed.
             credential = await signInWithEmailAndPassword(
               auth,
               ADMIN_EMAIL,
-              ADMIN_PASSWORD,
+              password,
             );
           } catch (signInError) {
+            // Only auto-create the account if it genuinely doesn't exist
+            // yet, AND the typed password matches the default. This stops
+            // a wrong password from silently trying to "create" a new
+            // account (which was masking the real error before).
+            const notFoundCodes = [
+              "auth/user-not-found",
+              "auth/invalid-credential",
+            ];
             if (
-              !["auth/user-not-found", "auth/invalid-credential"].includes(
-                signInError.code,
-              )
+              notFoundCodes.includes(signInError.code) &&
+              password === ADMIN_PASSWORD
             ) {
+              try {
+                credential = await createUserWithEmailAndPassword(
+                  auth,
+                  ADMIN_EMAIL,
+                  ADMIN_PASSWORD,
+                );
+              } catch (createError) {
+                // Account already exists with a different password —
+                // the original sign-in error is the real one to show.
+                throw signInError;
+              }
+            } else {
               throw signInError;
             }
-            credential = await createUserWithEmailAndPassword(
-              auth,
-              ADMIN_EMAIL,
-              ADMIN_PASSWORD,
-            );
           }
 
-          if (credential.user.email !== "admin@prizam.com") {
-            throw new Error(
-              "This account is not authorized for the admin portal.",
-            );
+          if (credential.user.email !== ADMIN_EMAIL) {
+            throw {
+              code: "custom/not-authorized",
+              message: "This account is not authorized for the admin portal.",
+            };
           }
 
           localStorage.setItem("admin_heartbeat", Date.now().toString());
@@ -400,9 +428,26 @@
           window.location.href = "index.html";
         } catch (error) {
           console.error("Admin sign-in failed:", error);
-          errorText.textContent =
-            "Unable to sign in. Check the Firebase admin account and try again.";
-          errorMsg.style.display = "flex";
+          // Show the REAL Firebase error instead of a generic message,
+          // so the actual cause (wrong password, provider disabled,
+          // unauthorized domain, etc.) is visible.
+          const code = error && error.code ? error.code : "unknown";
+          const readable =
+            {
+              "auth/wrong-password": "Incorrect password.",
+              "auth/invalid-credential": "Incorrect email or password.",
+              "auth/user-not-found": "No admin account found for this email.",
+              "auth/too-many-requests":
+                "Too many attempts. Please wait a moment and try again.",
+              "auth/network-request-failed":
+                "Network error — check your internet connection.",
+              "auth/unauthorized-domain":
+                "This domain is not authorized in Firebase Auth settings.",
+              "auth/operation-not-allowed":
+                "Email/Password sign-in is disabled in Firebase Auth settings.",
+            }[code] || error.message || "Unable to sign in.";
+
+          showError(`${readable} (${code})`);
           loginBtn.disabled = false;
           loginBtn.innerHTML = `<span>Sign In to Dashboard</span> <i class="fa-solid fa-arrow-right"></i>`;
         }
