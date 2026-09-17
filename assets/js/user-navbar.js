@@ -89,7 +89,7 @@
 //             <i class="fa-solid fa-bag-shopping"></i>
 //             <span class="cart-badge" id="cartCount">0</span>
 //           </a>
-//           <a href="admin/index.html" class="icon-btn" title="Admin Portal"><i class="fa-solid fa-gear"></i></a>
+//           
 //         </div>
 //       </div>
 //     </header>
