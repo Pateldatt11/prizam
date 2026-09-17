@@ -737,7 +737,13 @@
   <!-- Real-Time Firestore Syncer & Click-Through Demand Controller -->
   <script type="module">
     import { db } from "./assets/js/firebase-config.js";
-    import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    import {
+      collection,
+      onSnapshot,
+      query,
+      where,
+      getDocsFromServer
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
     // Mobile Hamburger Toggle Logic
     const mobileMenuBtn = document.getElementById("mobileMenuBtn");
@@ -819,27 +825,178 @@
       showToast(`Added "${product.title}" to bag!`);
     };
 
-    // Real-Time Firestore Stream for Catalog
-    onSnapshot(collection(db, "products"), (snapshot) => {
-      allProducts = [];
-      snapshot.forEach(docSnap => {
-        allProducts.push({ id: docSnap.id, ...docSnap.data() });
+    // ==========================================================
+    // REAL-TIME PUBLISHED CATALOG — SAFE FOR PUBLIC / MOBILE USERS
+    // ==========================================================
+    //
+    // Firestore security rules allow public users to read ONLY documents
+    // whose status is exactly "published". Therefore the public storefront
+    // MUST query status == "published" at Firestore level.
+    //
+    // Reading collection(db, "products") and filtering drafts afterward
+    // can be denied for logged-out/mobile users because Firestore rules
+    // are not post-query filters.
+
+    const publishedProductsQuery = query(
+      collection(db, "products"),
+      where("status", "==", "published")
+    );
+
+    const CATALOG_CACHE_KEY = "prizam_shop_catalog_v2";
+    const CATALOG_CACHE_MAX_AGE = 5 * 60 * 1000; // 5 minutes
+
+    function snapshotToProducts(snapshot) {
+      const products = [];
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+
+        products.push({
+          id: docSnap.id,
+          ...data,
+          status: String(data.status || "")
+            .trim()
+            .toLowerCase()
+        });
       });
 
-      // Filter out draft listings
-      allProducts = allProducts.filter(p => p.status !== "draft");
+      return products.filter(
+        (product) => product.status === "published"
+      );
+    }
 
-      // Cache locally for offline resilience
+    function savePublishedCatalogCache(products) {
       try {
-        localStorage.setItem("prizam_local_catalog", JSON.stringify(allProducts));
-      } catch (e) {}
+        localStorage.setItem(
+          CATALOG_CACHE_KEY,
+          JSON.stringify({
+            savedAt: Date.now(),
+            products
+          })
+        );
 
+        // Remove the old cache that could remain stale on a phone.
+        localStorage.removeItem("prizam_local_catalog");
+      } catch (error) {
+        console.warn("Could not save catalog cache:", error);
+      }
+    }
+
+    function loadRecentPublishedCatalogCache() {
+      try {
+        const raw = localStorage.getItem(CATALOG_CACHE_KEY);
+        if (!raw) return [];
+
+        const parsed = JSON.parse(raw);
+
+        if (
+          !parsed ||
+          !Array.isArray(parsed.products) ||
+          !Number.isFinite(Number(parsed.savedAt))
+        ) {
+          return [];
+        }
+
+        if (
+          Date.now() - Number(parsed.savedAt) >
+          CATALOG_CACHE_MAX_AGE
+        ) {
+          localStorage.removeItem(CATALOG_CACHE_KEY);
+          return [];
+        }
+
+        return parsed.products.filter(
+          (product) =>
+            String(product.status || "")
+              .trim()
+              .toLowerCase() === "published"
+        );
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function applyIncomingCatalog(products) {
+      allProducts = products;
       initCatalogView();
-    }, (error) => {
-      console.warn("Firestore catalog stream offline, falling back to local cache:", error);
-      const local = JSON.parse(localStorage.getItem("prizam_local_catalog") || "[]");
-      allProducts = local.filter(p => p.status !== "draft");
-      initCatalogView();
+    }
+
+    async function refreshCatalogFromFirestoreServer() {
+      try {
+        const snapshot =
+          await getDocsFromServer(publishedProductsQuery);
+
+        const products = snapshotToProducts(snapshot);
+
+        savePublishedCatalogCache(products);
+        applyIncomingCatalog(products);
+
+        console.info(
+          `[Prizam Shop] Fresh server catalog loaded: ${products.length} published product(s).`
+        );
+      } catch (error) {
+        console.error(
+          "[Prizam Shop] Direct Firestore server refresh failed:",
+          error
+        );
+
+        const cached = loadRecentPublishedCatalogCache();
+
+        if (cached.length) {
+          console.warn(
+            "[Prizam Shop] Temporarily displaying recent offline catalog cache."
+          );
+          applyIncomingCatalog(cached);
+        } else {
+          applyIncomingCatalog([]);
+        }
+      }
+    }
+
+    // Force one fresh cloud read on every page load.
+    refreshCatalogFromFirestoreServer();
+
+    // Keep the shop synchronized in real time after the first read.
+    const unsubscribePublishedCatalog = onSnapshot(
+      publishedProductsQuery,
+      { includeMetadataChanges: true },
+      (snapshot) => {
+        const products = snapshotToProducts(snapshot);
+
+        // Only persist cache after Firestore confirms server-backed data.
+        if (!snapshot.metadata.fromCache) {
+          savePublishedCatalogCache(products);
+        }
+
+        applyIncomingCatalog(products);
+      },
+      (error) => {
+        console.error(
+          "[Prizam Shop] Published catalog listener failed:",
+          error
+        );
+
+        // Try a server refresh again instead of immediately trusting old cache.
+        refreshCatalogFromFirestoreServer();
+      }
+    );
+
+    // Mobile browsers often suspend background tabs. Revalidate whenever the
+    // customer returns to the tab, restores a cached page, or reconnects.
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        refreshCatalogFromFirestoreServer();
+      }
+    });
+
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) {
+        refreshCatalogFromFirestoreServer();
+      }
+    });
+
+    window.addEventListener("online", () => {
+      refreshCatalogFromFirestoreServer();
     });
 
     function initCatalogView() {
