@@ -1134,6 +1134,8 @@
         doc,
         updateDoc,
         deleteDoc,
+        getDocFromServer,
+        serverTimestamp,
       } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
       let catalogListenersStarted = false;
@@ -1386,12 +1388,48 @@
       window.toggleStatus = async function (productId) {
         const target = products.find((p) => p.id === productId);
         if (!target) return;
-        const updated =
-          (target.status || "published") === "published"
-            ? "draft"
-            : "published";
-        await updateDoc(doc(db, "products", productId), { status: updated });
-        showToast(`Status set to ${updated.toUpperCase()}`);
+
+        const currentStatus = String(target.status || "draft")
+          .trim()
+          .toLowerCase();
+
+        const updated = currentStatus === "published" ? "draft" : "published";
+
+        try {
+          const productRef = doc(db, "products", productId);
+          const payload = {
+            status: updated,
+            isPublished: updated === "published",
+            updatedAt: serverTimestamp(),
+          };
+
+          if (updated === "published") {
+            payload.publishedAt = serverTimestamp();
+          }
+
+          await updateDoc(productRef, payload);
+
+          // Verify against the Firestore SERVER so publish is not only local/cache state.
+          const verifiedSnap = await getDocFromServer(productRef);
+          if (!verifiedSnap.exists()) throw new Error("Product not found after update.");
+
+          const cloudStatus = String(verifiedSnap.data().status || "")
+            .trim()
+            .toLowerCase();
+
+          if (cloudStatus !== updated) {
+            throw new Error(`Cloud status verification failed: ${cloudStatus}`);
+          }
+
+          showToast(
+            updated === "published"
+              ? "Published to cloud — visible on all devices."
+              : "Product moved to Draft."
+          );
+        } catch (error) {
+          console.error("Product status update failed:", error);
+          showToast("Could not update product status. Please try again.");
+        }
       };
 
       window.toggleSection = async function (productId, field, value) {
@@ -1529,5 +1567,4 @@
         });
     </script>
   </body>
-  
 </html>

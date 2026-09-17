@@ -1404,12 +1404,14 @@
   <script type="module">
     import { db } from "./assets/js/firebase-config.js";
     import { addToCart, updateCartBadge } from "./assets/js/cart.js";
-    import { trackVisitor } from "./assets/js/visitor-counter.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-    import { 
-      collection, 
-      onSnapshot, 
-      doc 
+    import {
+      collection,
+      onSnapshot,
+      doc,
+      query,
+      where,
+      getDocsFromServer
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
     // Profile Hover: keep the dropdown synchronized with Firebase login state
@@ -1518,30 +1520,111 @@
       }
     }, () => {});
 
-    // 2. Real-Time Stream: Published Products Showcase
-    onSnapshot(collection(db, "products"), (snapshot) => {
-      let catalog = [];
+    // 2. CROSS-DEVICE REAL-TIME PUBLISHED CATALOG
+    // Server-first refresh prevents stale phone/localStorage catalogs.
+    const publishedProductsQuery = query(
+      collection(db, "products"),
+      where("status", "==", "published")
+    );
+
+    const CATALOG_CACHE_KEY = "prizam_local_catalog_v2";
+    const CATALOG_CACHE_MAX_AGE = 5 * 60 * 1000;
+
+    function normalizeCatalog(snapshot) {
+      const catalog = [];
       snapshot.forEach((docSnap) => {
-        catalog.push({ id: docSnap.id, ...docSnap.data() });
+        const data = docSnap.data();
+        catalog.push({
+          id: docSnap.id,
+          ...data,
+          status: String(data.status || "").trim().toLowerCase()
+        });
       });
+      return catalog;
+    }
 
-      // Cache locally for offline performance
+    function saveCatalogCache(catalog) {
       try {
-        localStorage.setItem("prizam_local_catalog", JSON.stringify(catalog));
-      } catch (e) {}
+        localStorage.setItem(
+          CATALOG_CACHE_KEY,
+          JSON.stringify({ savedAt: Date.now(), products: catalog })
+        );
+        // Remove the old unlimited cache that could stay stale on a phone.
+        localStorage.removeItem("prizam_local_catalog");
+      } catch (error) {
+        console.warn("Catalog cache save failed:", error);
+      }
+    }
 
-      processAndRenderCatalog(catalog);
-    }, (err) => {
-      console.warn("Firestore real-time catalog offline, loading cached products:", err);
-      const cached = JSON.parse(localStorage.getItem("prizam_local_catalog") || "[]");
-      processAndRenderCatalog(cached);
+    function loadRecentCatalogCache() {
+      try {
+        const raw = localStorage.getItem(CATALOG_CACHE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.products)) return [];
+        const savedAt = Number(parsed.savedAt || 0);
+        if (!savedAt || Date.now() - savedAt > CATALOG_CACHE_MAX_AGE) {
+          localStorage.removeItem(CATALOG_CACHE_KEY);
+          return [];
+        }
+        return parsed.products;
+      } catch (error) {
+        return [];
+      }
+    }
+
+    async function refreshPublishedCatalogFromServer() {
+      try {
+        const serverSnapshot = await getDocsFromServer(publishedProductsQuery);
+        const catalog = normalizeCatalog(serverSnapshot);
+        saveCatalogCache(catalog);
+        processAndRenderCatalog(catalog);
+        console.info(`[Prizam] Fresh catalog: ${catalog.length} published product(s)`);
+      } catch (error) {
+        console.error("[Prizam] Server catalog refresh failed:", error);
+        const cached = loadRecentCatalogCache();
+        processAndRenderCatalog(cached);
+      }
+    }
+
+    // Fresh server read on every load.
+    refreshPublishedCatalogFromServer();
+
+    // Real-time sync for all devices.
+    onSnapshot(
+      publishedProductsQuery,
+      { includeMetadataChanges: true },
+      (snapshot) => {
+        const catalog = normalizeCatalog(snapshot);
+        if (!snapshot.metadata.fromCache) saveCatalogCache(catalog);
+        processAndRenderCatalog(catalog);
+      },
+      (error) => {
+        console.error("[Prizam] Real-time catalog listener failed:", error);
+        refreshPublishedCatalogFromServer();
+      }
+    );
+
+    // Mobile browsers can freeze background tabs; refresh when returning.
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        refreshPublishedCatalogFromServer();
+      }
     });
 
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) refreshPublishedCatalogFromServer();
+    });
+
+    window.addEventListener("online", refreshPublishedCatalogFromServer);
+
     function processAndRenderCatalog(catalog) {
-      const activeProducts = catalog.filter(item => item.status !== "draft");
-      
-      const topPicks = activeProducts.filter(p => p.isTopPick);
-      const bestSellers = activeProducts.filter(p => p.isTopSeller);
+      const activeProducts = catalog.filter(
+        (item) => String(item.status || "").trim().toLowerCase() === "published"
+      );
+
+      const topPicks = activeProducts.filter((p) => p.isTopPick);
+      const bestSellers = activeProducts.filter((p) => p.isTopSeller);
 
       renderShowcaseSection("topPicksContainer", topPicks);
       renderShowcaseSection("bestSellersContainer", bestSellers);
