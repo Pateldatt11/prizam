@@ -449,6 +449,281 @@
       margin-right: auto;
     }
 
+
+    /* Wholesale / Quotation Mode */
+    .cart-mode-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cart-mode-copy strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    .cart-mode-copy span {
+      display: block;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .cart-mode-toggle {
+      display: inline-flex;
+      padding: 4px;
+      background: #eef2f7;
+      border-radius: 999px;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .cart-mode-toggle button {
+      border: 0;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 0.55rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .cart-mode-toggle button.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    .quote-price-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--accent-blue);
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      border-radius: 999px;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .quote-summary-note {
+      padding: 0.9rem;
+      border: 1px solid #dbeafe;
+      background: #eff6ff;
+      border-radius: 10px;
+      color: #1e40af;
+      font-size: 0.8rem;
+      line-height: 1.55;
+      margin-bottom: 1rem;
+    }
+
+    .quote-moq-warning {
+      padding: 0.78rem 0.85rem;
+      margin-top: 0.85rem;
+      border-radius: 9px;
+      border: 1px solid #fde68a;
+      background: #fffbeb;
+      color: #92400e;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .quote-moq-warning.ready {
+      border-color: #bbf7d0;
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .btn-quotation:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .quote-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.87rem;
+    }
+
+    .quote-summary-row:last-of-type {
+      border-bottom: 0;
+    }
+
+    .btn-quotation {
+      display: block;
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--accent-blue);
+      color: #fff;
+      text-align: center;
+      font-weight: 800;
+      border-radius: 40px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.92rem;
+      margin-top: 1.1rem;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-quotation:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    .quote-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.68);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10020;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      padding: 1rem;
+    }
+
+    .quote-modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .quote-modal {
+      background: #fff;
+      width: 100%;
+      max-width: 560px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(20px) scale(.97);
+      transition: transform .25s ease;
+    }
+
+    .quote-modal-overlay.active .quote-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .quote-modal-header {
+      padding: 1.35rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .quote-modal-header h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .quote-modal-header p {
+      color: var(--text-muted);
+      font-size: .78rem;
+      margin-top: .2rem;
+      line-height: 1.45;
+    }
+
+    .quote-modal-close {
+      border: 0;
+      background: #f1f5f9;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .quote-form {
+      padding: 1.4rem 1.5rem 1.55rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .quote-form .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .quote-form textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .quote-form input,
+    .quote-form textarea {
+      width: 100%;
+      padding: .75rem .85rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font: inherit;
+      font-size: .88rem;
+      outline: none;
+    }
+
+    .quote-form input:focus,
+    .quote-form textarea:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .quote-submit-btn {
+      grid-column: 1 / -1;
+      width: 100%;
+      border: 0;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 10px;
+      padding: .9rem 1rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .quote-submit-btn:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    @media (max-width: 700px) {
+      .cart-mode-card {
+        align-items: stretch;
+        flex-direction: column;
+      }
+      .cart-mode-toggle {
+        width: 100%;
+      }
+      .cart-mode-toggle button {
+        flex: 1;
+      }
+      .quote-form {
+        grid-template-columns: 1fr;
+      }
+      .quote-form .form-group.full,
+      .quote-submit-btn {
+        grid-column: 1;
+      }
+    }
+
     /* Modal Styles */
     .auth-modal-overlay {
       position: fixed;
@@ -811,8 +1086,19 @@
   <!-- Cart Content -->
   <main class="container cart-wrapper">
     <div class="cart-title-box">
-      <h1>Your Shopping Cart</h1>
-      <p>Review your selected architectural drainage systems before proceeding.</p>
+      <h1 id="cartPageTitle">Your Shopping Cart</h1>
+      <p id="cartPageSubtitle">Review your selected architectural drainage systems before proceeding.</p>
+
+      <div class="cart-mode-card">
+        <div class="cart-mode-copy">
+          <strong>Order Type</strong>
+          <span>Switch to wholesale mode to hide retail pricing and request a custom quotation.</span>
+        </div>
+        <div class="cart-mode-toggle" role="group" aria-label="Order Type">
+          <button type="button" id="retailModeBtn">Retail Order</button>
+          <button type="button" id="quoteModeBtn">Wholesale Quote</button>
+        </div>
+      </div>
     </div>
 
     <div id="cartContentArea">
@@ -896,6 +1182,54 @@
     </div>
   </div>
 
+
+  <!-- Wholesale Quotation Request Modal -->
+  <div class="quote-modal-overlay" id="quoteModalOverlay">
+    <div class="quote-modal" role="dialog" aria-modal="true" aria-labelledby="quoteModalTitle">
+      <div class="quote-modal-header">
+        <div>
+          <h2 id="quoteModalTitle">Request Wholesale Quotation</h2>
+          <p>Send your product quantities to Prizam. Our team can respond with project/wholesale pricing.</p>
+        </div>
+        <button type="button" class="quote-modal-close" id="quoteModalClose" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form class="quote-form" id="quoteRequestForm">
+        <div class="form-group">
+          <label for="quoteName">Full Name *</label>
+          <input id="quoteName" type="text" required />
+        </div>
+
+        <div class="form-group">
+          <label for="quoteCompany">Company / Firm</label>
+          <input id="quoteCompany" type="text" placeholder="Optional" />
+        </div>
+
+        <div class="form-group">
+          <label for="quoteEmail">Email *</label>
+          <input id="quoteEmail" type="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="quotePhone">Phone *</label>
+          <input id="quotePhone" type="tel" required />
+        </div>
+
+        <div class="form-group full">
+          <label for="quoteNotes">Project / Requirement Notes</label>
+          <textarea id="quoteNotes" placeholder="Project name, required delivery city, special sizes, expected quantity, etc."></textarea>
+        </div>
+
+        <button class="quote-submit-btn" id="submitQuoteBtn" type="submit">
+          <i class="fa-solid fa-paper-plane"></i>
+          Send Quotation Request
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div class="cart-toast" id="cartToast">Notification</div>
 
@@ -932,8 +1266,9 @@
   </footer>
 
   <script type="module">
-    import { auth, googleProvider } from "./assets/js/firebase-config.js";
+    import { auth, googleProvider, db } from "./assets/js/firebase-config.js";
     import { signInWithPopup } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
     // 1. Mobile Menu Toggle
     const mobileMenuBtn = document.getElementById("mobileMenuBtn");
@@ -978,6 +1313,8 @@
               title: item.title || "Architectural Drain",
               price: Number(item.price) || 0,
               imageUrl: item.imageUrl || "assets/images/logo/prizam.png",
+              category: item.category || "Architectural Drain",
+              material: item.material || "",
               quantity: itemQty
             });
           }
@@ -990,6 +1327,38 @@
         return normalized;
       } catch (e) {
         return [];
+      }
+    }
+
+
+    const MIN_QUOTE_QTY = 30;
+
+    function getCartMode() {
+      return localStorage.getItem("prizam_cart_mode") === "quote" ? "quote" : "retail";
+    }
+
+    function setCartMode(mode) {
+      localStorage.setItem("prizam_cart_mode", mode === "quote" ? "quote" : "retail");
+      syncCartModeUI();
+      renderCartView();
+    }
+
+    function syncCartModeUI() {
+      const mode = getCartMode();
+      const retailBtn = document.getElementById("retailModeBtn");
+      const quoteBtn = document.getElementById("quoteModeBtn");
+      const title = document.getElementById("cartPageTitle");
+      const subtitle = document.getElementById("cartPageSubtitle");
+
+      if (retailBtn) retailBtn.classList.toggle("active", mode === "retail");
+      if (quoteBtn) quoteBtn.classList.toggle("active", mode === "quote");
+
+      if (mode === "quote") {
+        if (title) title.textContent = "Wholesale Quotation Cart";
+        if (subtitle) subtitle.textContent = "Confirm products and quantities. Retail prices are hidden in quotation mode.";
+      } else {
+        if (title) title.textContent = "Your Shopping Cart";
+        if (subtitle) subtitle.textContent = "Review your selected architectural drainage systems before proceeding.";
       }
     }
 
@@ -1028,13 +1397,17 @@
     function renderCartView() {
       const container = document.getElementById("cartContentArea");
       const cart = getCart();
+      const mode = getCartMode();
+      const quoteMode = mode === "quote";
+
+      syncCartModeUI();
 
       if (cart.length === 0) {
         container.innerHTML = `
           <div class="empty-cart-view">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <h2>Your cart is currently empty</h2>
-            <p>Explore our high-grade stainless steel drainage solutions.</p>
+            <i class="fa-solid ${quoteMode ? "fa-file-signature" : "fa-cart-shopping"}"></i>
+            <h2>${quoteMode ? "Your quotation cart is empty" : "Your cart is currently empty"}</h2>
+            <p>${quoteMode ? "Add products and quantities to request wholesale/project pricing." : "Explore our high-grade stainless steel drainage solutions."}</p>
             <a href="shop.html" class="btn-checkout" style="display:inline-block; width:auto; padding:0.8rem 2.2rem;">Shop Catalog &rarr;</a>
           </div>
         `;
@@ -1044,13 +1417,18 @@
       const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (Number(item.quantity) || 1)), 0);
       const gst = Math.round(subtotal * 0.18);
       const grandTotal = subtotal + gst;
+      const totalQty = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
 
-      let itemsHtml = cart.map(item => `
+      const itemsHtml = cart.map(item => `
         <div class="cart-item">
           <img class="cart-item-thumb" src="${item.imageUrl || 'assets/images/logo/prizam.png'}" alt="${item.title}" />
           <div class="cart-item-info">
             <div class="cart-item-title">${item.title}</div>
-            <div class="cart-item-price">₹${Number(item.price).toLocaleString()}</div>
+            ${
+              quoteMode
+                ? `<div class="quote-price-label"><i class="fa-solid fa-file-signature"></i> Price on quotation</div>`
+                : `<div class="cart-item-price">₹${Number(item.price).toLocaleString("en-IN")}</div>`
+            }
             <div class="cart-qty-controls">
               <button class="qty-btn" onclick="changeQuantity('${item.id}', -1)" aria-label="Decrease quantity">-</button>
               <span class="qty-display">${item.quantity || 1}</span>
@@ -1063,20 +1441,57 @@
         </div>
       `).join("");
 
-      container.innerHTML = `
-        <div class="cart-layout">
-          <div class="cart-items-card">
-            ${itemsHtml}
+      const summaryHtml = quoteMode
+        ? `
+          <div class="order-summary-card">
+            <h3>Wholesale Quotation</h3>
+
+            <div class="quote-summary-note">
+              <strong>No online price is shown in wholesale mode.</strong><br>
+              Submit your required quantities and Prizam will review the request and prepare a custom quotation.
+            </div>
+
+            <div class="quote-summary-row">
+              <span>Products</span>
+              <strong>${cart.length}</strong>
+            </div>
+            <div class="quote-summary-row">
+              <span>Total Quantity</span>
+              <strong>${totalQty}</strong>
+            </div>
+            <div class="quote-summary-row">
+              <span>Pricing</span>
+              <strong style="color:var(--accent-blue);">Custom Quote</strong>
+            </div>
+            <div class="quote-summary-row">
+              <span>Minimum Order</span>
+              <strong>${MIN_QUOTE_QTY} pieces</strong>
+            </div>
+
+            <div class="quote-moq-warning ${totalQty >= MIN_QUOTE_QTY ? "ready" : ""}">
+              ${
+                totalQty >= MIN_QUOTE_QTY
+                  ? `<i class="fa-solid fa-circle-check"></i> Minimum quantity reached. You can request your quotation.`
+                  : `<i class="fa-solid fa-triangle-exclamation"></i> Add ${MIN_QUOTE_QTY - totalQty} more piece${MIN_QUOTE_QTY - totalQty === 1 ? "" : "s"} to reach the ${MIN_QUOTE_QTY}-piece quotation minimum.`
+              }
+            </div>
+
+            <button class="btn-quotation" id="requestQuoteBtn" ${totalQty < MIN_QUOTE_QTY ? "disabled" : ""}>
+              <i class="fa-solid fa-file-signature"></i>
+              ${totalQty < MIN_QUOTE_QTY ? `Minimum ${MIN_QUOTE_QTY} Pieces Required` : "Get Quotation"}
+            </button>
           </div>
+        `
+        : `
           <div class="order-summary-card">
             <h3>Order Summary</h3>
             <div class="summary-row">
               <span>Subtotal</span>
-              <span>₹${subtotal.toLocaleString()}</span>
+              <span>₹${subtotal.toLocaleString("en-IN")}</span>
             </div>
             <div class="summary-row">
               <span>Estimated GST (18%)</span>
-              <span>₹${gst.toLocaleString()}</span>
+              <span>₹${gst.toLocaleString("en-IN")}</span>
             </div>
             <div class="summary-row">
               <span>Shipping</span>
@@ -1084,16 +1499,28 @@
             </div>
             <div class="summary-row total-row">
               <span>Grand Total</span>
-              <span>₹${grandTotal.toLocaleString()}</span>
+              <span>₹${grandTotal.toLocaleString("en-IN")}</span>
             </div>
             <button class="btn-checkout" id="proceedCheckoutBtn">
               Proceed to Checkout &rarr;
             </button>
           </div>
+        `;
+
+      container.innerHTML = `
+        <div class="cart-layout">
+          <div class="cart-items-card">
+            ${itemsHtml}
+          </div>
+          ${summaryHtml}
         </div>
       `;
 
-      document.getElementById("proceedCheckoutBtn").addEventListener("click", handleProceedCheckout);
+      const checkoutBtn = document.getElementById("proceedCheckoutBtn");
+      if (checkoutBtn) checkoutBtn.addEventListener("click", handleProceedCheckout);
+
+      const quoteBtn = document.getElementById("requestQuoteBtn");
+      if (quoteBtn) quoteBtn.addEventListener("click", openQuoteModal);
     }
 
     // 4. Auth Modal Flow
@@ -1236,8 +1663,164 @@
       }, 500);
     });
 
+
+    // 6. Wholesale Quotation Request Flow
+    const quoteModalOverlay = document.getElementById("quoteModalOverlay");
+    const quoteModalClose = document.getElementById("quoteModalClose");
+    const quoteRequestForm = document.getElementById("quoteRequestForm");
+    const submitQuoteBtn = document.getElementById("submitQuoteBtn");
+
+    function prefillQuoteForm() {
+      const user = getLoggedInUser() || {};
+      const firebaseUser = auth.currentUser;
+
+      document.getElementById("quoteName").value =
+        user.name || firebaseUser?.displayName || "";
+
+      document.getElementById("quoteEmail").value =
+        user.email || firebaseUser?.email || "";
+
+      document.getElementById("quotePhone").value =
+        user.phone || "";
+    }
+
+    function openQuoteModal() {
+      const cart = getCart();
+
+      if (cart.length === 0) {
+        showToast("Add at least one product before requesting a quotation.");
+        return;
+      }
+
+      const totalQty = cart.reduce(
+        (sum, item) => sum + Math.max(1, Number(item.quantity) || 1),
+        0
+      );
+
+      if (totalQty < MIN_QUOTE_QTY) {
+        showToast(`Wholesale quotation requires minimum ${MIN_QUOTE_QTY} pieces. Add ${MIN_QUOTE_QTY - totalQty} more.`);
+        return;
+      }
+
+      prefillQuoteForm();
+      quoteModalOverlay.classList.add("active");
+    }
+
+    function closeQuoteModal() {
+      quoteModalOverlay.classList.remove("active");
+    }
+
+    quoteModalClose.addEventListener("click", closeQuoteModal);
+    quoteModalOverlay.addEventListener("click", (event) => {
+      if (event.target === quoteModalOverlay) closeQuoteModal();
+    });
+
+    quoteRequestForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const cart = getCart();
+      if (!cart.length) {
+        showToast("Your quotation cart is empty.");
+        closeQuoteModal();
+        return;
+      }
+
+      const totalQuoteQty = cart.reduce(
+        (sum, item) => sum + Math.max(1, Number(item.quantity) || 1),
+        0
+      );
+
+      if (totalQuoteQty < MIN_QUOTE_QTY) {
+        showToast(`Minimum wholesale quotation quantity is ${MIN_QUOTE_QTY} pieces.`);
+        closeQuoteModal();
+        renderCartView();
+        return;
+      }
+
+      const name = document.getElementById("quoteName").value.trim();
+      const company = document.getElementById("quoteCompany").value.trim();
+      const email = document.getElementById("quoteEmail").value.trim();
+      const phone = document.getElementById("quotePhone").value.trim();
+      const notes = document.getElementById("quoteNotes").value.trim();
+
+      submitQuoteBtn.disabled = true;
+      submitQuoteBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending Request...';
+
+      try {
+        const quoteItems = cart.map((item) => ({
+          productId: String(item.id),
+          title: item.title || "Architectural Drain",
+          category: item.category || "Architectural Drain",
+          material: item.material || "",
+          quantity: Math.max(1, Number(item.quantity) || 1),
+          imageUrl: item.imageUrl || ""
+        }));
+
+        // Store quotation requests inside the existing "inquiries" collection.
+        // This avoids a separate Firestore collection/rules problem and makes
+        // the request immediately available on the Admin Inquiry page.
+        const quoteRef = await addDoc(collection(db, "inquiries"), {
+          requestType: "quotation",
+          type: "quotation",
+          subject: "Wholesale Quotation Request",
+          name,
+          company,
+          email,
+          phone,
+          message: notes || "Wholesale quotation requested from cart.",
+          notes,
+          items: quoteItems,
+          totalQuantity: quoteItems.reduce((sum, item) => sum + item.quantity, 0),
+          minimumOrderQuantity: MIN_QUOTE_QTY,
+          status: "New",
+          source: "Wholesale Cart",
+          userId: auth.currentUser?.uid || null,
+          userEmail: auth.currentUser?.email || email,
+          createdAt: serverTimestamp()
+        });
+
+        // Quotation submitted successfully: completely clear the cart.
+        localStorage.setItem("prizam_cart", JSON.stringify([]));
+        localStorage.setItem("prizam_cart_mode", "retail");
+
+        closeQuoteModal();
+
+        // Reset the quotation form so old customer/project data is not retained.
+        quoteRequestForm.reset();
+
+        // Refresh all cart UI immediately.
+        updateCartCount();
+        syncCartModeUI();
+        renderCartView();
+
+        // Notify other pages/components that use the same cart storage.
+        window.dispatchEvent(
+          new StorageEvent("storage", {
+            key: "prizam_cart",
+            newValue: "[]"
+          })
+        );
+
+        showToast(`Quotation request sent successfully. Ref: ${quoteRef.id.slice(0, 8).toUpperCase()}`);
+      } catch (error) {
+        console.error("Quotation request failed:", error);
+        showToast(
+          error?.code === "permission-denied"
+            ? "Quotation could not be sent. Firestore permission needs to allow writes to inquiries."
+            : "Could not send quotation request. Please try again."
+        );
+      } finally {
+        submitQuoteBtn.disabled = false;
+        submitQuoteBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Quotation Request';
+      }
+    });
+
+    document.getElementById("retailModeBtn").addEventListener("click", () => setCartMode("retail"));
+    document.getElementById("quoteModeBtn").addEventListener("click", () => setCartMode("quote"));
+
     document.addEventListener("DOMContentLoaded", () => {
       updateCartCount();
+      syncCartModeUI();
       renderCartView();
     });
   </script>

@@ -947,6 +947,63 @@
       transform: translateY(-1px);
     }
 
+
+    .btn-quote {
+      flex: 1;
+      padding: 0.9rem;
+      background: #ffffff;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: all 0.2s ease;
+      min-height: 48px;
+    }
+
+    .btn-quote:hover {
+      background: #eff6ff;
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .quote-hint {
+      margin-top: -0.95rem;
+      margin-bottom: 1.4rem;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+    }
+
+    .quote-hint i {
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    .quote-moq-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-left: 0.35rem;
+      padding: 0.28rem 0.55rem;
+      border-radius: 999px;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      color: #1d4ed8;
+      font-size: 0.72rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
     .delivery-box {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -1137,7 +1194,8 @@
       .qty-selector {
         width: auto !important;
       }
-      .btn-checkout {
+      .btn-checkout,
+      .btn-quote {
         flex: 1 1 auto !important;
         min-width: 160px;
       }
@@ -1330,16 +1388,30 @@
           <div class="key-spec-item"><i class="fa-solid fa-wrench"></i> Fast Subfloor Fitting</div>
         </div>
 
-        <!-- In-Page Action Row (Quantity + Add to Cart) -->
+        <!-- In-Page Action Row (Retail + Wholesale Quote) -->
         <div class="action-row">
           <div class="qty-selector">
             <button class="qty-btn" id="qtyMinus">-</button>
             <input type="text" class="qty-input" id="qtyInput" value="1" readonly />
             <button class="qty-btn" id="qtyPlus">+</button>
           </div>
+
           <button class="btn-checkout" id="addToCartBtn">
             <i class="fa-solid fa-bag-shopping"></i> Add to Cart
           </button>
+
+          <button class="btn-quote" id="getQuoteBtn">
+            <i class="fa-solid fa-file-signature"></i> Get Quote
+            <span class="quote-moq-badge"><i class="fa-solid fa-boxes-stacked"></i> Min. 30 pcs</span>
+          </button>
+        </div>
+
+        <div class="quote-hint">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>
+            Need wholesale/project pricing? Minimum quotation order is <strong>30 pieces</strong>.
+            Prices will be hidden and you can submit quantities to Prizam for a custom quotation.
+          </span>
         </div>
 
         <!-- Pincode Availability Box -->
@@ -1589,6 +1661,7 @@
       flowRate: "40 L/min"
     };
 
+    const MIN_QUOTE_QTY = 30;
     let selectedQuantity = 1;
     const toast = document.getElementById("detailToast");
 
@@ -1842,28 +1915,52 @@
       }
     }
 
-    // In-Page Add To Cart Action
-    document.getElementById("addToCartBtn").addEventListener("click", () => {
+    // In-Page Retail / Quote Cart Actions
+    function addCurrentProductToCart(mode = "retail") {
       let cart = getCart();
-      const existing = cart.find(i => i.id === currentProduct.id);
+      const existing = cart.find(i => String(i.id) === String(currentProduct.id));
 
       if (existing) {
         existing.quantity = (Number(existing.quantity) || 1) + selectedQuantity;
+        existing.title = currentProduct.title;
+        existing.price = Number(currentProduct.price) || 0;
+        existing.imageUrl = currentProduct.imageUrl || existing.imageUrl || "assets/images/logo/prizam.png";
+        existing.category = currentProduct.category || existing.category || "Architectural Drain";
+        existing.material = currentProduct.material || existing.material || "";
       } else {
         cart.push({
           id: currentProduct.id,
           title: currentProduct.title,
-          price: Number(currentProduct.price),
-          imageUrl: currentProduct.imageUrl || "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
+          price: Number(currentProduct.price) || 0,
+          imageUrl: currentProduct.imageUrl || "assets/images/logo/prizam.png",
+          category: currentProduct.category || "Architectural Drain",
+          material: currentProduct.material || "",
           quantity: selectedQuantity
         });
       }
 
       localStorage.setItem("prizam_cart", JSON.stringify(cart));
+      localStorage.setItem("prizam_cart_mode", mode === "quote" ? "quote" : "retail");
       updateCartBadgeCount();
+    }
+
+    document.getElementById("addToCartBtn").addEventListener("click", () => {
+      addCurrentProductToCart("retail");
       showToast(`Added ${selectedQuantity} item(s) to Cart!`);
     });
 
+    document.getElementById("getQuoteBtn").addEventListener("click", () => {
+      if (selectedQuantity < MIN_QUOTE_QTY) {
+        setQuantity(MIN_QUOTE_QTY);
+        showToast(`Wholesale quotation minimum is ${MIN_QUOTE_QTY} pieces. Quantity updated to ${MIN_QUOTE_QTY}.`);
+      }
+
+      addCurrentProductToCart("quote");
+      showToast(`Added ${selectedQuantity} item(s) to Wholesale Quote Cart`);
+      setTimeout(() => {
+        window.location.href = "cart.html";
+      }, 650);
+    });
     document.addEventListener("DOMContentLoaded", () => {
       updateCartBadgeCount();
       loadProductDetails();

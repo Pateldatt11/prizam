@@ -387,6 +387,105 @@
         transform: translateY(0);
         opacity: 1;
       }
+
+      /* Contact / Quotation main tabs */
+      .request-main-tabs {
+        display: inline-flex;
+        gap: 0.4rem;
+        padding: 0.35rem;
+        margin-bottom: 1.35rem;
+        background: #e9eef5;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+
+      .request-main-tab {
+        border: 0;
+        background: transparent;
+        color: var(--text-muted);
+        padding: 0.7rem 1rem;
+        border-radius: 8px;
+        font-size: 0.84rem;
+        font-weight: 800;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .request-main-tab.active {
+        background: #fff;
+        color: var(--primary);
+        box-shadow: 0 2px 8px rgba(15,23,42,.08);
+      }
+
+      .request-panel { display: none; }
+      .request-panel.active { display: block; }
+
+      .quote-status-select {
+        padding: 0.38rem 0.55rem;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        font-size: 0.76rem;
+        font-weight: 800;
+        background: #fff;
+      }
+
+      .quote-items-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+      }
+
+      .quote-items-preview strong {
+        font-size: 0.8rem;
+      }
+
+      .quote-items-preview span {
+        color: var(--text-muted);
+        font-size: 0.72rem;
+      }
+
+      .quote-detail-list {
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.65rem;
+      }
+
+      .quote-detail-item {
+        border: 1px solid var(--border);
+        background: #f8fafc;
+        border-radius: 9px;
+        padding: 0.8rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .quote-detail-item strong {
+        display: block;
+        font-size: 0.82rem;
+      }
+
+      .quote-detail-item span {
+        color: var(--text-muted);
+        font-size: 0.74rem;
+      }
+
+      .quote-qty-pill {
+        background: #0f172a;
+        color: #fff !important;
+        min-width: 34px;
+        height: 28px;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 0 0.5rem;
+        border-radius: 999px;
+        font-weight: 800;
+      }
+
       .auth-gate-overlay {
         position: fixed;
         inset: 0;
@@ -493,48 +592,95 @@
       <div class="admin-body">
         <div class="page-title-row">
           <div>
-            <h1>Customer & B2B Contact Inquiries</h1>
+            <h1>Customer Inquiries & Quotation Requests</h1>
             <p>
-              Architectural inquiries, project specifications, and site
-              questions streamed live.
+              Contact messages and wholesale quotation requests streamed live. New wholesale quotes are stored in the same inquiries database and appear under the Quotation Requests tab.
             </p>
           </div>
         </div>
 
-        <div class="filter-tabs">
-          <button class="tab-btn active" id="tabAll">
-            All Messages <span class="tab-badge" id="badgeAll">0</span>
+        <div class="request-main-tabs">
+          <button class="request-main-tab active" id="contactRequestsTab" type="button" onclick="switchRequestPanel('contact')">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            Contact Messages
+            <span class="tab-badge" id="mainContactBadge">0</span>
           </button>
-          <button class="tab-btn" id="tabNew">
-            New <span class="tab-badge" id="badgeNew">0</span>
-          </button>
-          <button class="tab-btn" id="tabReplied">
-            Replied <span class="tab-badge" id="badgeReplied">0</span>
+
+          <button class="request-main-tab" id="quoteRequestsTab" type="button" onclick="switchRequestPanel('quotes')">
+            <i class="fa-solid fa-file-signature"></i>
+            Quotation Requests
+            <span class="tab-badge" id="mainQuoteBadge">0</span>
           </button>
         </div>
 
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Client / Org</th>
-                <th>Contact Info</th>
-                <th>Subject</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="inquiriesTableBody">
-              <tr>
-                <td colspan="6" style="text-align: center; padding: 3rem">
-                  <i class="fa-solid fa-spinner fa-spin"></i> Streaming
-                  inquiries...
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <section class="request-panel active" id="contactRequestsPanel">
+          <div class="filter-tabs">
+            <button class="tab-btn active" id="tabAll">
+              All Messages <span class="tab-badge" id="badgeAll">0</span>
+            </button>
+            <button class="tab-btn" id="tabNew">
+              New <span class="tab-badge" id="badgeNew">0</span>
+            </button>
+            <button class="tab-btn" id="tabReplied">
+              Replied <span class="tab-badge" id="badgeReplied">0</span>
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Client / Org</th>
+                  <th>Contact Info</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inquiriesTableBody">
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 3rem">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Streaming inquiries...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="request-panel" id="quoteRequestsPanel">
+          <div class="filter-tabs">
+            <button class="tab-btn active quote-filter-btn" id="quoteTabAll" type="button">All Quotes <span class="tab-badge" id="quoteBadgeAll">0</span></button>
+            <button class="tab-btn quote-filter-btn" id="quoteTabNew" type="button">New <span class="tab-badge" id="quoteBadgeNew">0</span></button>
+            <button class="tab-btn quote-filter-btn" id="quoteTabReviewed" type="button">Reviewed</button>
+            <button class="tab-btn quote-filter-btn" id="quoteTabQuoted" type="button">Quoted</button>
+            <button class="tab-btn quote-filter-btn" id="quoteTabClosed" type="button">Closed</button>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Client / Company</th>
+                  <th>Contact</th>
+                  <th>Requested Products</th>
+                  <th>Total Qty</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="quoteRequestsTableBody">
+                <tr>
+                  <td colspan="7" style="text-align:center;padding:3rem;">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Streaming quotation requests...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
     </main>
 
@@ -590,6 +736,42 @@
       </div>
     </div>
 
+
+    <div class="modal-backdrop" id="quoteRequestModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div>
+            <h3 id="quoteModalAdminTitle">Quotation Request</h3>
+            <div style="color:var(--text-muted);font-size:.76rem;margin-top:.2rem;" id="quoteModalAdminRef"></div>
+          </div>
+          <button id="closeQuoteModalBtn" style="background:none;border:none;font-size:1.3rem;cursor:pointer;">&times;</button>
+        </div>
+
+        <div style="font-size:.9rem;line-height:1.8;">
+          <p><strong>Client:</strong> <span id="quoteAdminClient">-</span></p>
+          <p><strong>Company:</strong> <span id="quoteAdminCompany">-</span></p>
+          <p><strong>Email:</strong> <span id="quoteAdminEmail">-</span></p>
+          <p><strong>Phone:</strong> <span id="quoteAdminPhone">-</span></p>
+          <p><strong>Date:</strong> <span id="quoteAdminDate">-</span></p>
+        </div>
+
+        <h4 style="font-size:.95rem;margin-top:1.15rem;">Requested Products</h4>
+        <div class="quote-detail-list" id="quoteAdminItems"></div>
+
+        <h4 style="font-size:.95rem;margin-top:1.15rem;">Project / Requirement Notes</h4>
+        <div class="message-content-box" id="quoteAdminNotes">No notes provided.</div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-top:1.25rem;">
+          <a id="quoteReplyMailtoBtn" href="#" class="btn-action" style="background:var(--primary);color:#fff;">
+            <i class="fa-solid fa-reply"></i> Reply via Email
+          </a>
+          <button id="quoteMarkReviewedBtn" class="btn-action">
+            <i class="fa-solid fa-check"></i> Mark Reviewed
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="admin-toast" id="adminToast">Notice updated</div>
 
     <script type="module">
@@ -607,31 +789,63 @@
       } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
       // 🔒 AUTH GUARD & OVERLAY REMOVER
-      onAuthStateChanged(auth, (user) => {
-        if (!user || user.email !== "admin@prizam.com") {
-          sessionStorage.removeItem("prizam_admin_logged_in");
-          window.location.replace("login.html");
-          return;
-        }
-        const authGateOverlay = document.getElementById("authGateOverlay");
-        if (authGateOverlay) authGateOverlay.style.display = "none";
+      onAuthStateChanged(
+        auth,
+        (user) => {
+          if (!user || user.email !== "admin@prizam.com") {
+            sessionStorage.removeItem("prizam_admin_logged_in");
+            window.location.replace("login.html");
+            return;
+          }
 
-        document.getElementById("sideUserName").textContent =
-          user.displayName || "Administrator";
-        document.getElementById("sideUserEmail").textContent =
-          user.email || "admin@prizam.com";
-        const initials = (user.displayName || user.email || "AD")
-          .substring(0, 2)
-          .toUpperCase();
-        document.getElementById("sideUserAvatar").textContent = initials;
-      });
+          const authGateOverlay = document.getElementById("authGateOverlay");
+          if (authGateOverlay) authGateOverlay.style.display = "none";
+
+          document.getElementById("sideUserName").textContent =
+            user.displayName || "Administrator";
+          document.getElementById("sideUserEmail").textContent =
+            user.email || "admin@prizam.com";
+
+          const initials = (user.displayName || user.email || "AD")
+            .substring(0, 2)
+            .toUpperCase();
+
+          document.getElementById("sideUserAvatar").textContent = initials;
+        },
+        (error) => {
+          console.error("Admin auth verification failed:", error);
+
+          const authGateOverlay = document.getElementById("authGateOverlay");
+          if (authGateOverlay) {
+            authGateOverlay.innerHTML = `
+              <i class="fa-solid fa-triangle-exclamation" style="font-size:1.4rem;color:var(--danger)"></i>
+              <span>Unable to verify admin session.</span>
+              <button
+                type="button"
+                onclick="window.location.reload()"
+                style="margin-top:.35rem;padding:.55rem .9rem;border:1px solid var(--border);border-radius:8px;background:#fff;font-weight:700;cursor:pointer;"
+              >
+                Retry
+              </button>
+            `;
+          }
+        }
+      );
 
       let inquiries = [];
+      let quoteRequests = [];
+      let legacyQuoteRequests = [];
       let currentFilter = "all";
+      let currentQuoteFilter = "all";
+      let activeRequestPanel = "contact";
       let searchQuery = "";
       let activeInquiryId = null;
+      let activeQuoteRequestId = null;
+      let activeQuoteRequestCollection = "inquiries";
       const tbody = document.getElementById("inquiriesTableBody"),
+        quoteTbody = document.getElementById("quoteRequestsTableBody"),
         modal = document.getElementById("inquiryModal"),
+        quoteModal = document.getElementById("quoteRequestModal"),
         toast = document.getElementById("adminToast");
 
       function showToast(text) {
@@ -639,6 +853,35 @@
         toast.classList.add("show");
         setTimeout(() => toast.classList.remove("show"), 2200);
       }
+
+
+      const esc = (value) =>
+        String(value ?? "").replace(/[&<>'"]/g, (c) => ({
+          "&":"&amp;",
+          "<":"&lt;",
+          ">":"&gt;",
+          "'":"&#39;",
+          '"':"&quot;"
+        })[c]);
+
+      function toJsDate(value) {
+        if (!value) return null;
+        if (typeof value.toDate === "function") return value.toDate();
+        const parsed = new Date(value);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+      }
+
+      window.switchRequestPanel = function(panel) {
+        activeRequestPanel = panel === "quotes" ? "quotes" : "contact";
+
+        document.getElementById("contactRequestsTab").classList.toggle("active", activeRequestPanel === "contact");
+        document.getElementById("quoteRequestsTab").classList.toggle("active", activeRequestPanel === "quotes");
+        document.getElementById("contactRequestsPanel").classList.toggle("active", activeRequestPanel === "contact");
+        document.getElementById("quoteRequestsPanel").classList.toggle("active", activeRequestPanel === "quotes");
+
+        renderTable();
+        renderQuoteTable();
+      };
 
       onSnapshot(collection(db, "products"), (snap) => {
         const b = document.getElementById("sideBadgeProducts");
@@ -649,17 +892,114 @@
         if (b) b.textContent = snap.size;
       });
 
-      onSnapshot(collection(db, "inquiries"), (snapshot) => {
-        inquiries = [];
-        snapshot.forEach((docSnap) => {
-          inquiries.push({ id: docSnap.id, ...docSnap.data() });
-        });
-        inquiries.sort(
-          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
-        );
-        updateBadges();
-        renderTable();
-      });
+      // Main source: both contact messages and quotation requests live in "inquiries".
+      onSnapshot(
+        collection(db, "inquiries"),
+        (snapshot) => {
+          const contactRows = [];
+          const quotationRows = [];
+
+          snapshot.forEach((docSnap) => {
+            const row = {
+              id: docSnap.id,
+              _collection: "inquiries",
+              ...docSnap.data()
+            };
+
+            const requestType = String(
+              row.requestType || row.type || ""
+            ).toLowerCase();
+
+            if (
+              requestType === "quotation" ||
+              requestType === "quote" ||
+              row.source === "Wholesale Cart"
+            ) {
+              quotationRows.push(row);
+            } else {
+              contactRows.push(row);
+            }
+          });
+
+          inquiries = contactRows;
+          inquiries.sort(
+            (a, b) =>
+              (toJsDate(b.createdAt)?.getTime() || 0) -
+              (toJsDate(a.createdAt)?.getTime() || 0)
+          );
+
+          // Merge new quotation requests with any legacy quoteRequests docs.
+          const merged = new Map();
+
+          [...quotationRows, ...legacyQuoteRequests].forEach((item) => {
+            const key = `${item._collection || "inquiries"}:${item.id}`;
+            merged.set(key, item);
+          });
+
+          quoteRequests = [...merged.values()].sort(
+            (a, b) =>
+              (toJsDate(b.createdAt)?.getTime() || 0) -
+              (toJsDate(a.createdAt)?.getTime() || 0)
+          );
+
+          updateBadges();
+          updateQuoteBadges();
+          renderTable();
+          renderQuoteTable();
+        },
+        (error) => {
+          console.error("Inquiry/quotation stream failed:", error);
+          showToast("Could not load inquiry data.");
+        }
+      );
+
+      // Legacy compatibility: old versions saved quotes in "quoteRequests".
+      // If Firestore rules block this old collection, the new "inquiries"
+      // quotation flow still continues to work.
+      onSnapshot(
+        collection(db, "quoteRequests"),
+        (snapshot) => {
+          legacyQuoteRequests = [];
+
+          snapshot.forEach((docSnap) => {
+            legacyQuoteRequests.push({
+              id: docSnap.id,
+              _collection: "quoteRequests",
+              requestType: "quotation",
+              ...docSnap.data()
+            });
+          });
+
+          const currentInquiryQuotes = quoteRequests.filter(
+            (item) => item._collection === "inquiries"
+          );
+
+          const merged = new Map();
+
+          [...currentInquiryQuotes, ...legacyQuoteRequests].forEach((item) => {
+            const key = `${item._collection || "inquiries"}:${item.id}`;
+            merged.set(key, item);
+          });
+
+          quoteRequests = [...merged.values()].sort(
+            (a, b) =>
+              (toJsDate(b.createdAt)?.getTime() || 0) -
+              (toJsDate(a.createdAt)?.getTime() || 0)
+          );
+
+          updateBadges();
+          updateQuoteBadges();
+          renderQuoteTable();
+        },
+        (error) => {
+          // This is only a legacy fallback, so don't break the page.
+          console.warn(
+            "Legacy quoteRequests collection is not readable; using inquiries quotation records only:",
+            error
+          );
+        }
+      );
+
 
       function updateBadges() {
         const total = inquiries.length,
@@ -671,7 +1011,28 @@
         document.getElementById("badgeNew").textContent = newCount;
         document.getElementById("badgeReplied").textContent = repliedCount;
         const sideInqBadge = document.getElementById("sideBadgeInquiries");
-        if (sideInqBadge) sideInqBadge.textContent = newCount;
+        if (sideInqBadge) {
+          const newQuotes = quoteRequests.filter((q) => (q.status || "New") === "New").length;
+          sideInqBadge.textContent = newCount + newQuotes;
+        }
+
+        const mainContactBadge = document.getElementById("mainContactBadge");
+        if (mainContactBadge) mainContactBadge.textContent = newCount;
+      }
+
+      function updateQuoteBadges() {
+        const total = quoteRequests.length;
+        const newCount = quoteRequests.filter((q) => (q.status || "New") === "New").length;
+
+        document.getElementById("quoteBadgeAll").textContent = total;
+        document.getElementById("quoteBadgeNew").textContent = newCount;
+        document.getElementById("mainQuoteBadge").textContent = newCount;
+
+        const sideInqBadge = document.getElementById("sideBadgeInquiries");
+        if (sideInqBadge) {
+          const newContacts = inquiries.filter((i) => (i.status || "New") === "New").length;
+          sideInqBadge.textContent = newContacts + newCount;
+        }
       }
 
       function setFilter(f) {
@@ -702,7 +1063,36 @@
         .addEventListener("input", (e) => {
           searchQuery = e.target.value.trim().toLowerCase();
           renderTable();
+          renderQuoteTable();
         });
+
+
+      function setQuoteFilter(filter) {
+        currentQuoteFilter = filter;
+
+        document
+          .querySelectorAll(".quote-filter-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+
+        const map = {
+          all: "quoteTabAll",
+          New: "quoteTabNew",
+          Reviewed: "quoteTabReviewed",
+          Quoted: "quoteTabQuoted",
+          Closed: "quoteTabClosed"
+        };
+
+        const target = document.getElementById(map[filter] || "quoteTabAll");
+        if (target) target.classList.add("active");
+
+        renderQuoteTable();
+      }
+
+      document.getElementById("quoteTabAll").addEventListener("click", () => setQuoteFilter("all"));
+      document.getElementById("quoteTabNew").addEventListener("click", () => setQuoteFilter("New"));
+      document.getElementById("quoteTabReviewed").addEventListener("click", () => setQuoteFilter("Reviewed"));
+      document.getElementById("quoteTabQuoted").addEventListener("click", () => setQuoteFilter("Quoted"));
+      document.getElementById("quoteTabClosed").addEventListener("click", () => setQuoteFilter("Closed"));
 
       window.viewInquiry = function (id) {
         const item = inquiries.find((i) => i.id === id);
@@ -793,6 +1183,167 @@
           </td>`;
           tbody.appendChild(tr);
         });
+      }
+
+
+      window.updateQuoteStatus = async function(id, status, collectionName = "inquiries") {
+        await updateDoc(doc(db, collectionName, id), { status });
+        showToast(`Quotation request set to ${status}`);
+      };
+
+      window.deleteQuoteRequest = async function(id, collectionName = "inquiries") {
+        if (!confirm("Permanently delete this quotation request?")) return;
+        await deleteDoc(doc(db, collectionName, id));
+        showToast("Quotation request deleted");
+      };
+
+      window.viewQuoteRequest = function(id, collectionName = "inquiries") {
+        const item = quoteRequests.find(
+          (q) => q.id === id && (q._collection || "inquiries") === collectionName
+        );
+        if (!item) return;
+
+        activeQuoteRequestId = id;
+        activeQuoteRequestCollection = item._collection || "inquiries";
+
+        document.getElementById("quoteModalAdminTitle").textContent =
+          item.company ? `${item.company} Quotation Request` : "Quotation Request";
+
+        document.getElementById("quoteModalAdminRef").textContent =
+          `Reference #${item.id.slice(0, 10).toUpperCase()}`;
+
+        document.getElementById("quoteAdminClient").textContent = item.name || "Client";
+        document.getElementById("quoteAdminCompany").textContent = item.company || "-";
+        document.getElementById("quoteAdminEmail").textContent = item.email || "-";
+        document.getElementById("quoteAdminPhone").textContent = item.phone || "-";
+
+        const created = toJsDate(item.createdAt);
+        document.getElementById("quoteAdminDate").textContent =
+          created ? created.toLocaleString("en-IN") : "-";
+
+        const items = Array.isArray(item.items) ? item.items : [];
+        document.getElementById("quoteAdminItems").innerHTML = items.length
+          ? items.map((product) => `
+              <div class="quote-detail-item">
+                <div>
+                  <strong>${esc(product.title || "Product")}</strong>
+                  <span>${esc(product.category || "")}${product.material ? ` • ${esc(product.material)}` : ""}</span>
+                </div>
+                <span class="quote-qty-pill">Qty ${Math.max(1, Number(product.quantity) || 1)}</span>
+              </div>
+            `).join("")
+          : '<div style="color:var(--text-muted);font-size:.82rem;">No products listed.</div>';
+
+        document.getElementById("quoteAdminNotes").textContent =
+          item.notes || "No notes provided.";
+
+        document.getElementById("quoteReplyMailtoBtn").href =
+          `mailto:${item.email || ""}?subject=${encodeURIComponent("RE: Prizam Quotation Request " + item.id.slice(0, 8).toUpperCase())}`;
+
+        quoteModal.classList.add("active");
+      };
+
+      function closeQuoteAdminModal() {
+        quoteModal.classList.remove("active");
+        activeQuoteRequestId = null;
+        activeQuoteRequestCollection = "inquiries";
+      }
+
+      document.getElementById("closeQuoteModalBtn").addEventListener("click", closeQuoteAdminModal);
+      quoteModal.addEventListener("click", (event) => {
+        if (event.target.id === "quoteRequestModal") closeQuoteAdminModal();
+      });
+
+      document.getElementById("quoteMarkReviewedBtn").addEventListener("click", async () => {
+        if (!activeQuoteRequestId) return;
+        await updateDoc(
+          doc(db, activeQuoteRequestCollection, activeQuoteRequestId),
+          { status: "Reviewed" }
+        );
+        showToast("Quotation request marked Reviewed");
+        closeQuoteAdminModal();
+      });
+
+      function renderQuoteTable() {
+        if (!quoteTbody) return;
+
+        const filtered = quoteRequests.filter((item) => {
+          const status = item.status || "New";
+          if (currentQuoteFilter !== "all" && status !== currentQuoteFilter) return false;
+
+          if (searchQuery) {
+            const productText = (Array.isArray(item.items) ? item.items : [])
+              .map((p) => p.title || "")
+              .join(" ")
+              .toLowerCase();
+
+            return (
+              (item.name || "").toLowerCase().includes(searchQuery) ||
+              (item.company || "").toLowerCase().includes(searchQuery) ||
+              (item.email || "").toLowerCase().includes(searchQuery) ||
+              (item.phone || "").toLowerCase().includes(searchQuery) ||
+              item.id.toLowerCase().includes(searchQuery) ||
+              productText.includes(searchQuery)
+            );
+          }
+
+          return true;
+        });
+
+        if (!filtered.length) {
+          quoteTbody.innerHTML =
+            '<tr><td colspan="7" style="text-align:center;padding:3.5rem 1rem;">No quotation requests found.</td></tr>';
+          return;
+        }
+
+        quoteTbody.innerHTML = filtered.map((item) => {
+          const status = item.status || "New";
+          const created = toJsDate(item.createdAt);
+          const dateStr = created
+            ? created.toLocaleDateString("en-IN", { day:"numeric", month:"short", year:"numeric" })
+            : "Recent";
+
+          const items = Array.isArray(item.items) ? item.items : [];
+          const firstTitle = items[0]?.title || "Product Request";
+          const extra = Math.max(0, items.length - 1);
+
+          return `
+            <tr>
+              <td><strong>${dateStr}</strong><br><small style="color:var(--text-muted);">#${item.id.slice(0,8).toUpperCase()}</small></td>
+              <td>
+                <strong>${esc(item.name || "Client")}</strong><br>
+                <small style="color:var(--text-muted);">${esc(item.company || "Individual / Project")}</small>
+              </td>
+              <td>
+                <div>${esc(item.email || "-")}</div>
+                <small style="color:var(--text-muted);">${esc(item.phone || "")}</small>
+              </td>
+              <td>
+                <div class="quote-items-preview">
+                  <strong>${esc(firstTitle)}</strong>
+                  <span>${extra ? `+${extra} more product${extra === 1 ? "" : "s"}` : "1 product"}</span>
+                </div>
+              </td>
+              <td><strong>${Number(item.totalQuantity || items.reduce((s,p)=>s+(Number(p.quantity)||1),0))}</strong></td>
+              <td>
+                <select class="quote-status-select" onchange="updateQuoteStatus('${item.id}', this.value, '${item._collection || "inquiries"}')">
+                  <option value="New" ${status === "New" ? "selected" : ""}>New</option>
+                  <option value="Reviewed" ${status === "Reviewed" ? "selected" : ""}>Reviewed</option>
+                  <option value="Quoted" ${status === "Quoted" ? "selected" : ""}>Quoted</option>
+                  <option value="Closed" ${status === "Closed" ? "selected" : ""}>Closed</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn-action" style="padding:.35rem .65rem;" onclick="viewQuoteRequest('${item.id}', '${item._collection || "inquiries"}')">
+                  <i class="fa-solid fa-eye"></i> View
+                </button>
+                <button class="btn-action" style="padding:.35rem .65rem;color:var(--danger);" onclick="deleteQuoteRequest('${item.id}', '${item._collection || "inquiries"}')">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join("");
       }
 
       document
