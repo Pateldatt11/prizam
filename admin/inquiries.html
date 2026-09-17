@@ -5,23 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Prizam Admin | Contact Inquiries</title>
 
-    <!-- 🔒 HEARTBEAT SCRIPT -->
+    <!-- 🔒 RESILIENT HEARTBEAT & SESSION CHECK -->
     <script>
       (function () {
-        const lastHb = localStorage.getItem("admin_heartbeat");
+        const loggedIn = sessionStorage.getItem("prizam_admin_logged_in");
+        const lastHb = parseInt(localStorage.getItem("admin_heartbeat") || "0", 10);
         const now = Date.now();
-        if (
-          !sessionStorage.getItem("prizam_admin_logged_in") ||
-          (lastHb && now - parseInt(lastHb) > 15000)
-        ) {
+        // 30-minute session inactivity limit (prevents background-tab freeze)
+        const MAX_INACTIVITY = 30 * 60 * 1000;
+
+        if (!loggedIn || (lastHb > 0 && now - lastHb > MAX_INACTIVITY)) {
           sessionStorage.removeItem("prizam_admin_logged_in");
+          localStorage.removeItem("admin_heartbeat");
           window.location.replace("login.html");
         } else {
           localStorage.setItem("admin_heartbeat", now.toString());
           setInterval(() => {
             localStorage.setItem("admin_heartbeat", Date.now().toString());
-          }, 3000);
+          }, 5000);
         }
+      })();
+
+      // ⚡ INSTANT BADGE CACHE (PREVENTS NUMBERS FROM FLICKERING OR DISAPPEARING)
+      (function () {
+        document.addEventListener("DOMContentLoaded", () => {
+          const setB = (id, key, defaultVal = "0") => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = localStorage.getItem(key) || defaultVal;
+          };
+          setB("sideBadgeProducts", "badge_products");
+          setB("sideBadgePublish", "badge_publish");
+          setB("sideBadgeDraft", "badge_draft");
+          setB("sideBadgeOrders", "badge_orders");
+          setB("sideBadgeReturns", "badge_returns");
+          setB("sideBadgeInquiries", "badge_inquiries");
+        });
       })();
     </script>
 
@@ -38,9 +56,9 @@
 
     <style>
       :root {
-        --sidebar-bg: #070b13;
-        --sidebar-hover: #0f172a;
-        --sidebar-border: #131b2e;
+        --sidebar-bg: #040711;
+        --sidebar-hover: rgba(255, 255, 255, 0.05);
+        --sidebar-border: rgba(255, 255, 255, 0.06);
         --sidebar-text: #94a3b8;
         --sidebar-heading: #475569;
         --sidebar-active-bg: #2563eb;
@@ -71,6 +89,8 @@
         min-height: 100vh;
         display: flex;
       }
+
+      /* Sidebar */
       .admin-sidebar {
         width: 270px;
         background: var(--sidebar-bg);
@@ -86,23 +106,24 @@
         user-select: none;
       }
       .sidebar-header {
-        padding: 1.75rem 1.5rem 1.25rem;
+        padding: 1.8rem 1.5rem 1.2rem;
         display: flex;
         align-items: center;
-        gap: 0.65rem;
+        gap: 0.75rem;
       }
       .sidebar-brand-dot {
         width: 9px;
         height: 9px;
         background-color: #38bdf8;
         border-radius: 50%;
-        box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
         flex-shrink: 0;
       }
       .sidebar-brand-title {
         color: #ffffff;
         font-size: 1.35rem;
         font-weight: 800;
+        letter-spacing: -0.5px;
         text-decoration: none;
       }
       .sidebar-nav-scroll {
@@ -110,84 +131,120 @@
         overflow-y: auto;
         padding: 0.5rem 1rem 1.5rem;
       }
+      .sidebar-nav-scroll::-webkit-scrollbar {
+        width: 4px;
+      }
+      .sidebar-nav-scroll::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 4px;
+      }
       .sidebar-section-title {
-        font-size: 0.72rem;
+        font-size: 0.7rem;
         font-weight: 800;
         text-transform: uppercase;
+        letter-spacing: 1.2px;
         color: var(--sidebar-heading);
-        padding: 1.25rem 0.75rem 0.5rem;
+        padding: 1.3rem 0.6rem 0.55rem;
       }
       .sidebar-link {
         display: flex;
         align-items: center;
         gap: 0.85rem;
-        padding: 0.75rem 0.95rem;
-        border-radius: 10px;
+        padding: 0.72rem 0.95rem;
+        border-radius: 12px;
         color: var(--sidebar-text);
         text-decoration: none;
         font-size: 0.92rem;
         font-weight: 600;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.3rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
       }
       .sidebar-link i {
         font-size: 1rem;
         width: 20px;
         text-align: center;
+        color: var(--sidebar-text);
+        transition: color 0.2s ease;
       }
       .sidebar-link:hover {
         color: #ffffff;
         background: var(--sidebar-hover);
       }
-      .sidebar-link.active {
-        background: var(--sidebar-active-bg);
-        color: var(--sidebar-active-text);
+      .sidebar-link:hover i {
+        color: #ffffff;
       }
+
+      /* ✨ SOLID BLUE PILL HIGHLIGHT */
+      .sidebar-link.active {
+        background: var(--sidebar-active-bg) !important;
+        color: #ffffff !important;
+        font-weight: 700;
+        box-shadow: 0 4px 18px rgba(37, 99, 235, 0.45);
+      }
+      .sidebar-link.active i {
+        color: #ffffff !important;
+      }
+      .sidebar-link.active .sidebar-badge {
+        color: #ffffff !important;
+      }
+
+      /* Right-Side Number Badge */
       .sidebar-badge {
         margin-left: auto;
-        background: rgba(0, 0, 0, 0.25);
         color: #ffffff;
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         font-weight: 700;
-        padding: 0.15rem 0.55rem;
-        border-radius: 12px;
-        text-align: center;
+        min-width: 18px;
+        text-align: right;
       }
+
       .sidebar-footer {
-        padding: 1.25rem;
+        padding: 1.15rem 1.25rem;
         border-top: 1px solid var(--sidebar-border);
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        background: #060910;
+        background: #03060d;
       }
       .sidebar-user-info {
         display: flex;
         align-items: center;
         gap: 0.75rem;
+        overflow: hidden;
       }
       .sidebar-avatar {
         width: 38px;
         height: 38px;
         border-radius: 50%;
-        background: #1e293b;
+        background: #111b2b;
         color: #38bdf8;
         font-weight: 800;
         font-size: 0.85rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
       }
       .sidebar-meta {
         display: flex;
         flex-direction: column;
+        overflow: hidden;
       }
       .sidebar-user-name {
         color: #ffffff;
-        font-size: 0.88rem;
+        font-size: 0.92rem;
         font-weight: 700;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
       .sidebar-user-email {
         color: #64748b;
         font-size: 0.75rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
       .sidebar-logout-btn {
         background: none;
@@ -195,7 +252,17 @@
         color: #64748b;
         font-size: 1.15rem;
         cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease;
       }
+      .sidebar-logout-btn:hover {
+        color: #ffffff;
+      }
+
+      /* Main Content */
       .admin-main {
         margin-left: 270px;
         flex-grow: 1;
@@ -416,11 +483,15 @@
       .request-main-tab.active {
         background: #fff;
         color: var(--primary);
-        box-shadow: 0 2px 8px rgba(15,23,42,.08);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
       }
 
-      .request-panel { display: none; }
-      .request-panel.active { display: block; }
+      .request-panel {
+        display: none;
+      }
+      .request-panel.active {
+        display: block;
+      }
 
       .quote-status-select {
         padding: 0.38rem 0.55rem;
@@ -512,58 +583,89 @@
       <span>Verifying admin session...</span>
     </div>
 
+    <!-- ADMIN SIDEBAR -->
     <aside class="admin-sidebar">
       <div class="sidebar-header">
-        <span class="sidebar-brand-dot"></span
-        ><a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
+        <span class="sidebar-brand-dot"></span>
+        <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
       </div>
+
       <div class="sidebar-nav-scroll">
-        <div class="sidebar-section-title">Storefront Catalog</div>
-        <a href="index.html" class="sidebar-link"
-          ><i class="fa-solid fa-boxes-stacked"></i><span>Products</span
-          ><span class="sidebar-badge" id="sideBadgeProducts">0</span></a
+        <!-- STOREFRONT CATALOG -->
+        <div class="sidebar-section-title">STOREFRONT CATALOG</div>
+        <a href="index.html" class="sidebar-link" id="sideNavProducts">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <span>Products</span>
+          <span class="sidebar-badge" id="sideBadgeProducts">0</span>
+        </a>
+        <a
+          href="index.html?status=published"
+          class="sidebar-link"
+          id="sideNavPublish"
         >
-        <a href="add-product.html" class="sidebar-link"
-          ><i class="fa-solid fa-circle-plus"></i
-          ><span>Add New Product</span></a
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Publish</span>
+          <span class="sidebar-badge" id="sideBadgePublish">0</span>
+        </a>
+        <a
+          href="index.html?status=draft"
+          class="sidebar-link"
+          id="sideNavDraft"
         >
-        <div class="sidebar-section-title">Management & Sales</div>
-        <a href="brochures.html" class="sidebar-link"
-          ><i class="fa-solid fa-file-lines"></i><span>Brochures</span></a
-        >
-        <a href="orders.html" class="sidebar-link"
-          ><i class="fa-solid fa-truck-ramp-box"></i><span>Orders</span
-          ><span class="sidebar-badge" id="sideBadgeOrders">0</span></a
-        >
-        <a href="returns.html" class="sidebar-link"
-          ><i class="fa-solid fa-rotate-left"></i><span>Returns</span></a
-        >
-        <a href="inquiries.html" class="sidebar-link active"
-          ><i class="fa-solid fa-envelope-open-text"></i
-          ><span>Contact Request</span
-          ><span class="sidebar-badge" id="sideBadgeInquiries">0</span></a
-        >
-        <a href="analytics.html" class="sidebar-link"
-          ><i class="fa-solid fa-chart-pie"></i><span>Store Analysis</span></a
-        >
-        <a href="settings.html" class="sidebar-link"
-          ><i class="fa-solid fa-gears"></i><span>System Maintenance</span></a
-        >
-        <div class="sidebar-section-title">Live Preview</div>
-        <a href="../contact.html" target="_blank" class="sidebar-link"
-          ><i class="fa-solid fa-map-location-dot"></i
-          ><span>Contact Page</span></a
-        >
+          <i class="fa-solid fa-file-lines"></i>
+          <span>Draft</span>
+          <span class="sidebar-badge" id="sideBadgeDraft">0</span>
+        </a>
+        <a href="add-product.html" class="sidebar-link" id="sideNavAddProduct">
+          <i class="fa-solid fa-circle-plus"></i>
+          <span>Add New Product</span>
+        </a>
+
+        <!-- MANAGEMENT & SALES -->
+        <div class="sidebar-section-title">MANAGEMENT & SALES</div>
+        <a href="brochures.html" class="sidebar-link">
+          <i class="fa-solid fa-file-lines"></i>
+          <span>Brochures</span>
+        </a>
+        <a href="orders.html" class="sidebar-link">
+          <i class="fa-solid fa-truck-fast"></i>
+          <span>Orders</span>
+          <span class="sidebar-badge" id="sideBadgeOrders">0</span>
+        </a>
+        <a href="returns.html" class="sidebar-link">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>Returns</span>
+          <span class="sidebar-badge" id="sideBadgeReturns">0</span>
+        </a>
+        <a href="inquiries.html" class="sidebar-link active">
+          <i class="fa-solid fa-envelope"></i>
+          <span>Contact Request</span>
+          <span class="sidebar-badge" id="sideBadgeInquiries">0</span>
+        </a>
+        <a href="analytics.html" class="sidebar-link">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Store Analysis</span>
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          <i class="fa-solid fa-gears"></i>
+          <span>System Maintenance</span>
+        </a>
+
+        <!-- LIVE PREVIEW -->
+        <div class="sidebar-section-title">LIVE PREVIEW</div>
+        <a href="../contact.html" target="_blank" class="sidebar-link">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>Live Preview</span>
+        </a>
       </div>
+
+      <!-- FOOTER USER PROFILE -->
       <div class="sidebar-footer">
         <div class="sidebar-user-info">
           <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
           <div class="sidebar-meta">
-            <span class="sidebar-user-name" id="sideUserName"
-              >Administrator</span
-            ><span class="sidebar-user-email" id="sideUserEmail"
-              >admin@prizam.com</span
-            >
+            <span class="sidebar-user-name" id="sideUserName">admin</span>
+            <span class="sidebar-user-email" id="sideUserEmail">admin@prizam.com</span>
           </div>
         </div>
         <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
@@ -575,8 +677,8 @@
     <main class="admin-main">
       <header class="top-navbar">
         <div class="nav-search">
-          <i class="fa-solid fa-magnifying-glass"></i
-          ><input
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
             type="text"
             id="inquirySearch"
             placeholder="Search inquiry by client, subject, email..."
@@ -594,19 +696,31 @@
           <div>
             <h1>Customer Inquiries & Quotation Requests</h1>
             <p>
-              Contact messages and wholesale quotation requests streamed live. New wholesale quotes are stored in the same inquiries database and appear under the Quotation Requests tab.
+              Contact messages and wholesale quotation requests streamed live.
+              New wholesale quotes are stored in the same inquiries database and
+              appear under the Quotation Requests tab.
             </p>
           </div>
         </div>
 
         <div class="request-main-tabs">
-          <button class="request-main-tab active" id="contactRequestsTab" type="button" onclick="switchRequestPanel('contact')">
+          <button
+            class="request-main-tab active"
+            id="contactRequestsTab"
+            type="button"
+            onclick="switchRequestPanel('contact')"
+          >
             <i class="fa-solid fa-envelope-open-text"></i>
             Contact Messages
             <span class="tab-badge" id="mainContactBadge">0</span>
           </button>
 
-          <button class="request-main-tab" id="quoteRequestsTab" type="button" onclick="switchRequestPanel('quotes')">
+          <button
+            class="request-main-tab"
+            id="quoteRequestsTab"
+            type="button"
+            onclick="switchRequestPanel('quotes')"
+          >
             <i class="fa-solid fa-file-signature"></i>
             Quotation Requests
             <span class="tab-badge" id="mainQuoteBadge">0</span>
@@ -641,7 +755,8 @@
               <tbody id="inquiriesTableBody">
                 <tr>
                   <td colspan="6" style="text-align: center; padding: 3rem">
-                    <i class="fa-solid fa-spinner fa-spin"></i> Streaming inquiries...
+                    <i class="fa-solid fa-spinner fa-spin"></i> Streaming
+                    inquiries...
                   </td>
                 </tr>
               </tbody>
@@ -651,11 +766,41 @@
 
         <section class="request-panel" id="quoteRequestsPanel">
           <div class="filter-tabs">
-            <button class="tab-btn active quote-filter-btn" id="quoteTabAll" type="button">All Quotes <span class="tab-badge" id="quoteBadgeAll">0</span></button>
-            <button class="tab-btn quote-filter-btn" id="quoteTabNew" type="button">New <span class="tab-badge" id="quoteBadgeNew">0</span></button>
-            <button class="tab-btn quote-filter-btn" id="quoteTabReviewed" type="button">Reviewed</button>
-            <button class="tab-btn quote-filter-btn" id="quoteTabQuoted" type="button">Quoted</button>
-            <button class="tab-btn quote-filter-btn" id="quoteTabClosed" type="button">Closed</button>
+            <button
+              class="tab-btn active quote-filter-btn"
+              id="quoteTabAll"
+              type="button"
+            >
+              All Quotes <span class="tab-badge" id="quoteBadgeAll">0</span>
+            </button>
+            <button
+              class="tab-btn quote-filter-btn"
+              id="quoteTabNew"
+              type="button"
+            >
+              New <span class="tab-badge" id="quoteBadgeNew">0</span>
+            </button>
+            <button
+              class="tab-btn quote-filter-btn"
+              id="quoteTabReviewed"
+              type="button"
+            >
+              Reviewed
+            </button>
+            <button
+              class="tab-btn quote-filter-btn"
+              id="quoteTabQuoted"
+              type="button"
+            >
+              Quoted
+            </button>
+            <button
+              class="tab-btn quote-filter-btn"
+              id="quoteTabClosed"
+              type="button"
+            >
+              Closed
+            </button>
           </div>
 
           <div class="table-container">
@@ -673,8 +818,9 @@
               </thead>
               <tbody id="quoteRequestsTableBody">
                 <tr>
-                  <td colspan="7" style="text-align:center;padding:3rem;">
-                    <i class="fa-solid fa-spinner fa-spin"></i> Streaming quotation requests...
+                  <td colspan="7" style="text-align: center; padding: 3rem">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Streaming
+                    quotation requests...
                   </td>
                 </tr>
               </tbody>
@@ -736,18 +882,30 @@
       </div>
     </div>
 
-
     <div class="modal-backdrop" id="quoteRequestModal">
       <div class="modal-card">
         <div class="modal-header">
           <div>
             <h3 id="quoteModalAdminTitle">Quotation Request</h3>
-            <div style="color:var(--text-muted);font-size:.76rem;margin-top:.2rem;" id="quoteModalAdminRef"></div>
+            <div
+              style="color: var(--text-muted); font-size: 0.76rem; margin-top: 0.2rem"
+              id="quoteModalAdminRef"
+            ></div>
           </div>
-          <button id="closeQuoteModalBtn" style="background:none;border:none;font-size:1.3rem;cursor:pointer;">&times;</button>
+          <button
+            id="closeQuoteModalBtn"
+            style="
+              background: none;
+              border: none;
+              font-size: 1.3rem;
+              cursor: pointer;
+            "
+          >
+            &times;
+          </button>
         </div>
 
-        <div style="font-size:.9rem;line-height:1.8;">
+        <div style="font-size: 0.9rem; line-height: 1.8">
           <p><strong>Client:</strong> <span id="quoteAdminClient">-</span></p>
           <p><strong>Company:</strong> <span id="quoteAdminCompany">-</span></p>
           <p><strong>Email:</strong> <span id="quoteAdminEmail">-</span></p>
@@ -755,14 +913,33 @@
           <p><strong>Date:</strong> <span id="quoteAdminDate">-</span></p>
         </div>
 
-        <h4 style="font-size:.95rem;margin-top:1.15rem;">Requested Products</h4>
+        <h4 style="font-size: 0.95rem; margin-top: 1.15rem">
+          Requested Products
+        </h4>
         <div class="quote-detail-list" id="quoteAdminItems"></div>
 
-        <h4 style="font-size:.95rem;margin-top:1.15rem;">Project / Requirement Notes</h4>
-        <div class="message-content-box" id="quoteAdminNotes">No notes provided.</div>
+        <h4 style="font-size: 0.95rem; margin-top: 1.15rem">
+          Project / Requirement Notes
+        </h4>
+        <div class="message-content-box" id="quoteAdminNotes">
+          No notes provided.
+        </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-top:1.25rem;">
-          <a id="quoteReplyMailtoBtn" href="#" class="btn-action" style="background:var(--primary);color:#fff;">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+          "
+        >
+          <a
+            id="quoteReplyMailtoBtn"
+            href="#"
+            class="btn-action"
+            style="background: var(--primary); color: #fff"
+          >
             <i class="fa-solid fa-reply"></i> Reply via Email
           </a>
           <button id="quoteMarkReviewedBtn" class="btn-action">
@@ -788,21 +965,58 @@
         deleteDoc,
       } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
+      // 🔒 SAFE OVERLAY REMOVER HELPER
+      function dismissOverlay() {
+        const overlay = document.getElementById("authGateOverlay");
+        if (overlay) {
+          overlay.style.opacity = "0";
+          overlay.style.transition = "opacity 0.25s ease";
+          setTimeout(() => {
+            overlay.style.display = "none";
+          }, 250);
+        }
+      }
+
+      // Safety fallback: prevents screen freeze if connection is slow
+      const fallbackTimeout = setTimeout(() => {
+        const overlay = document.getElementById("authGateOverlay");
+        if (overlay && overlay.style.display !== "none") {
+          console.warn("Auth verification taking longer than expected. Attempting recovery...");
+          if (sessionStorage.getItem("prizam_admin_logged_in")) {
+            dismissOverlay();
+          } else {
+            overlay.innerHTML = `
+              <i class="fa-solid fa-triangle-exclamation" style="font-size:1.6rem; color:var(--danger); margin-bottom:0.5rem;"></i>
+              <span style="font-weight:700; color:var(--text-main);">Session verification timed out</span>
+              <div style="display:flex; gap:0.5rem; margin-top:0.75rem;">
+                <button onclick="window.location.reload()" style="padding:0.5rem 1rem; border:1px solid var(--border); border-radius:6px; background:#fff; font-weight:700; cursor:pointer;">Retry</button>
+                <button onclick="window.location.replace('login.html')" style="padding:0.5rem 1rem; border:none; border-radius:6px; background:var(--accent); color:#fff; font-weight:700; cursor:pointer;">Login</button>
+              </div>
+            `;
+          }
+        }
+      }, 3500);
+
       // 🔒 AUTH GUARD & OVERLAY REMOVER
       onAuthStateChanged(
         auth,
         (user) => {
-          if (!user || user.email !== "admin@prizam.com") {
+          clearTimeout(fallbackTimeout);
+
+          const email = (user?.email || "").toLowerCase().trim();
+          if (!user || email !== "admin@prizam.com") {
             sessionStorage.removeItem("prizam_admin_logged_in");
+            localStorage.removeItem("admin_heartbeat");
             window.location.replace("login.html");
             return;
           }
 
-          const authGateOverlay = document.getElementById("authGateOverlay");
-          if (authGateOverlay) authGateOverlay.style.display = "none";
+          sessionStorage.setItem("prizam_admin_logged_in", "true");
+          localStorage.setItem("admin_heartbeat", Date.now().toString());
+          dismissOverlay();
 
           document.getElementById("sideUserName").textContent =
-            user.displayName || "Administrator";
+            user.displayName || "admin";
           document.getElementById("sideUserEmail").textContent =
             user.email || "admin@prizam.com";
 
@@ -813,24 +1027,47 @@
           document.getElementById("sideUserAvatar").textContent = initials;
         },
         (error) => {
+          clearTimeout(fallbackTimeout);
           console.error("Admin auth verification failed:", error);
-
-          const authGateOverlay = document.getElementById("authGateOverlay");
-          if (authGateOverlay) {
-            authGateOverlay.innerHTML = `
-              <i class="fa-solid fa-triangle-exclamation" style="font-size:1.4rem;color:var(--danger)"></i>
-              <span>Unable to verify admin session.</span>
-              <button
-                type="button"
-                onclick="window.location.reload()"
-                style="margin-top:.35rem;padding:.55rem .9rem;border:1px solid var(--border);border-radius:8px;background:#fff;font-weight:700;cursor:pointer;"
-              >
-                Retry
-              </button>
-            `;
-          }
+          sessionStorage.removeItem("prizam_admin_logged_in");
+          window.location.replace("login.html");
         }
       );
+
+      // ================= REAL-TIME BADGE COUNTERS =================
+      onSnapshot(collection(db, "products"), (snapshot) => {
+        let pubCount = 0;
+        let draftCount = 0;
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          if ((data.status || "published") === "published") pubCount++;
+          else if (data.status === "draft") draftCount++;
+        });
+
+        const bProd = document.getElementById("sideBadgeProducts");
+        const bPub = document.getElementById("sideBadgePublish");
+        const bDraft = document.getElementById("sideBadgeDraft");
+
+        if (bProd) bProd.textContent = snapshot.size;
+        if (bPub) bPub.textContent = pubCount;
+        if (bDraft) bDraft.textContent = draftCount;
+
+        localStorage.setItem("badge_products", snapshot.size.toString());
+        localStorage.setItem("badge_publish", pubCount.toString());
+        localStorage.setItem("badge_draft", draftCount.toString());
+      });
+
+      onSnapshot(collection(db, "orders"), (snap) => {
+        const b = document.getElementById("sideBadgeOrders");
+        if (b) b.textContent = snap.size;
+        localStorage.setItem("badge_orders", snap.size.toString());
+      });
+
+      onSnapshot(collection(db, "returns"), (snap) => {
+        const b = document.getElementById("sideBadgeReturns");
+        if (b) b.textContent = snap.size;
+        localStorage.setItem("badge_returns", snap.size.toString());
+      });
 
       let inquiries = [];
       let quoteRequests = [];
@@ -854,14 +1091,13 @@
         setTimeout(() => toast.classList.remove("show"), 2200);
       }
 
-
       const esc = (value) =>
         String(value ?? "").replace(/[&<>'"]/g, (c) => ({
-          "&":"&amp;",
-          "<":"&lt;",
-          ">":"&gt;",
-          "'":"&#39;",
-          '"':"&quot;"
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "'": "&#39;",
+          '"': "&quot;",
         })[c]);
 
       function toJsDate(value) {
@@ -871,26 +1107,25 @@
         return Number.isNaN(parsed.getTime()) ? null : parsed;
       }
 
-      window.switchRequestPanel = function(panel) {
+      window.switchRequestPanel = function (panel) {
         activeRequestPanel = panel === "quotes" ? "quotes" : "contact";
 
-        document.getElementById("contactRequestsTab").classList.toggle("active", activeRequestPanel === "contact");
-        document.getElementById("quoteRequestsTab").classList.toggle("active", activeRequestPanel === "quotes");
-        document.getElementById("contactRequestsPanel").classList.toggle("active", activeRequestPanel === "contact");
-        document.getElementById("quoteRequestsPanel").classList.toggle("active", activeRequestPanel === "quotes");
+        document
+          .getElementById("contactRequestsTab")
+          .classList.toggle("active", activeRequestPanel === "contact");
+        document
+          .getElementById("quoteRequestsTab")
+          .classList.toggle("active", activeRequestPanel === "quotes");
+        document
+          .getElementById("contactRequestsPanel")
+          .classList.toggle("active", activeRequestPanel === "contact");
+        document
+          .getElementById("quoteRequestsPanel")
+          .classList.toggle("active", activeRequestPanel === "quotes");
 
         renderTable();
         renderQuoteTable();
       };
-
-      onSnapshot(collection(db, "products"), (snap) => {
-        const b = document.getElementById("sideBadgeProducts");
-        if (b) b.textContent = snap.size;
-      });
-      onSnapshot(collection(db, "orders"), (snap) => {
-        const b = document.getElementById("sideBadgeOrders");
-        if (b) b.textContent = snap.size;
-      });
 
       // Main source: both contact messages and quotation requests live in "inquiries".
       onSnapshot(
@@ -903,7 +1138,7 @@
             const row = {
               id: docSnap.id,
               _collection: "inquiries",
-              ...docSnap.data()
+              ...docSnap.data(),
             };
 
             const requestType = String(
@@ -928,7 +1163,6 @@
               (toJsDate(a.createdAt)?.getTime() || 0)
           );
 
-          // Merge new quotation requests with any legacy quoteRequests docs.
           const merged = new Map();
 
           [...quotationRows, ...legacyQuoteRequests].forEach((item) => {
@@ -953,9 +1187,6 @@
         }
       );
 
-      // Legacy compatibility: old versions saved quotes in "quoteRequests".
-      // If Firestore rules block this old collection, the new "inquiries"
-      // quotation flow still continues to work.
       onSnapshot(
         collection(db, "quoteRequests"),
         (snapshot) => {
@@ -966,7 +1197,7 @@
               id: docSnap.id,
               _collection: "quoteRequests",
               requestType: "quotation",
-              ...docSnap.data()
+              ...docSnap.data(),
             });
           });
 
@@ -992,7 +1223,6 @@
           renderQuoteTable();
         },
         (error) => {
-          // This is only a legacy fallback, so don't break the page.
           console.warn(
             "Legacy quoteRequests collection is not readable; using inquiries quotation records only:",
             error
@@ -1000,21 +1230,26 @@
         }
       );
 
-
       function updateBadges() {
         const total = inquiries.length,
           newCount = inquiries.filter(
-            (i) => (i.status || "New") === "New",
+            (i) => (i.status || "New") === "New"
           ).length,
           repliedCount = inquiries.filter((i) => i.status === "Replied").length;
         document.getElementById("badgeAll").textContent = total;
         document.getElementById("badgeNew").textContent = newCount;
         document.getElementById("badgeReplied").textContent = repliedCount;
+
         const sideInqBadge = document.getElementById("sideBadgeInquiries");
+        const newQuotes = quoteRequests.filter(
+          (q) => (q.status || "New") === "New"
+        ).length;
+        const totalInquiriesAndQuotes = inquiries.length + quoteRequests.length;
+        
         if (sideInqBadge) {
-          const newQuotes = quoteRequests.filter((q) => (q.status || "New") === "New").length;
-          sideInqBadge.textContent = newCount + newQuotes;
+          sideInqBadge.textContent = totalInquiriesAndQuotes;
         }
+        localStorage.setItem("badge_inquiries", totalInquiriesAndQuotes.toString());
 
         const mainContactBadge = document.getElementById("mainContactBadge");
         if (mainContactBadge) mainContactBadge.textContent = newCount;
@@ -1022,17 +1257,20 @@
 
       function updateQuoteBadges() {
         const total = quoteRequests.length;
-        const newCount = quoteRequests.filter((q) => (q.status || "New") === "New").length;
+        const newCount = quoteRequests.filter(
+          (q) => (q.status || "New") === "New"
+        ).length;
 
         document.getElementById("quoteBadgeAll").textContent = total;
         document.getElementById("quoteBadgeNew").textContent = newCount;
         document.getElementById("mainQuoteBadge").textContent = newCount;
 
         const sideInqBadge = document.getElementById("sideBadgeInquiries");
+        const totalInquiriesAndQuotes = inquiries.length + quoteRequests.length;
         if (sideInqBadge) {
-          const newContacts = inquiries.filter((i) => (i.status || "New") === "New").length;
-          sideInqBadge.textContent = newContacts + newCount;
+          sideInqBadge.textContent = totalInquiriesAndQuotes;
         }
+        localStorage.setItem("badge_inquiries", totalInquiriesAndQuotes.toString());
       }
 
       function setFilter(f) {
@@ -1066,7 +1304,6 @@
           renderQuoteTable();
         });
 
-
       function setQuoteFilter(filter) {
         currentQuoteFilter = filter;
 
@@ -1079,7 +1316,7 @@
           New: "quoteTabNew",
           Reviewed: "quoteTabReviewed",
           Quoted: "quoteTabQuoted",
-          Closed: "quoteTabClosed"
+          Closed: "quoteTabClosed",
         };
 
         const target = document.getElementById(map[filter] || "quoteTabAll");
@@ -1088,11 +1325,21 @@
         renderQuoteTable();
       }
 
-      document.getElementById("quoteTabAll").addEventListener("click", () => setQuoteFilter("all"));
-      document.getElementById("quoteTabNew").addEventListener("click", () => setQuoteFilter("New"));
-      document.getElementById("quoteTabReviewed").addEventListener("click", () => setQuoteFilter("Reviewed"));
-      document.getElementById("quoteTabQuoted").addEventListener("click", () => setQuoteFilter("Quoted"));
-      document.getElementById("quoteTabClosed").addEventListener("click", () => setQuoteFilter("Closed"));
+      document
+        .getElementById("quoteTabAll")
+        .addEventListener("click", () => setQuoteFilter("all"));
+      document
+        .getElementById("quoteTabNew")
+        .addEventListener("click", () => setQuoteFilter("New"));
+      document
+        .getElementById("quoteTabReviewed")
+        .addEventListener("click", () => setQuoteFilter("Reviewed"));
+      document
+        .getElementById("quoteTabQuoted")
+        .addEventListener("click", () => setQuoteFilter("Quoted"));
+      document
+        .getElementById("quoteTabClosed")
+        .addEventListener("click", () => setQuoteFilter("Closed"));
 
       window.viewInquiry = function (id) {
         const item = inquiries.find((i) => i.id === id);
@@ -1185,21 +1432,28 @@
         });
       }
 
-
-      window.updateQuoteStatus = async function(id, status, collectionName = "inquiries") {
+      window.updateQuoteStatus = async function (
+        id,
+        status,
+        collectionName = "inquiries"
+      ) {
         await updateDoc(doc(db, collectionName, id), { status });
         showToast(`Quotation request set to ${status}`);
       };
 
-      window.deleteQuoteRequest = async function(id, collectionName = "inquiries") {
+      window.deleteQuoteRequest = async function (
+        id,
+        collectionName = "inquiries"
+      ) {
         if (!confirm("Permanently delete this quotation request?")) return;
         await deleteDoc(doc(db, collectionName, id));
         showToast("Quotation request deleted");
       };
 
-      window.viewQuoteRequest = function(id, collectionName = "inquiries") {
+      window.viewQuoteRequest = function (id, collectionName = "inquiries") {
         const item = quoteRequests.find(
-          (q) => q.id === id && (q._collection || "inquiries") === collectionName
+          (q) =>
+            q.id === id && (q._collection || "inquiries") === collectionName
         );
         if (!item) return;
 
@@ -1207,23 +1461,32 @@
         activeQuoteRequestCollection = item._collection || "inquiries";
 
         document.getElementById("quoteModalAdminTitle").textContent =
-          item.company ? `${item.company} Quotation Request` : "Quotation Request";
+          item.company
+            ? `${item.company} Quotation Request`
+            : "Quotation Request";
 
         document.getElementById("quoteModalAdminRef").textContent =
           `Reference #${item.id.slice(0, 10).toUpperCase()}`;
 
-        document.getElementById("quoteAdminClient").textContent = item.name || "Client";
-        document.getElementById("quoteAdminCompany").textContent = item.company || "-";
-        document.getElementById("quoteAdminEmail").textContent = item.email || "-";
-        document.getElementById("quoteAdminPhone").textContent = item.phone || "-";
+        document.getElementById("quoteAdminClient").textContent =
+          item.name || "Client";
+        document.getElementById("quoteAdminCompany").textContent =
+          item.company || "-";
+        document.getElementById("quoteAdminEmail").textContent =
+          item.email || "-";
+        document.getElementById("quoteAdminPhone").textContent =
+          item.phone || "-";
 
         const created = toJsDate(item.createdAt);
-        document.getElementById("quoteAdminDate").textContent =
-          created ? created.toLocaleString("en-IN") : "-";
+        document.getElementById("quoteAdminDate").textContent = created
+          ? created.toLocaleString("en-IN")
+          : "-";
 
         const items = Array.isArray(item.items) ? item.items : [];
         document.getElementById("quoteAdminItems").innerHTML = items.length
-          ? items.map((product) => `
+          ? items
+              .map(
+                (product) => `
               <div class="quote-detail-item">
                 <div>
                   <strong>${esc(product.title || "Product")}</strong>
@@ -1231,7 +1494,9 @@
                 </div>
                 <span class="quote-qty-pill">Qty ${Math.max(1, Number(product.quantity) || 1)}</span>
               </div>
-            `).join("")
+            `
+              )
+              .join("")
           : '<div style="color:var(--text-muted);font-size:.82rem;">No products listed.</div>';
 
         document.getElementById("quoteAdminNotes").textContent =
@@ -1249,27 +1514,32 @@
         activeQuoteRequestCollection = "inquiries";
       }
 
-      document.getElementById("closeQuoteModalBtn").addEventListener("click", closeQuoteAdminModal);
+      document
+        .getElementById("closeQuoteModalBtn")
+        .addEventListener("click", closeQuoteAdminModal);
       quoteModal.addEventListener("click", (event) => {
         if (event.target.id === "quoteRequestModal") closeQuoteAdminModal();
       });
 
-      document.getElementById("quoteMarkReviewedBtn").addEventListener("click", async () => {
-        if (!activeQuoteRequestId) return;
-        await updateDoc(
-          doc(db, activeQuoteRequestCollection, activeQuoteRequestId),
-          { status: "Reviewed" }
-        );
-        showToast("Quotation request marked Reviewed");
-        closeQuoteAdminModal();
-      });
+      document
+        .getElementById("quoteMarkReviewedBtn")
+        .addEventListener("click", async () => {
+          if (!activeQuoteRequestId) return;
+          await updateDoc(
+            doc(db, activeQuoteRequestCollection, activeQuoteRequestId),
+            { status: "Reviewed" }
+          );
+          showToast("Quotation request marked Reviewed");
+          closeQuoteAdminModal();
+        });
 
       function renderQuoteTable() {
         if (!quoteTbody) return;
 
         const filtered = quoteRequests.filter((item) => {
           const status = item.status || "New";
-          if (currentQuoteFilter !== "all" && status !== currentQuoteFilter) return false;
+          if (currentQuoteFilter !== "all" && status !== currentQuoteFilter)
+            return false;
 
           if (searchQuery) {
             const productText = (Array.isArray(item.items) ? item.items : [])
@@ -1296,20 +1566,25 @@
           return;
         }
 
-        quoteTbody.innerHTML = filtered.map((item) => {
-          const status = item.status || "New";
-          const created = toJsDate(item.createdAt);
-          const dateStr = created
-            ? created.toLocaleDateString("en-IN", { day:"numeric", month:"short", year:"numeric" })
-            : "Recent";
+        quoteTbody.innerHTML = filtered
+          .map((item) => {
+            const status = item.status || "New";
+            const created = toJsDate(item.createdAt);
+            const dateStr = created
+              ? created.toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
+              : "Recent";
 
-          const items = Array.isArray(item.items) ? item.items : [];
-          const firstTitle = items[0]?.title || "Product Request";
-          const extra = Math.max(0, items.length - 1);
+            const items = Array.isArray(item.items) ? item.items : [];
+            const firstTitle = items[0]?.title || "Product Request";
+            const extra = Math.max(0, items.length - 1);
 
-          return `
+            return `
             <tr>
-              <td><strong>${dateStr}</strong><br><small style="color:var(--text-muted);">#${item.id.slice(0,8).toUpperCase()}</small></td>
+              <td><strong>${dateStr}</strong><br><small style="color:var(--text-muted);">#${item.id.slice(0, 8).toUpperCase()}</small></td>
               <td>
                 <strong>${esc(item.name || "Client")}</strong><br>
                 <small style="color:var(--text-muted);">${esc(item.company || "Individual / Project")}</small>
@@ -1324,7 +1599,7 @@
                   <span>${extra ? `+${extra} more product${extra === 1 ? "" : "s"}` : "1 product"}</span>
                 </div>
               </td>
-              <td><strong>${Number(item.totalQuantity || items.reduce((s,p)=>s+(Number(p.quantity)||1),0))}</strong></td>
+              <td><strong>${Number(item.totalQuantity || items.reduce((s, p) => s + (Number(p.quantity) || 1), 0))}</strong></td>
               <td>
                 <select class="quote-status-select" onchange="updateQuoteStatus('${item.id}', this.value, '${item._collection || "inquiries"}')">
                   <option value="New" ${status === "New" ? "selected" : ""}>New</option>
@@ -1343,7 +1618,8 @@
               </td>
             </tr>
           `;
-        }).join("");
+          })
+          .join("");
       }
 
       document

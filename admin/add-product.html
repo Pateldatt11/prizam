@@ -5,23 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Prizam Admin | Create Product</title>
 
-    <!-- 🔒 HEARTBEAT SCRIPT -->
+    <!-- 🔒 RESILIENT HEARTBEAT & SESSION CHECK -->
     <script>
       (function () {
-        const lastHb = localStorage.getItem("admin_heartbeat");
+        const loggedIn = sessionStorage.getItem("prizam_admin_logged_in");
+        const lastHb = parseInt(localStorage.getItem("admin_heartbeat") || "0", 10);
         const now = Date.now();
-        if (
-          !sessionStorage.getItem("prizam_admin_logged_in") ||
-          (lastHb && now - parseInt(lastHb) > 15000)
-        ) {
+        // 30-minute session inactivity limit (prevents background-tab freeze)
+        const MAX_INACTIVITY = 30 * 60 * 1000;
+
+        if (!loggedIn || (lastHb > 0 && now - lastHb > MAX_INACTIVITY)) {
           sessionStorage.removeItem("prizam_admin_logged_in");
+          localStorage.removeItem("admin_heartbeat");
           window.location.replace("login.html");
         } else {
           localStorage.setItem("admin_heartbeat", now.toString());
           setInterval(() => {
             localStorage.setItem("admin_heartbeat", Date.now().toString());
-          }, 3000);
+          }, 5000);
         }
+      })();
+
+      // ⚡ INSTANT BADGE CACHE (PREVENTS NUMBERS FROM FLICKERING OR DISAPPEARING)
+      (function () {
+        document.addEventListener("DOMContentLoaded", () => {
+          const setB = (id, key, defaultVal = "0") => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = localStorage.getItem(key) || defaultVal;
+          };
+          setB("sideBadgeProducts", "badge_products");
+          setB("sideBadgePublish", "badge_publish");
+          setB("sideBadgeDraft", "badge_draft");
+          setB("sideBadgeOrders", "badge_orders");
+          setB("sideBadgeReturns", "badge_returns");
+          setB("sideBadgeInquiries", "badge_inquiries");
+        });
       })();
     </script>
 
@@ -42,9 +60,9 @@
 
     <style>
       :root {
-        --sidebar-bg: #070b13;
-        --sidebar-hover: #0f172a;
-        --sidebar-border: #131b2e;
+        --sidebar-bg: #040711;
+        --sidebar-hover: rgba(255, 255, 255, 0.05);
+        --sidebar-border: rgba(255, 255, 255, 0.06);
         --sidebar-text: #94a3b8;
         --sidebar-heading: #475569;
         --sidebar-active-bg: #2563eb;
@@ -63,7 +81,6 @@
         --radius: 12px;
         --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
         --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
-        --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
       }
       * {
         box-sizing: border-box;
@@ -78,6 +95,8 @@
         min-height: 100vh;
         display: flex;
       }
+
+      /* ================= 1. PRECISION DARK SIDEBAR ================= */
       .admin-sidebar {
         width: 270px;
         background: var(--sidebar-bg);
@@ -94,17 +113,17 @@
         transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
       }
       .sidebar-header {
-        padding: 1.75rem 1.5rem 1.25rem;
+        padding: 1.8rem 1.5rem 1.2rem;
         display: flex;
         align-items: center;
-        gap: 0.65rem;
+        gap: 0.75rem;
       }
       .sidebar-brand-dot {
         width: 9px;
         height: 9px;
         background-color: #38bdf8;
         border-radius: 50%;
-        box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
         flex-shrink: 0;
       }
       .sidebar-brand-title {
@@ -120,72 +139,81 @@
         padding: 0.5rem 1rem 1.5rem;
       }
       .sidebar-nav-scroll::-webkit-scrollbar {
-        width: 5px;
+        width: 4px;
       }
       .sidebar-nav-scroll::-webkit-scrollbar-thumb {
         background: #1e293b;
         border-radius: 4px;
       }
       .sidebar-section-title {
-        font-size: 0.72rem;
+        font-size: 0.7rem;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 1.2px;
         color: var(--sidebar-heading);
-        padding: 1.25rem 0.75rem 0.5rem;
+        padding: 1.3rem 0.6rem 0.55rem;
       }
       .sidebar-link {
         display: flex;
         align-items: center;
         gap: 0.85rem;
-        padding: 0.75rem 0.95rem;
-        border-radius: 10px;
+        padding: 0.72rem 0.95rem;
+        border-radius: 12px;
         color: var(--sidebar-text);
         text-decoration: none;
         font-size: 0.92rem;
         font-weight: 600;
+        margin-bottom: 0.3rem;
         transition: all 0.2s ease;
-        margin-bottom: 0.2rem;
+        cursor: pointer;
       }
       .sidebar-link i {
         font-size: 1rem;
         width: 20px;
         text-align: center;
-        flex-shrink: 0;
+        color: var(--sidebar-text);
+        transition: color 0.2s ease;
       }
       .sidebar-link:hover {
         color: #ffffff;
         background: var(--sidebar-hover);
       }
-      .sidebar-link.active {
-        background: var(--sidebar-active-bg);
-        color: var(--sidebar-active-text);
-        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
-      }
-      .sidebar-badge {
-        margin-left: auto;
-        background: rgba(0, 0, 0, 0.25);
+      .sidebar-link:hover i {
         color: #ffffff;
-        font-size: 0.75rem;
+      }
+
+      /* ✨ SOLID BLUE PILL HIGHLIGHT */
+      .sidebar-link.active {
+        background: var(--sidebar-active-bg) !important;
+        color: #ffffff !important;
         font-weight: 700;
-        padding: 0.15rem 0.55rem;
-        border-radius: 12px;
-        min-width: 22px;
-        text-align: center;
+        box-shadow: 0 4px 18px rgba(37, 99, 235, 0.45);
+      }
+      .sidebar-link.active i {
+        color: #ffffff !important;
       }
       .sidebar-link.active .sidebar-badge {
-        background: rgba(0, 0, 0, 0.35);
+        color: #ffffff !important;
       }
-      .sidebar-sublink {
-        padding-left: 1.15rem;
+
+      /* Right-Side Number Badge */
+      .sidebar-badge {
+        margin-left: auto;
+        color: #ffffff;
+        font-size: 0.85rem;
+        font-weight: 700;
+        min-width: 18px;
+        text-align: right;
       }
+
+      /* Sidebar Footer */
       .sidebar-footer {
-        padding: 1.25rem 1.25rem;
+        padding: 1.15rem 1.25rem;
         border-top: 1px solid var(--sidebar-border);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: #060910;
+        background: #03060d;
       }
       .sidebar-user-info {
         display: flex;
@@ -197,7 +225,7 @@
         width: 38px;
         height: 38px;
         border-radius: 50%;
-        background: #1e293b;
+        background: #111b2b;
         color: #38bdf8;
         font-weight: 800;
         font-size: 0.85rem;
@@ -213,7 +241,7 @@
       }
       .sidebar-user-name {
         color: #ffffff;
-        font-size: 0.88rem;
+        font-size: 0.92rem;
         font-weight: 700;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -232,16 +260,16 @@
         color: #64748b;
         font-size: 1.15rem;
         cursor: pointer;
-        padding: 0.4rem;
+        padding: 4px;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.2s;
+        transition: color 0.2s ease;
       }
       .sidebar-logout-btn:hover {
-        color: var(--danger);
-        transform: translateX(2px);
+        color: #ffffff;
       }
+
       .sidebar-backdrop {
         position: fixed;
         inset: 0;
@@ -256,6 +284,8 @@
         display: block;
         opacity: 1;
       }
+
+      /* ================= 2. MAIN WORKSPACE ================= */
       .admin-main {
         margin-left: 270px;
         flex-grow: 1;
@@ -779,6 +809,7 @@
         color: var(--text-muted);
         font-size: 0.9rem;
       }
+
       @media (max-width: 900px) {
         .admin-sidebar {
           transform: translateX(-100%);
@@ -835,66 +866,93 @@
 
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
+    <!-- ================= 1. PRECISION DARK SIDEBAR ================= -->
     <aside class="admin-sidebar" id="adminSidebar">
       <div class="sidebar-header">
         <span class="sidebar-brand-dot"></span>
         <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
       </div>
+
       <div class="sidebar-nav-scroll">
-        <div class="sidebar-section-title">Storefront Catalog</div>
-        <a href="index.html" class="sidebar-link"
-          ><i class="fa-solid fa-boxes-stacked"></i><span>Products</span
-          ><span class="sidebar-badge" id="sideBadgeProducts">0</span></a
-        >
+        <!-- STOREFRONT CATALOG -->
+        <div class="sidebar-section-title">STOREFRONT CATALOG</div>
+        <a href="index.html" class="sidebar-link" id="sideNavProducts">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <span>Products</span>
+          <span class="sidebar-badge" id="sideBadgeProducts">0</span>
+        </a>
         <a
-          href="index.html?filter=published"
-          class="sidebar-link sidebar-sublink"
-          ><i class="fa-solid fa-circle-check"></i><span>Publish</span></a
+          href="index.html?status=published"
+          class="sidebar-link"
+          id="sideNavPublish"
         >
-        <a href="index.html?filter=draft" class="sidebar-link sidebar-sublink"
-          ><i class="fa-solid fa-file-lines"></i><span>Draft</span></a
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Publish</span>
+          <span class="sidebar-badge" id="sideBadgePublish">0</span>
+        </a>
+        <a
+          href="index.html?status=draft"
+          class="sidebar-link"
+          id="sideNavDraft"
         >
-        <a href="add-product.html" class="sidebar-link active"
-          ><i class="fa-solid fa-circle-plus"></i
-          ><span>Add New Product</span></a
+          <i class="fa-solid fa-file-lines"></i>
+          <span>Draft</span>
+          <span class="sidebar-badge" id="sideBadgeDraft">0</span>
+        </a>
+        <a
+          href="add-product.html"
+          class="sidebar-link active"
+          id="sideNavAddProduct"
         >
-        <div class="sidebar-section-title">Management & Sales</div>
-        <a href="brochures.html" class="sidebar-link"
-          ><i class="fa-solid fa-file-lines"></i><span>Brochures</span></a
-        >
-        <a href="orders.html" class="sidebar-link"
-          ><i class="fa-solid fa-truck-ramp-box"></i><span>Orders</span
-          ><span class="sidebar-badge" id="sideBadgeOrders">0</span></a
-        >
-        <a href="returns.html" class="sidebar-link"
-          ><i class="fa-solid fa-rotate-left"></i><span>Returns</span></a
-        >
-        <a href="inquiries.html" class="sidebar-link"
-          ><i class="fa-solid fa-envelope-open-text"></i
-          ><span>Contact Request</span></a
-        >
-        <a href="analytics.html" class="sidebar-link"
-          ><i class="fa-solid fa-chart-pie"></i><span>Store Analysis</span></a
-        >
-        <a href="settings.html" class="sidebar-link"
-          ><i class="fa-solid fa-gears"></i><span>System Maintenance</span></a
-        >
-        <div class="sidebar-section-title">Live Preview</div>
-        <a href="../index.html" target="_blank" class="sidebar-link"
-          ><i class="fa-solid fa-arrow-up-right-from-square"></i
-          ><span>Live Preview</span></a
-        >
+          <i class="fa-solid fa-circle-plus"></i>
+          <span>Add New Product</span>
+        </a>
+
+        <!-- MANAGEMENT & SALES -->
+        <div class="sidebar-section-title">MANAGEMENT & SALES</div>
+        <a href="brochures.html" class="sidebar-link">
+          <i class="fa-solid fa-file-lines"></i>
+          <span>Brochures</span>
+        </a>
+        <a href="orders.html" class="sidebar-link">
+          <i class="fa-solid fa-truck-fast"></i>
+          <span>Orders</span>
+          <span class="sidebar-badge" id="sideBadgeOrders">0</span>
+        </a>
+        <a href="returns.html" class="sidebar-link">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>Returns</span>
+          <span class="sidebar-badge" id="sideBadgeReturns">0</span>
+        </a>
+        <a href="inquiries.html" class="sidebar-link">
+          <i class="fa-solid fa-envelope"></i>
+          <span>Contact Request</span>
+          <span class="sidebar-badge" id="sideBadgeInquiries">0</span>
+        </a>
+        <a href="analytics.html" class="sidebar-link">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Store Analysis</span>
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          <i class="fa-solid fa-gears"></i>
+          <span>System Maintenance</span>
+        </a>
+
+        <!-- LIVE PREVIEW -->
+        <div class="sidebar-section-title">LIVE PREVIEW</div>
+        <a href="../index.html" target="_blank" class="sidebar-link">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>Live Storefront</span>
+        </a>
       </div>
+
+      <!-- FOOTER USER PROFILE -->
       <div class="sidebar-footer">
         <div class="sidebar-user-info">
           <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
           <div class="sidebar-meta">
-            <span class="sidebar-user-name" id="sideUserName"
-              >Administrator</span
-            >
-            <span class="sidebar-user-email" id="sideUserEmail"
-              >admin@prizam.com</span
-            >
+            <span class="sidebar-user-name" id="sideUserName">admin</span>
+            <span class="sidebar-user-email" id="sideUserEmail">admin@prizam.com</span>
           </div>
         </div>
         <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
@@ -914,8 +972,7 @@
             <i class="fa-solid fa-bars" id="menuIcon"></i>
           </button>
           <div class="breadcrumbs">
-            <a href="index.html">Catalog</a><span>/</span
-            ><span class="current">Add Product</span>
+            <a href="index.html">Catalog</a><span>/</span><span class="current">Add Product</span>
           </div>
         </div>
         <div class="top-actions">
@@ -950,15 +1007,14 @@
                 </div>
                 <div class="form-group">
                   <label
-                    >Product Description (Formatted Text / Paste from
-                    Word)</label
+                    >Product Description (Formatted Text / Paste from Word)</label
                   >
                   <div class="editor-wrapper">
                     <div id="pDescriptionEditor"></div>
                   </div>
                   <div class="editor-hint">
-                    <i class="fa-solid fa-circle-info"></i
-                    ><span
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span
                       >Supports direct copy-paste from MS Word. Retains bold,
                       paragraphs, font sizes, headings, and bullet points
                       automatically.</span
@@ -999,9 +1055,7 @@
                   <p>
                     Drag & drop multiple product images here (Cover + Gallery)
                   </p>
-                  <small
-                    >PNG, JPG, or WEBP (Multiple selection supported)</small
-                  >
+                  <small>PNG, JPG, or WEBP (Multiple selection supported)</small>
                   <input type="file" id="fileInput" accept="image/*" multiple />
                 </div>
                 <div class="divider-text">
@@ -1074,42 +1128,33 @@
                 <div class="toggle-list">
                   <div class="toggle-row">
                     <div class="toggle-meta">
-                      <strong>Feature in "Top Picks"</strong
-                      ><small
-                        >Showcase prominently on the homepage hero row</small
-                      >
+                      <strong>Feature in "Top Picks"</strong>
+                      <small>Showcase prominently on the homepage hero row</small>
                     </div>
-                    <label class="switch"
-                      ><input type="checkbox" id="flagTopPick" /><span
-                        class="slider"
-                      ></span
-                    ></label>
+                    <label class="switch">
+                      <input type="checkbox" id="flagTopPick" />
+                      <span class="slider"></span>
+                    </label>
                   </div>
                   <div class="toggle-row">
                     <div class="toggle-meta">
-                      <strong>Feature in "Best Sellers"</strong
-                      ><small
-                        >Highlight in high-conversion sales sections</small
-                      >
+                      <strong>Feature in "Best Sellers"</strong>
+                      <small>Highlight in high-conversion sales sections</small>
                     </div>
-                    <label class="switch"
-                      ><input type="checkbox" id="flagTopSeller" /><span
-                        class="slider"
-                      ></span
-                    ></label>
+                    <label class="switch">
+                      <input type="checkbox" id="flagTopSeller" />
+                      <span class="slider"></span>
+                    </label>
                   </div>
                   <div class="toggle-row">
                     <div class="toggle-meta">
-                      <strong>Feature in "Upcoming Catalog"</strong
-                      ><small
-                        >Pre-launch exhibition badge for arriving stock</small
-                      >
+                      <strong>Feature in "Upcoming Catalog"</strong>
+                      <small>Pre-launch exhibition badge for arriving stock</small>
                     </div>
-                    <label class="switch"
-                      ><input type="checkbox" id="flagUpcoming" /><span
-                        class="slider"
-                      ></span
-                    ></label>
+                    <label class="switch">
+                      <input type="checkbox" id="flagUpcoming" />
+                      <span class="slider"></span>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -1185,24 +1230,112 @@
         onSnapshot,
       } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
+      // 🔒 SAFE OVERLAY REMOVER HELPER
+      function dismissOverlay() {
+        const overlay = document.getElementById("authGateOverlay");
+        if (overlay) {
+          overlay.style.opacity = "0";
+          overlay.style.transition = "opacity 0.25s ease";
+          setTimeout(() => {
+            overlay.style.display = "none";
+          }, 250);
+        }
+      }
+
+      // Safety fallback: prevents screen freeze if connection is slow
+      const fallbackTimeout = setTimeout(() => {
+        const overlay = document.getElementById("authGateOverlay");
+        if (overlay && overlay.style.display !== "none") {
+          console.warn("Auth verification taking longer than expected. Attempting recovery...");
+          if (sessionStorage.getItem("prizam_admin_logged_in")) {
+            dismissOverlay();
+          } else {
+            overlay.innerHTML = `
+              <i class="fa-solid fa-triangle-exclamation" style="font-size:1.6rem; color:var(--danger); margin-bottom:0.5rem;"></i>
+              <span style="font-weight:700; color:var(--text-main);">Session verification timed out</span>
+              <div style="display:flex; gap:0.5rem; margin-top:0.75rem;">
+                <button onclick="window.location.reload()" style="padding:0.5rem 1rem; border:1px solid var(--border); border-radius:6px; background:#fff; font-weight:700; cursor:pointer;">Retry</button>
+                <button onclick="window.location.replace('login.html')" style="padding:0.5rem 1rem; border:none; border-radius:6px; background:var(--accent); color:#fff; font-weight:700; cursor:pointer;">Login</button>
+              </div>
+            `;
+          }
+        }
+      }, 3500);
+
       // 🔒 AUTH GUARD & OVERLAY REMOVER
-      onAuthStateChanged(auth, (user) => {
-        if (!user || user.email !== "admin@prizam.com") {
+      onAuthStateChanged(
+        auth,
+        (user) => {
+          clearTimeout(fallbackTimeout);
+
+          const email = (user?.email || "").toLowerCase().trim();
+          if (!user || email !== "admin@prizam.com") {
+            sessionStorage.removeItem("prizam_admin_logged_in");
+            localStorage.removeItem("admin_heartbeat");
+            window.location.replace("login.html");
+            return;
+          }
+
+          sessionStorage.setItem("prizam_admin_logged_in", "true");
+          localStorage.setItem("admin_heartbeat", Date.now().toString());
+          dismissOverlay();
+
+          document.getElementById("sideUserName").textContent =
+            user.displayName || "admin";
+          document.getElementById("sideUserEmail").textContent =
+            user.email || "admin@prizam.com";
+          const initials = (user.displayName || user.email || "AD")
+            .substring(0, 2)
+            .toUpperCase();
+          document.getElementById("sideUserAvatar").textContent = initials;
+        },
+        (error) => {
+          clearTimeout(fallbackTimeout);
+          console.error("Auth state error:", error);
           sessionStorage.removeItem("prizam_admin_logged_in");
           window.location.replace("login.html");
-          return;
         }
-        const authGateOverlay = document.getElementById("authGateOverlay");
-        if (authGateOverlay) authGateOverlay.style.display = "none";
+      );
 
-        document.getElementById("sideUserName").textContent =
-          user.displayName || "Administrator";
-        document.getElementById("sideUserEmail").textContent =
-          user.email || "admin@prizam.com";
-        const initials = (user.displayName || user.email || "AD")
-          .substring(0, 2)
-          .toUpperCase();
-        document.getElementById("sideUserAvatar").textContent = initials;
+      // ================= REAL-TIME BADGE COUNTERS =================
+      onSnapshot(collection(db, "products"), (snapshot) => {
+        let pubCount = 0;
+        let draftCount = 0;
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          if ((data.status || "published") === "published") pubCount++;
+          else if (data.status === "draft") draftCount++;
+        });
+
+        const bProd = document.getElementById("sideBadgeProducts");
+        const bPub = document.getElementById("sideBadgePublish");
+        const bDraft = document.getElementById("sideBadgeDraft");
+
+        if (bProd) bProd.textContent = snapshot.size;
+        if (bPub) bPub.textContent = pubCount;
+        if (bDraft) bDraft.textContent = draftCount;
+
+        localStorage.setItem("badge_products", snapshot.size.toString());
+        localStorage.setItem("badge_publish", pubCount.toString());
+        localStorage.setItem("badge_draft", draftCount.toString());
+      });
+
+      onSnapshot(collection(db, "orders"), (snap) => {
+        const b = document.getElementById("sideBadgeOrders");
+        if (b) b.textContent = snap.size;
+        localStorage.setItem("badge_orders", snap.size.toString());
+      });
+
+      onSnapshot(collection(db, "returns"), (snap) => {
+        const b = document.getElementById("sideBadgeReturns");
+        if (b) b.textContent = snap.size;
+        localStorage.setItem("badge_returns", snap.size.toString());
+      });
+
+      onSnapshot(collection(db, "inquiries"), (snap) => {
+        const b = document.getElementById("sideBadgeInquiries");
+        if (b) b.textContent = snap.size;
+        localStorage.setItem("badge_inquiries", snap.size.toString());
       });
 
       const quill = new Quill("#pDescriptionEditor", {
@@ -1283,23 +1416,6 @@
         toast.classList.add("show");
         setTimeout(() => toast.classList.remove("show"), 2200);
       }
-
-      onSnapshot(
-        collection(db, "products"),
-        (snap) => {
-          const b = document.getElementById("sideBadgeProducts");
-          if (b) b.textContent = snap.size;
-        },
-        () => {},
-      );
-      onSnapshot(
-        collection(db, "orders"),
-        (snap) => {
-          const b = document.getElementById("sideBadgeOrders");
-          if (b) b.textContent = snap.size;
-        },
-        () => {},
-      );
 
       function renderAdminGallery() {
         adminThumbnailsGrid.innerHTML = "";

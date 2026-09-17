@@ -49,9 +49,9 @@
 
     <style>
       :root {
-        --sidebar-bg: #070b13;
-        --sidebar-hover: #0f172a;
-        --sidebar-border: #131b2e;
+        --sidebar-bg: #040711;
+        --sidebar-hover: rgba(255, 255, 255, 0.05);
+        --sidebar-border: rgba(255, 255, 255, 0.06);
         --sidebar-text: #94a3b8;
         --sidebar-heading: #475569;
         --sidebar-active-bg: #2563eb;
@@ -68,6 +68,7 @@
         --warning: #f59e0b;
         --danger: #ef4444;
         --radius: 12px;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
       }
       * {
         box-sizing: border-box;
@@ -81,6 +82,8 @@
         min-height: 100vh;
         display: flex;
       }
+
+      /* ================= 1. PRECISION DARK SIDEBAR ================= */
       .admin-sidebar {
         width: 270px;
         background: var(--sidebar-bg);
@@ -93,94 +96,143 @@
         left: 0;
         z-index: 100;
         border-right: 1px solid var(--sidebar-border);
+        user-select: none;
       }
       .sidebar-header {
-        padding: 1.75rem 1.5rem 1.25rem;
+        padding: 1.8rem 1.5rem 1.2rem;
         display: flex;
         align-items: center;
-        gap: 0.65rem;
+        gap: 0.75rem;
       }
       .sidebar-brand-dot {
         width: 9px;
         height: 9px;
         background-color: #38bdf8;
         border-radius: 50%;
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+        flex-shrink: 0;
       }
       .sidebar-brand-title {
         color: #ffffff;
         font-size: 1.35rem;
         font-weight: 800;
+        letter-spacing: -0.5px;
         text-decoration: none;
       }
       .sidebar-nav-scroll {
         flex: 1;
         overflow-y: auto;
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 1rem 1.5rem;
+      }
+      .sidebar-nav-scroll::-webkit-scrollbar {
+        width: 4px;
+      }
+      .sidebar-nav-scroll::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 4px;
       }
       .sidebar-section-title {
-        font-size: 0.72rem;
+        font-size: 0.7rem;
         font-weight: 800;
         text-transform: uppercase;
+        letter-spacing: 1.2px;
         color: var(--sidebar-heading);
-        padding: 1.25rem 0.75rem 0.5rem;
+        padding: 1.3rem 0.6rem 0.55rem;
       }
       .sidebar-link {
         display: flex;
         align-items: center;
         gap: 0.85rem;
-        padding: 0.75rem 0.95rem;
-        border-radius: 10px;
+        padding: 0.72rem 0.95rem;
+        border-radius: 12px;
         color: var(--sidebar-text);
         text-decoration: none;
         font-size: 0.92rem;
         font-weight: 600;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.3rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
       }
       .sidebar-link i {
         font-size: 1rem;
         width: 20px;
         text-align: center;
+        color: var(--sidebar-text);
+        transition: color 0.2s ease;
       }
       .sidebar-link:hover {
         color: #ffffff;
         background: var(--sidebar-hover);
       }
+      .sidebar-link:hover i {
+        color: #ffffff;
+      }
+
+      /* ✨ SOLID BLUE PILL HIGHLIGHT FOR ACTIVE PAGE */
       .sidebar-link.active {
-        background: var(--sidebar-active-bg);
-        color: var(--sidebar-active-text);
+        background: var(--sidebar-active-bg) !important;
+        color: #ffffff !important;
+        font-weight: 700;
+        box-shadow: 0 4px 18px rgba(37, 99, 235, 0.45);
+      }
+      .sidebar-link.active i {
+        color: #ffffff !important;
+      }
+      .sidebar-link.active .sidebar-badge {
+        color: #ffffff !important;
+      }
+      .sidebar-badge {
+        margin-left: auto;
+        color: #ffffff;
+        font-size: 0.85rem;
+        font-weight: 700;
       }
       .sidebar-footer {
-        padding: 1.25rem;
+        padding: 1.15rem 1.25rem;
         border-top: 1px solid var(--sidebar-border);
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        background: #060910;
+        background: #03060d;
       }
       .sidebar-user-info {
         display: flex;
         align-items: center;
         gap: 0.75rem;
+        overflow: hidden;
       }
       .sidebar-avatar {
         width: 38px;
         height: 38px;
         border-radius: 50%;
-        background: #1e293b;
+        background: #111b2b;
         color: #38bdf8;
         font-weight: 800;
+        font-size: 0.85rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
+      }
+      .sidebar-meta {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
       }
       .sidebar-user-name {
         color: #ffffff;
-        font-size: 0.88rem;
+        font-size: 0.92rem;
         font-weight: 700;
-        display: block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
       .sidebar-user-email {
         color: #64748b;
         font-size: 0.75rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
       .sidebar-logout-btn {
         background: none;
@@ -188,7 +240,17 @@
         color: #64748b;
         font-size: 1.15rem;
         cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease;
       }
+      .sidebar-logout-btn:hover {
+        color: #ffffff;
+      }
+
+      /* Main Content */
       .admin-main {
         margin-left: 270px;
         flex-grow: 1;
@@ -242,6 +304,7 @@
         border: 1px solid var(--border);
         border-radius: var(--radius);
         overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
       }
       table {
         width: 100%;
@@ -266,6 +329,7 @@
         border-radius: 6px;
         font-weight: 700;
         border: 1.5px solid transparent;
+        cursor: pointer;
       }
       .return-status-select.Requested {
         background: #fef3c7;
@@ -293,6 +357,9 @@
         color: #94a3b8;
         cursor: pointer;
         font-size: 0.95rem;
+      }
+      .btn-delete-row:hover {
+        color: var(--danger);
       }
       .admin-toast {
         position: fixed;
@@ -338,20 +405,24 @@
       }
       .admin-section-tab:hover {
         color: var(--text-main);
-        background: rgba(255,255,255,.7);
+        background: rgba(255, 255, 255, 0.7);
       }
       .admin-section-tab.active {
         background: #fff;
         color: var(--primary);
-        box-shadow: 0 2px 8px rgba(15,23,42,.08);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
       }
-      .admin-tab-panel { display: none; }
-      .admin-tab-panel.active { display: block; }
+      .admin-tab-panel {
+        display: none;
+      }
+      .admin-tab-panel.active {
+        display: block;
+      }
 
       /* ================= ANALYSIS KPI CARDS ================= */
       .return-metrics-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit,minmax(190px,1fr));
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
         gap: 1rem;
         margin-bottom: 1.5rem;
       }
@@ -362,7 +433,7 @@
         padding: 1.15rem;
         display: flex;
         align-items: center;
-        gap: .9rem;
+        gap: 0.9rem;
       }
       .return-metric-icon {
         width: 44px;
@@ -379,7 +450,7 @@
         font-weight: 800;
       }
       .return-metric-card p {
-        font-size: .72rem;
+        font-size: 0.72rem;
         text-transform: uppercase;
         font-weight: 700;
         color: var(--text-muted);
@@ -388,7 +459,7 @@
       /* ================= INDIA RETURN HEATMAP ================= */
       .analysis-grid {
         display: grid;
-        grid-template-columns: minmax(0,1.55fr) minmax(260px,.7fr);
+        grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.7fr);
         gap: 1.25rem;
       }
       .analysis-card {
@@ -408,10 +479,10 @@
       .analysis-card-header h2 {
         font-size: 1rem;
         font-weight: 800;
-        margin-bottom: .2rem;
+        margin-bottom: 0.2rem;
       }
       .analysis-card-header p {
-        font-size: .78rem;
+        font-size: 0.78rem;
         color: var(--text-muted);
       }
       .analysis-pill {
@@ -419,8 +490,8 @@
         color: #1d4ed8;
         border: 1px solid #dbeafe;
         border-radius: 999px;
-        padding: .45rem .7rem;
-        font-size: .74rem;
+        padding: 0.45rem 0.7rem;
+        font-size: 0.74rem;
         font-weight: 800;
         white-space: nowrap;
       }
@@ -432,48 +503,48 @@
       .reason-rank-list {
         display: flex;
         flex-direction: column;
-        gap: .6rem;
+        gap: 0.6rem;
       }
       .rank-row {
         display: flex;
         justify-content: space-between;
-        gap: .7rem;
+        gap: 0.7rem;
         align-items: center;
-        padding: .7rem;
+        padding: 0.7rem;
         border: 1px solid var(--border);
         border-radius: 8px;
         background: #fff;
       }
       .rank-row strong {
         display: block;
-        font-size: .78rem;
+        font-size: 0.78rem;
       }
       .rank-row span {
         display: block;
-        font-size: .68rem;
+        font-size: 0.68rem;
         color: var(--text-muted);
-        margin-top: .1rem;
+        margin-top: 0.1rem;
       }
       .rank-count {
         min-width: 34px;
         height: 28px;
-        padding: 0 .5rem;
+        padding: 0 0.5rem;
         border-radius: 999px;
         background: #0f172a;
         color: #fff !important;
         display: inline-flex !important;
         align-items: center;
         justify-content: center;
-        font-size: .72rem !important;
+        font-size: 0.72rem !important;
         font-weight: 800;
       }
       .side-analysis-box {
         padding: 1rem;
       }
       .side-analysis-box h3 {
-        font-size: .85rem;
+        font-size: 0.85rem;
         font-weight: 800;
-        margin-bottom: .75rem;
+        margin-bottom: 0.75rem;
       }
 
       /* ================= GUJARAT RETURN SVG HEATMAP ================= */
@@ -485,17 +556,25 @@
       }
       .gujarat-map-layout {
         display: grid;
-        grid-template-columns: minmax(0,1.65fr) minmax(250px,.65fr);
+        grid-template-columns: minmax(0, 1.65fr) minmax(250px, 0.65fr);
         min-height: 500px;
       }
       .gujarat-map-wrap {
         position: relative;
         min-width: 0;
         min-height: 500px;
-        padding: .75rem;
+        padding: 0.75rem;
         background:
-          radial-gradient(circle at top left, rgba(59,130,246,.08), transparent 35%),
-          radial-gradient(circle at bottom right, rgba(16,185,129,.08), transparent 32%),
+          radial-gradient(
+            circle at top left,
+            rgba(59, 130, 246, 0.08),
+            transparent 35%
+          ),
+          radial-gradient(
+            circle at bottom right,
+            rgba(16, 185, 129, 0.08),
+            transparent 32%
+          ),
           #fff;
       }
       #gujaratReturnsHeatmap {
@@ -503,7 +582,7 @@
         height: 480px;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: inset 0 0 0 1px rgba(148,163,184,.18);
+        box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18);
       }
       .gujarat-map-sidebar {
         border-left: 1px solid var(--border);
@@ -511,9 +590,9 @@
         background: #fbfdff;
       }
       .gujarat-map-sidebar h3 {
-        font-size: .88rem;
+        font-size: 0.88rem;
         font-weight: 800;
-        margin-bottom: .8rem;
+        margin-bottom: 0.8rem;
       }
       .gujarat-map-toolbar {
         position: absolute;
@@ -523,60 +602,67 @@
       }
       .gujarat-map-btn {
         border: 1px solid var(--border);
-        background: rgba(255,255,255,.94);
+        background: rgba(255, 255, 255, 0.94);
         color: var(--text-main);
-        padding: .55rem .8rem;
+        padding: 0.55rem 0.8rem;
         border-radius: 999px;
-        font-size: .72rem;
+        font-size: 0.72rem;
         font-weight: 800;
         cursor: pointer;
-        box-shadow: 0 6px 18px rgba(15,23,42,.08);
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
       }
       .heat-legend,
       .district-insight-card {
         margin-top: 1rem;
-        padding: .85rem;
+        padding: 0.85rem;
         border: 1px solid var(--border);
         border-radius: 10px;
         background: #fff;
       }
       .heat-legend h4,
       .district-insight-card h4 {
-        font-size: .78rem;
+        font-size: 0.78rem;
         font-weight: 800;
-        margin-bottom: .65rem;
+        margin-bottom: 0.65rem;
       }
       .legend-scale {
         height: 10px;
         border-radius: 999px;
-        background: linear-gradient(90deg,#e0f2fe,#7dd3fc,#38bdf8,#0ea5e9,#1d4ed8);
+        background: linear-gradient(
+          90deg,
+          #e0f2fe,
+          #7dd3fc,
+          #38bdf8,
+          #0ea5e9,
+          #1d4ed8
+        );
       }
       .legend-labels {
         display: flex;
         justify-content: space-between;
-        margin-top: .4rem;
-        font-size: .68rem;
+        margin-top: 0.4rem;
+        font-size: 0.68rem;
         color: var(--text-muted);
       }
       .district-insight-card p {
-        font-size: .75rem;
+        font-size: 0.75rem;
         color: var(--text-muted);
         line-height: 1.45;
       }
       .district-focus-name {
         display: inline-block;
-        margin-top: .4rem;
-        font-size: .92rem;
+        margin-top: 0.4rem;
+        font-size: 0.92rem;
         font-weight: 800;
       }
       .district-focus-count {
         display: inline-flex;
-        margin-top: .5rem;
+        margin-top: 0.5rem;
         background: #eff6ff;
         color: #1d4ed8;
         border-radius: 999px;
-        padding: .35rem .6rem;
-        font-size: .72rem;
+        padding: 0.35rem 0.6rem;
+        font-size: 0.72rem;
         font-weight: 800;
       }
 
@@ -591,12 +677,14 @@
         }
       }
       @media (max-width: 640px) {
-        .admin-section-tabs { width: 100%; }
+        .admin-section-tabs {
+          width: 100%;
+        }
         .admin-section-tab {
           flex: 1;
           justify-content: center;
-          font-size: .75rem;
-          padding: .65rem .5rem;
+          font-size: 0.75rem;
+          padding: 0.65rem 0.5rem;
         }
         #indiaReturnsHeatmap,
         #gujaratReturnsHeatmap {
@@ -630,55 +718,79 @@
       <span>Verifying admin session...</span>
     </div>
 
+    <!-- ================= 1. PRECISION DARK SIDEBAR ================= -->
     <aside class="admin-sidebar">
       <div class="sidebar-header">
-        <span class="sidebar-brand-dot"></span
-        ><a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
+        <span class="sidebar-brand-dot"></span>
+        <a href="index.html" class="sidebar-brand-title">Prizam Admin</a>
       </div>
+
       <div class="sidebar-nav-scroll">
-        <div class="sidebar-section-title">Storefront Catalog</div>
-        <a href="index.html" class="sidebar-link"
-          ><i class="fa-solid fa-boxes-stacked"></i><span>Products</span></a
-        >
-        <a href="add-product.html" class="sidebar-link"
-          ><i class="fa-solid fa-circle-plus"></i
-          ><span>Add New Product</span></a
-        >
-        <div class="sidebar-section-title">Management & Sales</div>
-        <a href="brochures.html" class="sidebar-link"
-          ><i class="fa-solid fa-file-lines"></i><span>Brochures</span></a
-        >
-        <a href="orders.html" class="sidebar-link"
-          ><i class="fa-solid fa-truck-ramp-box"></i><span>Orders</span></a
-        >
-        <a href="returns.html" class="sidebar-link active"
-          ><i class="fa-solid fa-rotate-left"></i><span>Returns</span></a
-        >
-        <a href="inquiries.html" class="sidebar-link"
-          ><i class="fa-solid fa-envelope-open-text"></i
-          ><span>Contact Request</span></a
-        >
-        <a href="analytics.html" class="sidebar-link"
-          ><i class="fa-solid fa-chart-pie"></i><span>Store Analysis</span></a
-        >
-        <a href="settings.html" class="sidebar-link"
-          ><i class="fa-solid fa-gears"></i><span>System Maintenance</span></a
-        >
-        <div class="sidebar-section-title">Live Preview</div>
-        <a href="../index.html" target="_blank" class="sidebar-link"
-          ><i class="fa-solid fa-arrow-up-right-from-square"></i
-          ><span>Live Storefront</span></a
-        >
+        <!-- STOREFRONT CATALOG -->
+        <div class="sidebar-section-title">STOREFRONT CATALOG</div>
+        <a href="index.html" class="sidebar-link">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <span>Products</span>
+          <span class="sidebar-badge" id="sideBadgeProducts">0</span>
+        </a>
+        <a href="index.html?status=published" class="sidebar-link">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Publish</span>
+        </a>
+        <a href="index.html?status=draft" class="sidebar-link">
+          <i class="fa-solid fa-file-lines"></i>
+          <span>Draft</span>
+        </a>
+        <a href="add-product.html" class="sidebar-link">
+          <i class="fa-solid fa-circle-plus"></i>
+          <span>Add New Product</span>
+        </a>
+
+        <!-- MANAGEMENT & SALES -->
+        <div class="sidebar-section-title">MANAGEMENT & SALES</div>
+        <a href="brochures.html" class="sidebar-link">
+          <i class="fa-solid fa-file-lines"></i>
+          <span>Brochures</span>
+        </a>
+        <a href="orders.html" class="sidebar-link">
+          <i class="fa-solid fa-truck-fast"></i>
+          <span>Orders</span>
+          <span class="sidebar-badge" id="sideBadgeOrders">0</span>
+        </a>
+        <a href="returns.html" class="sidebar-link active">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>Returns</span>
+          <span class="sidebar-badge" id="sideBadgeReturns">0</span>
+        </a>
+        <a href="inquiries.html" class="sidebar-link">
+          <i class="fa-solid fa-envelope"></i>
+          <span>Contact Request</span>
+          <span class="sidebar-badge" id="sideBadgeInquiries">0</span>
+        </a>
+        <a href="analytics.html" class="sidebar-link">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Store Analysis</span>
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          <i class="fa-solid fa-gears"></i>
+          <span>System Maintenance</span>
+        </a>
+
+        <!-- LIVE PREVIEW -->
+        <div class="sidebar-section-title">LIVE PREVIEW</div>
+        <a href="../index.html" target="_blank" class="sidebar-link">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>Live Preview</span>
+        </a>
       </div>
+
+      <!-- FOOTER USER PROFILE -->
       <div class="sidebar-footer">
         <div class="sidebar-user-info">
           <div class="sidebar-avatar" id="sideUserAvatar">AD</div>
           <div class="sidebar-meta">
-            <span class="sidebar-user-name" id="sideUserName"
-              >Administrator</span
-            ><span class="sidebar-user-email" id="sideUserEmail"
-              >admin@prizam.com</span
-            >
+            <span class="sidebar-user-name" id="sideUserName">admin</span>
+            <span class="sidebar-user-email" id="sideUserEmail">admin@prizam.com</span>
           </div>
         </div>
         <button class="sidebar-logout-btn" id="logoutBtn" title="Sign out">
@@ -695,9 +807,11 @@
           placeholder="Search by Return ID..."
           oninput="handleSearch()"
           style="
-            padding: 0.5rem;
-            border-radius: 6px;
+            padding: 0.55rem 1rem;
+            border-radius: 8px;
             border: 1px solid var(--border);
+            width: 320px;
+            outline: none;
           "
         />
       </header>
@@ -714,7 +828,11 @@
         </div>
 
         <!-- RETURN PAGE TABS -->
-        <div class="admin-section-tabs" role="tablist" aria-label="Return management sections">
+        <div
+          class="admin-section-tabs"
+          role="tablist"
+          aria-label="Return management sections"
+        >
           <button
             class="admin-section-tab active"
             id="returnDetailsTab"
@@ -748,59 +866,88 @@
 
         <!-- TAB 1: RETURN DETAILS -->
         <section class="admin-tab-panel active" id="returnDetailsPanel">
-        <div class="filter-tabs">
-          <button class="tab-btn active" id="tabAll">All Requests</button>
-          <button class="tab-btn" id="tabRequested">Requested</button>
-          <button class="tab-btn" id="tabApproved">Approved</button>
-          <button class="tab-btn" id="tabReplacementDispatched">
-            Dispatched
-          </button>
-          <button class="tab-btn" id="tabRefunded">Refunded</button>
-        </div>
+          <div class="filter-tabs">
+            <button class="tab-btn active" id="tabAll">All Requests</button>
+            <button class="tab-btn" id="tabRequested">Requested</button>
+            <button class="tab-btn" id="tabApproved">Approved</button>
+            <button class="tab-btn" id="tabReplacementDispatched">
+              Dispatched
+            </button>
+            <button class="tab-btn" id="tabRefunded">Refunded</button>
+          </div>
 
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Return ID</th>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Item & Issue</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="returnsTableBody">
-              <tr>
-                <td colspan="7" style="text-align: center; padding: 3rem">
-                  <i class="fa-solid fa-spinner fa-spin"></i> Streaming
-                  returns...
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Return ID</th>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Item & Issue</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="returnsTableBody">
+                <tr>
+                  <td colspan="7" style="text-align: center; padding: 3rem">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Streaming
+                    returns...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <!-- TAB 2: RETURN ANALYSIS -->
         <section class="admin-tab-panel" id="returnAnalysisPanel">
           <div class="return-metrics-grid">
             <div class="return-metric-card">
-              <div class="return-metric-icon"><i class="fa-solid fa-rotate-left"></i></div>
-              <div><h3 id="metricTotalReturns">0</h3><p>Total Returns</p></div>
+              <div class="return-metric-icon">
+                <i class="fa-solid fa-rotate-left"></i>
+              </div>
+              <div>
+                <h3 id="metricTotalReturns">0</h3>
+                <p>Total Returns</p>
+              </div>
             </div>
             <div class="return-metric-card">
-              <div class="return-metric-icon" style="background:#fef3c7;color:#b45309;"><i class="fa-solid fa-clock"></i></div>
-              <div><h3 id="metricRequestedReturns">0</h3><p>Requested</p></div>
+              <div
+                class="return-metric-icon"
+                style="background: #fef3c7; color: #b45309"
+              >
+                <i class="fa-solid fa-clock"></i>
+              </div>
+              <div>
+                <h3 id="metricRequestedReturns">0</h3>
+                <p>Requested</p>
+              </div>
             </div>
             <div class="return-metric-card">
-              <div class="return-metric-icon" style="background:#eff6ff;color:#1d4ed8;"><i class="fa-solid fa-circle-check"></i></div>
-              <div><h3 id="metricApprovedReturns">0</h3><p>Approved</p></div>
+              <div
+                class="return-metric-icon"
+                style="background: #eff6ff; color: #1d4ed8"
+              >
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+              <div>
+                <h3 id="metricApprovedReturns">0</h3>
+                <p>Approved</p>
+              </div>
             </div>
             <div class="return-metric-card">
-              <div class="return-metric-icon" style="background:#dcfce7;color:#15803d;"><i class="fa-solid fa-indian-rupee-sign"></i></div>
-              <div><h3 id="metricRefundedReturns">0</h3><p>Refunded</p></div>
+              <div
+                class="return-metric-icon"
+                style="background: #dcfce7; color: #15803d"
+              >
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+              </div>
+              <div>
+                <h3 id="metricRefundedReturns">0</h3>
+                <p>Refunded</p>
+              </div>
             </div>
           </div>
 
@@ -808,10 +955,18 @@
             <div class="analysis-card">
               <div class="analysis-card-header">
                 <div>
-                  <h2><i class="fa-solid fa-map-location-dot" style="color:var(--accent);margin-right:.4rem;"></i>India Return Distribution</h2>
+                  <h2>
+                    <i
+                      class="fa-solid fa-map-location-dot"
+                      style="color: var(--accent); margin-right: 0.4rem"
+                    ></i
+                    >India Return Distribution
+                  </h2>
                   <p>States get darker as more return requests come from them.</p>
                 </div>
-                <div class="analysis-pill"><span id="indiaMappedReturns">0</span> mapped returns</div>
+                <div class="analysis-pill">
+                  <span id="indiaMappedReturns">0</span> mapped returns
+                </div>
               </div>
               <div id="indiaReturnsHeatmap"></div>
             </div>
@@ -821,7 +976,10 @@
                 <h3>Top Return States</h3>
                 <div class="state-rank-list" id="returnStateRankList"></div>
               </div>
-              <div class="side-analysis-box" style="border-top:1px solid var(--border);">
+              <div
+                class="side-analysis-box"
+                style="border-top: 1px solid var(--border)"
+              >
                 <h3>Top Return Reasons</h3>
                 <div class="reason-rank-list" id="returnReasonRankList"></div>
               </div>
@@ -834,10 +992,23 @@
           <div class="gujarat-heatmap-card">
             <div class="analysis-card-header">
               <div>
-                <h2><i class="fa-solid fa-location-dot" style="color:#047857;margin-right:.4rem;"></i>Gujarat Return District Heatmap</h2>
+                <h2>
+                  <i
+                    class="fa-solid fa-location-dot"
+                    style="color: #047857; margin-right: 0.4rem"
+                  ></i
+                  >Gujarat Return District Heatmap
+                </h2>
                 <p>Districts get darker as more return requests originate there.</p>
               </div>
-              <div class="analysis-pill" style="background:#ecfdf5;color:#047857;border-color:#a7f3d0;">
+              <div
+                class="analysis-pill"
+                style="
+                  background: #ecfdf5;
+                  color: #047857;
+                  border-color: #a7f3d0;
+                "
+              >
                 <span id="gujaratMappedReturns">0</span> Gujarat returns
               </div>
             </div>
@@ -845,7 +1016,11 @@
             <div class="gujarat-map-layout">
               <div class="gujarat-map-wrap">
                 <div class="gujarat-map-toolbar">
-                  <button class="gujarat-map-btn" type="button" onclick="resetReturnGujaratMapView()">
+                  <button
+                    class="gujarat-map-btn"
+                    type="button"
+                    onclick="resetReturnGujaratMapView()"
+                  >
                     <i class="fa-solid fa-arrows-rotate"></i> Reset View
                   </button>
                 </div>
@@ -854,7 +1029,10 @@
 
               <aside class="gujarat-map-sidebar">
                 <h3>Top Return Districts</h3>
-                <div class="state-rank-list" id="returnDistrictRankList"></div>
+                <div
+                  class="state-rank-list"
+                  id="returnDistrictRankList"
+                ></div>
 
                 <div class="heat-legend">
                   <h4>Heat Scale</h4>
@@ -904,13 +1082,29 @@
         if (authGateOverlay) authGateOverlay.style.display = "none";
 
         document.getElementById("sideUserName").textContent =
-          user.displayName || "Administrator";
+          user.displayName || "admin";
         document.getElementById("sideUserEmail").textContent =
           user.email || "admin@prizam.com";
         const initials = (user.displayName || user.email || "AD")
           .substring(0, 2)
           .toUpperCase();
         document.getElementById("sideUserAvatar").textContent = initials;
+      });
+
+      // Synchronize live badge counts
+      onSnapshot(collection(db, "products"), (snap) => {
+        const b = document.getElementById("sideBadgeProducts");
+        if (b) b.textContent = snap.size;
+      });
+
+      onSnapshot(collection(db, "orders"), (snap) => {
+        const b = document.getElementById("sideBadgeOrders");
+        if (b) b.textContent = snap.size;
+      });
+
+      onSnapshot(collection(db, "inquiries"), (snap) => {
+        const b = document.getElementById("sideBadgeInquiries");
+        if (b) b.textContent = snap.size;
       });
 
       let returnsList = [];
@@ -928,83 +1122,147 @@
       let currentReturnDistrictMax = 1;
 
       const INDIA_STATES = {
-        "andhra pradesh": { code:"IN-AP", name:"Andhra Pradesh" },
-        "arunachal pradesh": { code:"IN-AR", name:"Arunachal Pradesh" },
-        "assam": { code:"IN-AS", name:"Assam" },
-        "bihar": { code:"IN-BR", name:"Bihar" },
-        "chhattisgarh": { code:"IN-CT", name:"Chhattisgarh" },
-        "goa": { code:"IN-GA", name:"Goa" },
-        "gujarat": { code:"IN-GJ", name:"Gujarat" },
-        "haryana": { code:"IN-HR", name:"Haryana" },
-        "himachal pradesh": { code:"IN-HP", name:"Himachal Pradesh" },
-        "jharkhand": { code:"IN-JH", name:"Jharkhand" },
-        "karnataka": { code:"IN-KA", name:"Karnataka" },
-        "kerala": { code:"IN-KL", name:"Kerala" },
-        "madhya pradesh": { code:"IN-MP", name:"Madhya Pradesh" },
-        "maharashtra": { code:"IN-MH", name:"Maharashtra" },
-        "manipur": { code:"IN-MN", name:"Manipur" },
-        "meghalaya": { code:"IN-ML", name:"Meghalaya" },
-        "mizoram": { code:"IN-MZ", name:"Mizoram" },
-        "nagaland": { code:"IN-NL", name:"Nagaland" },
-        "odisha": { code:"IN-OR", name:"Odisha" },
-        "orissa": { code:"IN-OR", name:"Odisha" },
-        "punjab": { code:"IN-PB", name:"Punjab" },
-        "rajasthan": { code:"IN-RJ", name:"Rajasthan" },
-        "sikkim": { code:"IN-SK", name:"Sikkim" },
-        "tamil nadu": { code:"IN-TN", name:"Tamil Nadu" },
-        "telangana": { code:"IN-TG", name:"Telangana" },
-        "tripura": { code:"IN-TR", name:"Tripura" },
-        "uttar pradesh": { code:"IN-UP", name:"Uttar Pradesh" },
-        "uttarakhand": { code:"IN-UT", name:"Uttarakhand" },
-        "west bengal": { code:"IN-WB", name:"West Bengal" },
-        "delhi": { code:"IN-DL", name:"Delhi" },
-        "jammu and kashmir": { code:"IN-JK", name:"Jammu & Kashmir" },
-        "ladakh": { code:"IN-LA", name:"Ladakh" },
-        "puducherry": { code:"IN-PY", name:"Puducherry" }
+        "andhra pradesh": { code: "IN-AP", name: "Andhra Pradesh" },
+        "arunachal pradesh": { code: "IN-AR", name: "Arunachal Pradesh" },
+        assam: { code: "IN-AS", name: "Assam" },
+        bihar: { code: "IN-BR", name: "Bihar" },
+        chhattisgarh: { code: "IN-CT", name: "Chhattisgarh" },
+        goa: { code: "IN-GA", name: "Goa" },
+        gujarat: { code: "IN-GJ", name: "Gujarat" },
+        haryana: { code: "IN-HR", name: "Haryana" },
+        "himachal pradesh": { code: "IN-HP", name: "Himachal Pradesh" },
+        jharkhand: { code: "IN-JH", name: "Jharkhand" },
+        karnataka: { code: "IN-KA", name: "Karnataka" },
+        kerala: { code: "IN-KL", name: "Kerala" },
+        "madhya pradesh": { code: "IN-MP", name: "Madhya Pradesh" },
+        maharashtra: { code: "IN-MH", name: "Maharashtra" },
+        manipur: { code: "IN-MN", name: "Manipur" },
+        meghalaya: { code: "IN-ML", name: "Meghalaya" },
+        mizoram: { code: "IN-MZ", name: "Mizoram" },
+        nagaland: { code: "IN-NL", name: "Nagaland" },
+        odisha: { code: "IN-OR", name: "Odisha" },
+        orissa: { code: "IN-OR", name: "Odisha" },
+        punjab: { code: "IN-PB", name: "Punjab" },
+        rajasthan: { code: "IN-RJ", name: "Rajasthan" },
+        sikkim: { code: "IN-SK", name: "Sikkim" },
+        "tamil nadu": { code: "IN-TN", name: "Tamil Nadu" },
+        telangana: { code: "IN-TG", name: "Telangana" },
+        tripura: { code: "IN-TR", name: "Tripura" },
+        "uttar pradesh": { code: "IN-UP", name: "Uttar Pradesh" },
+        uttarakhand: { code: "IN-UT", name: "Uttarakhand" },
+        "west bengal": { code: "IN-WB", name: "West Bengal" },
+        delhi: { code: "IN-DL", name: "Delhi" },
+        "jammu and kashmir": { code: "IN-JK", name: "Jammu & Kashmir" },
+        ladakh: { code: "IN-LA", name: "Ladakh" },
+        puducherry: { code: "IN-PY", name: "Puducherry" },
       };
 
       const CITY_TO_STATE = {
-        "ahmedabad":"gujarat","surat":"gujarat","vadodara":"gujarat","baroda":"gujarat",
-        "rajkot":"gujarat","gandhinagar":"gujarat","bhavnagar":"gujarat","jamnagar":"gujarat",
-        "junagadh":"gujarat","morbi":"gujarat","anand":"gujarat","bharuch":"gujarat",
-        "navsari":"gujarat","valsad":"gujarat","vapi":"gujarat","mehsana":"gujarat",
-        "mumbai":"maharashtra","pune":"maharashtra","nagpur":"maharashtra",
-        "jaipur":"rajasthan","jodhpur":"rajasthan","udaipur":"rajasthan",
-        "delhi":"delhi","new delhi":"delhi","bengaluru":"karnataka","bangalore":"karnataka",
-        "chennai":"tamil nadu","hyderabad":"telangana","kochi":"kerala",
-        "indore":"madhya pradesh","bhopal":"madhya pradesh","lucknow":"uttar pradesh",
-        "noida":"uttar pradesh","agra":"uttar pradesh","kolkata":"west bengal",
-        "ludhiana":"punjab","amritsar":"punjab","gurugram":"haryana","gurgaon":"haryana",
-        "patna":"bihar","ranchi":"jharkhand","bhubaneswar":"odisha","raipur":"chhattisgarh"
+        ahmedabad: "gujarat",
+        surat: "gujarat",
+        vadodara: "gujarat",
+        baroda: "gujarat",
+        rajkot: "gujarat",
+        gandhinagar: "gujarat",
+        bhavnagar: "gujarat",
+        jamnagar: "gujarat",
+        junagadh: "gujarat",
+        morbi: "gujarat",
+        anand: "gujarat",
+        bharuch: "gujarat",
+        navsari: "gujarat",
+        valsad: "gujarat",
+        vapi: "gujarat",
+        mehsana: "gujarat",
+        mumbai: "maharashtra",
+        pune: "maharashtra",
+        nagpur: "maharashtra",
+        jaipur: "rajasthan",
+        jodhpur: "rajasthan",
+        udaipur: "rajasthan",
+        delhi: "delhi",
+        "new delhi": "delhi",
+        bengaluru: "karnataka",
+        bangalore: "karnataka",
+        chennai: "tamil nadu",
+        hyderabad: "telangana",
+        kochi: "kerala",
+        indore: "madhya pradesh",
+        bhopal: "madhya pradesh",
+        lucknow: "uttar pradesh",
+        noida: "uttar pradesh",
+        agra: "uttar pradesh",
+        kolkata: "west bengal",
+        ludhiana: "punjab",
+        amritsar: "punjab",
+        gurugram: "haryana",
+        gurgaon: "haryana",
+        patna: "bihar",
+        ranchi: "jharkhand",
+        bhubaneswar: "odisha",
+        raipur: "chhattisgarh",
       };
 
       const GUJARAT_CITY_TO_DISTRICT = {
-        "ahmedabad":"Ahmedabad","dholka":"Ahmedabad","sanand":"Ahmedabad",
-        "amreli":"Amreli","anand":"Anand","modasa":"Aravalli","palanpur":"Banaskantha",
-        "deesa":"Banaskantha","bharuch":"Bharuch","ankleshwar":"Bharuch",
-        "bhavnagar":"Bhavnagar","mahuva":"Bhavnagar","botad":"Botad",
-        "chhota udaipur":"Chhota Udaipur","dahod":"Dahod","ahwa":"Dang",
-        "dwarka":"Devbhumi Dwarka","gandhinagar":"Gandhinagar","kalol":"Gandhinagar",
-        "veraval":"Gir Somnath","somnath":"Gir Somnath","jamnagar":"Jamnagar",
-        "junagadh":"Junagadh","nadiad":"Kheda","bhuj":"Kutch","gandhidham":"Kutch",
-        "mehsana":"Mehsana","mahesana":"Mehsana","morbi":"Morbi","rajpipla":"Narmada",
-        "navsari":"Navsari","godhra":"Panchmahal","patan":"Patan","porbandar":"Porbandar",
-        "rajkot":"Rajkot","jetpur":"Rajkot","gondal":"Rajkot","himmatnagar":"Sabarkantha",
-        "surat":"Surat","bardoli":"Surat","surendranagar":"Surendranagar",
-        "vyara":"Tapi","vadodara":"Vadodara","baroda":"Vadodara","valsad":"Valsad","vapi":"Valsad"
+        ahmedabad: "Ahmedabad",
+        dholka: "Ahmedabad",
+        sanand: "Ahmedabad",
+        amreli: "Amreli",
+        anand: "Anand",
+        modasa: "Aravalli",
+        palanpur: "Banaskantha",
+        deesa: "Banaskantha",
+        bharuch: "Bharuch",
+        ankleshwar: "Bharuch",
+        bhavnagar: "Bhavnagar",
+        mahuva: "Bhavnagar",
+        botad: "Botad",
+        "chhota udaipur": "Chhota Udaipur",
+        dahod: "Dahod",
+        ahwa: "Dang",
+        dwarka: "Devbhumi Dwarka",
+        gandhinagar: "Gandhinagar",
+        kalol: "Gandhinagar",
+        veraval: "Gir Somnath",
+        somnath: "Gir Somnath",
+        jamnagar: "Jamnagar",
+        junagadh: "Junagadh",
+        nadiad: "Kheda",
+        bhuj: "Kutch",
+        gandhidham: "Kutch",
+        mehsana: "Mehsana",
+        mahesana: "Mehsana",
+        morbi: "Morbi",
+        rajpipla: "Narmada",
+        navsari: "Navsari",
+        godhra: "Panchmahal",
+        patan: "Patan",
+        porbandar: "Porbandar",
+        rajkot: "Rajkot",
+        jetpur: "Rajkot",
+        gondal: "Rajkot",
+        himmatnagar: "Sabarkantha",
+        surat: "Surat",
+        bardoli: "Surat",
+        surendranagar: "Surendranagar",
+        vyara: "Tapi",
+        vadodara: "Vadodara",
+        baroda: "Vadodara",
+        valsad: "Valsad",
+        vapi: "Valsad",
       };
 
       const GUJARAT_GEOJSON_URLS = [
         "https://raw.githubusercontent.com/udit-001/india-maps-data/main/geojson/states/gujarat.geojson",
-        "https://cdn.jsdelivr.net/gh/udit-001/india-maps-data@main/geojson/states/gujarat.geojson"
+        "https://cdn.jsdelivr.net/gh/udit-001/india-maps-data@main/geojson/states/gujarat.geojson",
       ];
 
       function normalizePlace(v) {
         return String(v || "")
           .toLowerCase()
-          .replace(/&/g,"and")
-          .replace(/[.,]/g," ")
-          .replace(/\s+/g," ")
+          .replace(/&/g, "and")
+          .replace(/[.,]/g, " ")
+          .replace(/\s+/g, " ")
           .trim();
       }
 
@@ -1017,12 +1275,34 @@
       function resolveReturnLocation(returnItem) {
         const order = findOriginalOrder(returnItem) || {};
         const customer = order.customer || returnItem.customer || {};
-        const shipping = order.shippingAddress || order.shipping || returnItem.shippingAddress || {};
+        const shipping =
+          order.shippingAddress ||
+          order.shipping ||
+          returnItem.shippingAddress ||
+          {};
 
         return {
-          state: returnItem.state || returnItem.customerState || customer.state || shipping.state || order.state || "",
-          city: returnItem.city || returnItem.customerCity || customer.city || shipping.city || order.city || "",
-          district: returnItem.district || returnItem.customerDistrict || customer.district || shipping.district || order.district || ""
+          state:
+            returnItem.state ||
+            returnItem.customerState ||
+            customer.state ||
+            shipping.state ||
+            order.state ||
+            "",
+          city:
+            returnItem.city ||
+            returnItem.customerCity ||
+            customer.city ||
+            shipping.city ||
+            order.city ||
+            "",
+          district:
+            returnItem.district ||
+            returnItem.customerDistrict ||
+            customer.district ||
+            shipping.district ||
+            order.district ||
+            "",
         };
       }
 
@@ -1047,16 +1327,16 @@
 
       async function loadOrderLookup() {
         try {
-          const snap = await getDocs(collection(db,"orders"));
+          const snap = await getDocs(collection(db, "orders"));
           orderLookup = new Map();
 
           snap.forEach((d) => {
-            const order = { id:d.id, ...d.data() };
+            const order = { id: d.id, ...d.data() };
             const keys = [
               d.id,
               order.orderId,
               String(d.id).toLowerCase(),
-              String(order.orderId || "").toLowerCase()
+              String(order.orderId || "").toLowerCase(),
             ].filter(Boolean);
 
             keys.forEach((key) => orderLookup.set(String(key), order));
@@ -1067,23 +1347,23 @@
       }
 
       if (window.google && google.charts) {
-        google.charts.load("current",{packages:["geochart"]});
+        google.charts.load("current", { packages: ["geochart"] });
         google.charts.setOnLoadCallback(() => {
           indiaReturnChartReady = true;
           renderReturnAnalytics();
         });
       }
 
-      window.switchReturnPageTab = function(tabName) {
+      window.switchReturnPageTab = function (tabName) {
         const tabs = {
           details: document.getElementById("returnDetailsTab"),
           analysis: document.getElementById("returnAnalysisTab"),
-          gujarat: document.getElementById("returnGujaratTab")
+          gujarat: document.getElementById("returnGujaratTab"),
         };
         const panels = {
           details: document.getElementById("returnDetailsPanel"),
           analysis: document.getElementById("returnAnalysisPanel"),
-          gujarat: document.getElementById("returnGujaratPanel")
+          gujarat: document.getElementById("returnGujaratPanel"),
         };
 
         Object.keys(tabs).forEach((key) => {
@@ -1092,23 +1372,31 @@
         });
 
         if (tabName === "analysis") {
-          setTimeout(renderReturnAnalytics,80);
+          setTimeout(renderReturnAnalytics, 80);
         }
 
         if (tabName === "gujarat") {
           setTimeout(async () => {
             await renderReturnGujaratHeatmap();
             if (returnGujaratMap) returnGujaratMap.invalidateSize(true);
-          },150);
+          }, 150);
         }
       };
 
       function updateReturnMetrics() {
-        const countStatus = (s) => returnsList.filter(r => (r.status || "Requested") === s).length;
-        document.getElementById("metricTotalReturns").textContent = returnsList.length;
-        document.getElementById("metricRequestedReturns").textContent = countStatus("Requested");
-        document.getElementById("metricApprovedReturns").textContent = countStatus("Approved");
-        document.getElementById("metricRefundedReturns").textContent = countStatus("Refunded");
+        const countStatus = (s) =>
+          returnsList.filter((r) => (r.status || "Requested") === s).length;
+        document.getElementById("metricTotalReturns").textContent =
+          returnsList.length;
+        document.getElementById("metricRequestedReturns").textContent =
+          countStatus("Requested");
+        document.getElementById("metricApprovedReturns").textContent =
+          countStatus("Approved");
+        document.getElementById("metricRefundedReturns").textContent =
+          countStatus("Refunded");
+
+        const sideReturns = document.getElementById("sideBadgeReturns");
+        if (sideReturns) sideReturns.textContent = returnsList.length;
       }
 
       function buildReturnStateCounts() {
@@ -1119,13 +1407,13 @@
           const state = resolveReturnState(item);
           if (!state) return;
           mapped += 1;
-          if (!map.has(state.code)) map.set(state.code,{...state,count:0});
+          if (!map.has(state.code)) map.set(state.code, { ...state, count: 0 });
           map.get(state.code).count += 1;
         });
 
         return {
           mapped,
-          states:[...map.values()].sort((a,b)=>b.count-a.count)
+          states: [...map.values()].sort((a, b) => b.count - a.count),
         };
       }
 
@@ -1134,36 +1422,46 @@
         if (!list) return;
 
         list.innerHTML = states.length
-          ? states.slice(0,8).map((s,i)=>`
+          ? states
+              .slice(0, 8)
+              .map(
+                (s, i) => `
               <div class="rank-row">
-                <div><strong>${i+1}. ${s.name}</strong><span>${s.count} return ${s.count===1?"request":"requests"}</span></div>
+                <div><strong>${i + 1}. ${s.name}</strong><span>${s.count} return ${s.count === 1 ? "request" : "requests"}</span></div>
                 <span class="rank-count">${s.count}</span>
               </div>
-            `).join("")
+            `,
+              )
+              .join("")
           : '<div style="font-size:.78rem;color:var(--text-muted);">No mapped return states yet.</div>';
       }
 
       function renderReturnReasons() {
         const counts = {};
-        returnsList.forEach((item)=>{
+        returnsList.forEach((item) => {
           const reason = String(item.reason || "Warranty").trim() || "Warranty";
           counts[reason] = (counts[reason] || 0) + 1;
         });
 
         const sorted = Object.entries(counts)
-          .map(([reason,count])=>({reason,count}))
-          .sort((a,b)=>b.count-a.count);
+          .map(([reason, count]) => ({ reason, count }))
+          .sort((a, b) => b.count - a.count);
 
         const list = document.getElementById("returnReasonRankList");
         if (!list) return;
 
         list.innerHTML = sorted.length
-          ? sorted.slice(0,6).map((r,i)=>`
+          ? sorted
+              .slice(0, 6)
+              .map(
+                (r, i) => `
               <div class="rank-row">
-                <div><strong>${i+1}. ${r.reason}</strong><span>${r.count} ticket${r.count===1?"":"s"}</span></div>
+                <div><strong>${i + 1}. ${r.reason}</strong><span>${r.count} ticket${r.count === 1 ? "" : "s"}</span></div>
                 <span class="rank-count">${r.count}</span>
               </div>
-            `).join("")
+            `,
+              )
+              .join("")
           : '<div style="font-size:.78rem;color:var(--text-muted);">No return reasons yet.</div>';
       }
 
@@ -1171,7 +1469,7 @@
         updateReturnMetrics();
         renderReturnReasons();
 
-        const {mapped,states} = buildReturnStateCounts();
+        const { mapped, states } = buildReturnStateCounts();
         const mappedEl = document.getElementById("indiaMappedReturns");
         if (mappedEl) mappedEl.textContent = mapped.toLocaleString("en-IN");
         renderReturnStateRanking(states);
@@ -1182,66 +1480,100 @@
         if (!el) return;
 
         const data = new google.visualization.DataTable();
-        data.addColumn("string","State");
-        data.addColumn("number","Returns");
-        data.addColumn({type:"string",role:"tooltip"});
+        data.addColumn("string", "State");
+        data.addColumn("number", "Returns");
+        data.addColumn({ type: "string", role: "tooltip" });
 
-        states.forEach((s)=>{
+        states.forEach((s) => {
           data.addRow([
-            {v:s.code,f:s.name},
+            { v: s.code, f: s.name },
             s.count,
-            `${s.name}: ${s.count} return ${s.count===1?"request":"requests"}`
+            `${s.name}: ${s.count} return ${s.count === 1 ? "request" : "requests"}`,
           ]);
         });
 
-        const max = Math.max(...states.map(s=>s.count),1);
+        const max = Math.max(...states.map((s) => s.count), 1);
 
         const options = {
-          region:"IN",
-          resolution:"provinces",
-          displayMode:"regions",
-          backgroundColor:"#ffffff",
-          datalessRegionColor:"#eef2f7",
-          defaultColor:"#eef2f7",
-          colorAxis:{
-            minValue:1,
-            maxValue:max,
-            colors:["#dbeafe","#60a5fa","#2563eb","#0f3f99"]
+          region: "IN",
+          resolution: "provinces",
+          displayMode: "regions",
+          backgroundColor: "#ffffff",
+          datalessRegionColor: "#eef2f7",
+          defaultColor: "#eef2f7",
+          colorAxis: {
+            minValue: 1,
+            maxValue: max,
+            colors: ["#dbeafe", "#60a5fa", "#2563eb", "#0f3f99"],
           },
-          legend:{textStyle:{color:"#64748b",fontSize:11}},
-          tooltip:{textStyle:{color:"#0f172a",fontSize:12}},
-          keepAspectRatio:true,
-          enableRegionInteractivity:true
+          legend: { textStyle: { color: "#64748b", fontSize: 11 } },
+          tooltip: { textStyle: { color: "#0f172a", fontSize: 12 } },
+          keepAspectRatio: true,
+          enableRegionInteractivity: true,
         };
 
-        indiaReturnChart = indiaReturnChart || new google.visualization.GeoChart(el);
-        indiaReturnChart.draw(data,options);
+        indiaReturnChart =
+          indiaReturnChart || new google.visualization.GeoChart(el);
+        indiaReturnChart.draw(data, options);
       }
 
       const DISTRICT_ALIASES = {
-        "ahmedabad":"Ahmedabad","ahmadabad":"Ahmedabad","amreli":"Amreli","anand":"Anand",
-        "aravalli":"Aravalli","banaskantha":"Banaskantha","banas kantha":"Banaskantha",
-        "bharuch":"Bharuch","bhavnagar":"Bhavnagar","botad":"Botad",
-        "chhota udaipur":"Chhota Udaipur","dahod":"Dahod","dang":"Dang","dangs":"Dang",
-        "devbhumi dwarka":"Devbhumi Dwarka","gandhinagar":"Gandhinagar",
-        "gir somnath":"Gir Somnath","jamnagar":"Jamnagar","junagadh":"Junagadh",
-        "kheda":"Kheda","kutch":"Kutch","kachchh":"Kutch","mahisagar":"Mahisagar",
-        "mehsana":"Mehsana","mahesana":"Mehsana","morbi":"Morbi","narmada":"Narmada",
-        "navsari":"Navsari","panchmahal":"Panchmahal","panch mahals":"Panchmahal",
-        "patan":"Patan","porbandar":"Porbandar","rajkot":"Rajkot","sabarkantha":"Sabarkantha",
-        "sabar kantha":"Sabarkantha","surat":"Surat","surendranagar":"Surendranagar",
-        "surendra nagar":"Surendranagar","tapi":"Tapi","vadodara":"Vadodara","valsad":"Valsad"
+        ahmedabad: "Ahmedabad",
+        ahmadabad: "Ahmedabad",
+        amreli: "Amreli",
+        anand: "Anand",
+        aravalli: "Aravalli",
+        banaskantha: "Banaskantha",
+        "banas kantha": "Banaskantha",
+        bharuch: "Bharuch",
+        bhavnagar: "Bhavnagar",
+        botad: "Botad",
+        "chhota udaipur": "Chhota Udaipur",
+        dahod: "Dahod",
+        dang: "Dang",
+        dangs: "Dang",
+        "devbhumi dwarka": "Devbhumi Dwarka",
+        gandhinagar: "Gandhinagar",
+        "gir somnath": "Gir Somnath",
+        jamnagar: "Jamnagar",
+        junagadh: "Junagadh",
+        kheda: "Kheda",
+        kutch: "Kutch",
+        kachchh: "Kutch",
+        mahisagar: "Mahisagar",
+        mehsana: "Mehsana",
+        mahesana: "Mehsana",
+        morbi: "Morbi",
+        narmada: "Narmada",
+        navsari: "Navsari",
+        panchmahal: "Panchmahal",
+        "panch mahals": "Panchmahal",
+        patan: "Patan",
+        porbandar: "Porbandar",
+        rajkot: "Rajkot",
+        sabarkantha: "Sabarkantha",
+        "sabar kantha": "Sabarkantha",
+        surat: "Surat",
+        surendranagar: "Surendranagar",
+        "surendra nagar": "Surendranagar",
+        tapi: "Tapi",
+        vadodara: "Vadodara",
+        valsad: "Valsad",
       };
 
       function canonicalDistrict(v) {
-        return DISTRICT_ALIASES[normalizePlace(v)] || String(v || "").trim() || null;
+        return (
+          DISTRICT_ALIASES[normalizePlace(v)] ||
+          String(v || "").trim() ||
+          null
+        );
       }
 
       function buildReturnDistrictCounts() {
         const counts = {};
         let mapped = 0;
 
-        returnsList.forEach((item)=>{
+        returnsList.forEach((item) => {
           const state = resolveReturnState(item);
           if (!state || state.code !== "IN-GJ") return;
 
@@ -1255,17 +1587,26 @@
         return {
           mapped,
           counts,
-          ranked:Object.entries(counts)
-            .map(([district,count])=>({district,count}))
-            .sort((a,b)=>b.count-a.count)
+          ranked: Object.entries(counts)
+            .map(([district, count]) => ({ district, count }))
+            .sort((a, b) => b.count - a.count),
         };
       }
 
       function getGeoDistrictName(feature) {
         const p = feature?.properties || {};
         const candidates = [
-          p.district,p.DISTRICT,p.District,p.district_name,p.DISTRICT_N,
-          p.dtname,p.DTNAME,p.NAME_2,p.NAME2,p.name,p.NAME
+          p.district,
+          p.DISTRICT,
+          p.District,
+          p.district_name,
+          p.DISTRICT_N,
+          p.dtname,
+          p.DTNAME,
+          p.NAME_2,
+          p.NAME2,
+          p.name,
+          p.NAME,
         ];
         for (const v of candidates) {
           const district = canonicalDistrict(v);
@@ -1274,21 +1615,21 @@
         return "Unknown";
       }
 
-      function getReturnDistrictStyle(count,max,active=false) {
+      function getReturnDistrictStyle(count, max, active = false) {
         let fill = "#eef2f7";
         if (count > 0) {
-          const r = count/max;
-          if (r >= .8) fill = "#1d4ed8";
-          else if (r >= .6) fill = "#0ea5e9";
-          else if (r >= .4) fill = "#38bdf8";
-          else if (r >= .2) fill = "#7dd3fc";
+          const r = count / max;
+          if (r >= 0.8) fill = "#1d4ed8";
+          else if (r >= 0.6) fill = "#0ea5e9";
+          else if (r >= 0.4) fill = "#38bdf8";
+          else if (r >= 0.2) fill = "#7dd3fc";
           else fill = "#bae6fd";
         }
         return {
-          color:active?"#0f172a":"#ffffff",
-          weight:active?2.2:1.25,
-          fillColor:fill,
-          fillOpacity:active?1:.97
+          color: active ? "#0f172a" : "#ffffff",
+          weight: active ? 2.2 : 1.25,
+          fillColor: fill,
+          fillOpacity: active ? 1 : 0.97,
         };
       }
 
@@ -1298,7 +1639,10 @@
         let lastError;
         for (const url of GUJARAT_GEOJSON_URLS) {
           try {
-            const res = await fetch(url,{mode:"cors",cache:"force-cache"});
+            const res = await fetch(url, {
+              mode: "cors",
+              cache: "force-cache",
+            });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             if (!data?.features?.length) throw new Error("Invalid GeoJSON");
@@ -1316,42 +1660,54 @@
         if (!list) return;
 
         list.innerHTML = ranked.length
-          ? ranked.slice(0,10).map((r,i)=>`
+          ? ranked
+              .slice(0, 10)
+              .map(
+                (r, i) => `
               <div class="rank-row">
-                <div><strong>${i+1}. ${r.district}</strong><span>${r.count} return ${r.count===1?"request":"requests"}</span></div>
+                <div><strong>${i + 1}. ${r.district}</strong><span>${r.count} return ${r.count === 1 ? "request" : "requests"}</span></div>
                 <span class="rank-count">${r.count}</span>
               </div>
-            `).join("")
+            `,
+              )
+              .join("")
           : '<div style="font-size:.78rem;color:var(--text-muted);">No Gujarat return locations yet.</div>';
       }
 
-      function updateReturnDistrictInsight(district,count,total,selected=false) {
+      function updateReturnDistrictInsight(
+        district,
+        count,
+        total,
+        selected = false,
+      ) {
         const el = document.getElementById("returnDistrictInsight");
         if (!el) return;
 
-        const share = total ? ((count/total)*100).toFixed(1) : "0.0";
+        const share = total ? ((count / total) * 100).toFixed(1) : "0.0";
         el.innerHTML = `
-          <h4>${selected?"Selected District":"District Focus"}</h4>
-          <p>${selected?"You pinned this district.":"Current return concentration."}</p>
+          <h4>${selected ? "Selected District" : "District Focus"}</h4>
+          <p>${selected ? "You pinned this district." : "Current return concentration."}</p>
           <span class="district-focus-name">${district}</span><br>
-          <span class="district-focus-count">${count} return ${count===1?"request":"requests"} • ${share}% share</span>
+          <span class="district-focus-count">${count} return ${count === 1 ? "request" : "requests"} • ${share}% share</span>
         `;
       }
 
       function applyReturnDistrictStyles() {
         if (!returnGujaratLayer) return;
-        returnGujaratLayer.eachLayer((layer)=>{
+        returnGujaratLayer.eachLayer((layer) => {
           const district = getGeoDistrictName(layer.feature);
           const count = currentReturnDistrictCounts[district] || 0;
-          layer.setStyle(getReturnDistrictStyle(
-            count,
-            currentReturnDistrictMax,
-            selectedReturnDistrict === district
-          ));
+          layer.setStyle(
+            getReturnDistrictStyle(
+              count,
+              currentReturnDistrictMax,
+              selectedReturnDistrict === district,
+            ),
+          );
         });
       }
 
-      window.resetReturnGujaratMapView = function() {
+      window.resetReturnGujaratMapView = function () {
         selectedReturnDistrict = null;
         applyReturnDistrictStyles();
 
@@ -1365,7 +1721,8 @@
 
         if (returnGujaratMap && returnGujaratLayer) {
           const bounds = returnGujaratLayer.getBounds();
-          if (bounds.isValid()) returnGujaratMap.fitBounds(bounds,{padding:[15,15]});
+          if (bounds.isValid())
+            returnGujaratMap.fitBounds(bounds, { padding: [15, 15] });
         }
       };
 
@@ -1373,19 +1730,23 @@
         const mapEl = document.getElementById("gujaratReturnsHeatmap");
         if (!mapEl || !window.L) return;
 
-        const {mapped,counts,ranked} = buildReturnDistrictCounts();
-        document.getElementById("gujaratMappedReturns").textContent = mapped.toLocaleString("en-IN");
+        const { mapped, counts, ranked } = buildReturnDistrictCounts();
+        document.getElementById("gujaratMappedReturns").textContent =
+          mapped.toLocaleString("en-IN");
         renderReturnDistrictRanking(ranked);
 
         currentReturnDistrictCounts = counts;
-        currentReturnDistrictMax = Math.max(1,...Object.values(counts).map(Number));
+        currentReturnDistrictMax = Math.max(
+          1,
+          ...Object.values(counts).map(Number),
+        );
 
         if (!returnGujaratMap) {
-          returnGujaratMap = L.map("gujaratReturnsHeatmap",{
-            zoomControl:true,
-            scrollWheelZoom:false,
-            attributionControl:false
-          }).setView([22.45,71.45],6.25);
+          returnGujaratMap = L.map("gujaratReturnsHeatmap", {
+            zoomControl: true,
+            scrollWheelZoom: false,
+            attributionControl: false,
+          }).setView([22.45, 71.45], 6.25);
         }
 
         try {
@@ -1395,34 +1756,49 @@
             returnGujaratMap.removeLayer(returnGujaratLayer);
           }
 
-          returnGujaratLayer = L.geoJSON(geojson,{
+          returnGujaratLayer = L.geoJSON(geojson, {
             style(feature) {
               const district = getGeoDistrictName(feature);
               return getReturnDistrictStyle(
                 counts[district] || 0,
                 currentReturnDistrictMax,
-                selectedReturnDistrict === district
+                selectedReturnDistrict === district,
               );
             },
-            onEachFeature(feature,layer) {
+            onEachFeature(feature, layer) {
               const district = getGeoDistrictName(feature);
               const count = counts[district] || 0;
 
               layer.bindTooltip(
-                `<strong>${district}</strong><br>${count} return ${count===1?"request":"requests"}`,
-                {sticky:true,opacity:.96}
+                `<strong>${district}</strong><br>${count} return ${count === 1 ? "request" : "requests"}`,
+                { sticky: true, opacity: 0.96 },
               );
 
               layer.on({
                 mouseover(e) {
-                  e.target.setStyle({color:"#0f172a",weight:2,fillOpacity:1});
-                  updateReturnDistrictInsight(district,count,mapped,selectedReturnDistrict===district);
+                  e.target.setStyle({
+                    color: "#0f172a",
+                    weight: 2,
+                    fillOpacity: 1,
+                  });
+                  updateReturnDistrictInsight(
+                    district,
+                    count,
+                    mapped,
+                    selectedReturnDistrict === district,
+                  );
                 },
                 mouseout() {
                   applyReturnDistrictStyles();
                   if (selectedReturnDistrict) {
-                    const c = currentReturnDistrictCounts[selectedReturnDistrict] || 0;
-                    updateReturnDistrictInsight(selectedReturnDistrict,c,mapped,true);
+                    const c =
+                      currentReturnDistrictCounts[selectedReturnDistrict] || 0;
+                    updateReturnDistrictInsight(
+                      selectedReturnDistrict,
+                      c,
+                      mapped,
+                      true,
+                    );
                   }
                 },
                 click() {
@@ -1430,18 +1806,24 @@
                     selectedReturnDistrict === district ? null : district;
                   applyReturnDistrictStyles();
                   if (selectedReturnDistrict) {
-                    updateReturnDistrictInsight(district,count,mapped,true);
+                    updateReturnDistrictInsight(
+                      district,
+                      count,
+                      mapped,
+                      true,
+                    );
                   }
-                }
+                },
               });
-            }
+            },
           }).addTo(returnGujaratMap);
 
           const bounds = returnGujaratLayer.getBounds();
-          if (bounds.isValid()) returnGujaratMap.fitBounds(bounds,{padding:[15,15]});
-          setTimeout(()=>returnGujaratMap.invalidateSize(true),100);
+          if (bounds.isValid())
+            returnGujaratMap.fitBounds(bounds, { padding: [15, 15] });
+          setTimeout(() => returnGujaratMap.invalidateSize(true), 100);
         } catch (error) {
-          console.error("Return Gujarat heatmap error:",error);
+          console.error("Return Gujarat heatmap error:", error);
         }
       }
 
