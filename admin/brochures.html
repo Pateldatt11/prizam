@@ -22,7 +22,6 @@
         const loggedIn = sessionStorage.getItem("prizam_admin_logged_in");
         const lastHb = parseInt(localStorage.getItem("admin_heartbeat") || "0", 10);
         const now = Date.now();
-        // 30-minute session inactivity limit (prevents background-tab freeze)
         const MAX_INACTIVITY = 30 * 60 * 1000;
 
         if (!loggedIn || (lastHb > 0 && now - lastHb > MAX_INACTIVITY)) {
@@ -37,7 +36,7 @@
         }
       })();
 
-      // ⚡ INSTANT BADGE CACHE (PREVENTS NUMBERS FROM FLICKERING OR DISAPPEARING)
+      // ⚡ INSTANT BADGE CACHE
       (function () {
         document.addEventListener("DOMContentLoaded", () => {
           const setB = (id, key, defaultVal = "0") => {
@@ -92,7 +91,7 @@
         display: flex;
       }
 
-      /* ================= 1. PRECISION DARK SIDEBAR ================= */
+      /* Sidebar */
       .admin-sidebar {
         width: 270px;
         background: var(--sidebar-bg);
@@ -155,7 +154,6 @@
         padding: 1.3rem 0.6rem 0.55rem;
       }
 
-      /* Standard Navigation Link */
       .sidebar-link {
         display: flex;
         align-items: center;
@@ -187,7 +185,6 @@
         color: #ffffff;
       }
 
-      /* ✨ SOLID BLUE PILL HIGHLIGHT FOR CURRENT PAGE */
       .sidebar-link.active {
         background: var(--sidebar-active-bg) !important;
         color: #ffffff !important;
@@ -201,7 +198,6 @@
         color: #ffffff !important;
       }
 
-      /* Right-Side Number Badge */
       .sidebar-badge {
         margin-left: auto;
         color: #ffffff;
@@ -211,7 +207,6 @@
         text-align: right;
       }
 
-      /* Footer */
       .sidebar-footer {
         padding: 1.15rem 1.25rem;
         border-top: 1px solid var(--sidebar-border);
@@ -282,7 +277,7 @@
         color: #ffffff;
       }
 
-      /* ================= 2. MAIN WORKSPACE ================= */
+      /* Main Workspace */
       .admin-main {
         margin-left: 270px;
         flex-grow: 1;
@@ -511,9 +506,10 @@
         color: var(--text-muted);
       }
 
+      /* ✨ 16:9 Aspect Ratio Thumbnail Containers */
       .preview-thumb-box {
         position: relative;
-        height: 150px;
+        aspect-ratio: 16 / 9;
         background: #f1f5f9;
         overflow: hidden;
         display: flex;
@@ -548,9 +544,9 @@
         margin-bottom: 0.5rem;
       }
       .item-mini-thumb {
-        width: 48px;
-        height: 48px;
-        border-radius: 8px;
+        width: 56px;
+        aspect-ratio: 16 / 9;
+        border-radius: 6px;
         overflow: hidden;
         flex-shrink: 0;
         background: #fee2e2;
@@ -558,7 +554,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.25rem;
+        font-size: 1.1rem;
       }
       .item-mini-thumb img {
         width: 100%;
@@ -740,7 +736,7 @@
               />
             </div>
             <div class="field">
-              <label for="brochureThumbnailUrl">Thumbnail image URL</label
+              <label for="brochureThumbnailUrl">Thumbnail image URL (16:9 Recommended)</label
               ><input
                 id="brochureThumbnailUrl"
                 type="url"

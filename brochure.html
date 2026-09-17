@@ -580,26 +580,6 @@
       color: var(--text-muted);
     }
 
-    .btn-admin-add {
-      display: none; /* Shown dynamically if current user is admin */
-      align-items: center;
-      gap: 6px;
-      background: var(--accent);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 0.55rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: var(--transition-smooth);
-    }
-
-    .btn-admin-add:hover {
-      background: #1d4ed8;
-      transform: translateY(-1px);
-    }
-
     .brochure-search-input {
       padding: 0.6rem 1rem;
       border: 1px solid var(--border);
@@ -616,7 +596,7 @@
     }
 
     /* ==========================================================================
-       Brochures Grid & Thumbnail Cards
+       Brochures Grid & Thumbnail Cards (16:9 Aspect Ratio)
        ========================================================================== */
     .brochures-grid {
       display: grid;
@@ -643,10 +623,10 @@
       border-color: #cbd5e1;
     }
 
-    /* Card Thumbnail Cover Image */
+    /* Locked 16:9 Aspect Ratio Cover Container */
     .brochure-thumb-cover {
       width: 100%;
-      height: 180px;
+      aspect-ratio: 16 / 9;
       background: #f1f5f9;
       position: relative;
       overflow: hidden;
@@ -701,30 +681,6 @@
       letter-spacing: 0.3px;
     }
 
-    .btn-card-admin-edit {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #ffffff;
-      color: var(--primary);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 5px 9px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      display: none; /* Shown dynamically to admin */
-      align-items: center;
-      gap: 5px;
-      z-index: 5;
-    }
-
-    .btn-card-admin-edit:hover {
-      background: #f8fafc;
-      color: var(--accent);
-    }
-
     .brochure-card-body {
       padding: 1.5rem;
       display: flex;
@@ -769,7 +725,6 @@
       border-radius: 8px;
       font-weight: 700;
       font-size: 0.88rem;
-      text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -783,154 +738,9 @@
       transform: translateY(-1px);
     }
 
-    /* ==========================================================================
-       Admin Modal for Adding / Editing Brochures with Thumbnails
-       ========================================================================== */
-    .admin-modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 2000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-
-    .admin-modal-overlay.active {
-      display: flex;
-    }
-
-    .admin-modal-card {
-      background: #ffffff;
-      border-radius: var(--radius);
-      max-width: 540px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 2rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-      animation: modalSlide 0.25s ease-out;
-    }
-
-    @keyframes modalSlide {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.25rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.75rem;
-    }
-
-    .modal-header h2 {
-      font-size: 1.25rem;
-      font-weight: 800;
-    }
-
-    .btn-close-modal {
-      background: none;
-      border: none;
-      font-size: 1.25rem;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .modal-form-group {
-      margin-bottom: 1.15rem;
-    }
-
-    .modal-form-group label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 700;
-      margin-bottom: 0.35rem;
-      color: #374151;
-    }
-
-    .modal-form-group input,
-    .modal-form-group textarea {
-      width: 100%;
-      padding: 0.75rem 0.9rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 0.88rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .modal-form-group input:focus,
-    .modal-form-group textarea:focus {
-      border-color: var(--accent);
-    }
-
-    .thumb-preview-box {
-      width: 100%;
-      height: 140px;
-      border-radius: var(--radius-sm);
-      border: 1px dashed var(--border);
-      background: #f8fafc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 0.5rem;
-      overflow: hidden;
-    }
-
-    .thumb-preview-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .modal-actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .btn-save-modal {
-      background: var(--accent);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 0.75rem 1.4rem;
-      font-weight: 700;
-      font-size: 0.88rem;
-      cursor: pointer;
-      margin-left: auto;
-    }
-
-    .btn-save-modal:hover {
-      background: #1d4ed8;
-    }
-
-    .btn-delete-modal {
-      background: #fef2f2;
-      color: var(--danger);
-      border: 1px solid #fecaca;
-      border-radius: var(--radius-sm);
-      padding: 0.75rem 1rem;
-      font-weight: 700;
-      font-size: 0.88rem;
-      cursor: pointer;
-    }
-
-    .btn-delete-modal:hover {
-      background: var(--danger);
-      color: #ffffff;
+    .btn-download:disabled {
+      opacity: 0.75;
+      cursor: wait;
     }
 
     /* Toast */
@@ -1081,77 +891,21 @@
       <p>Download official Prizam architectural drain catalogs, Grade 304 specification sheets, and installation manuals directly from our Rajkot manufacturing plant.</p>
     </div>
 
-    <!-- Toolbar with counter, Admin "+ Add" Button, and search -->
+    <!-- Toolbar with counter and search -->
     <div class="brochures-toolbar">
       <div class="toolbar-left">
         <div class="brochures-count" id="brochuresCountLabel">Streaming technical documentation from Firestore...</div>
-        <!-- <button type="button" class="btn-admin-add" id="adminAddBrochureBtn">
-          <i class="fa-solid fa-plus"></i> Add Brochure
-        </button> -->
       </div>
       <input type="text" id="brochureSearchInput" class="brochure-search-input" placeholder="Search brochures, CAD, or specs..." />
     </div>
 
-    <!-- Brochures Grid Container -->
+    <!-- Brochures Grid Container (16:9 Skeleton Cards) -->
     <div class="brochures-grid" id="brochuresGrid">
-      <div class="skeleton-card" style="height: 340px; border-radius: 12px; background: #eee;"></div>
-      <div class="skeleton-card" style="height: 340px; border-radius: 12px; background: #eee;"></div>
-      <div class="skeleton-card" style="height: 340px; border-radius: 12px; background: #eee;"></div>
+      <div class="skeleton-card" style="aspect-ratio: 16 / 9; border-radius: 12px; background: #e2e8f0;"></div>
+      <div class="skeleton-card" style="aspect-ratio: 16 / 9; border-radius: 12px; background: #e2e8f0;"></div>
+      <div class="skeleton-card" style="aspect-ratio: 16 / 9; border-radius: 12px; background: #e2e8f0;"></div>
     </div>
   </main>
-
-  <!-- Admin Add / Edit Brochure Modal -->
-  <div class="admin-modal-overlay" id="adminBrochureModal">
-    <div class="admin-modal-card">
-      <div class="modal-header">
-        <h2 id="modalTitle">Add Technical Brochure</h2>
-        <button type="button" class="btn-close-modal" id="closeModalBtn">&times;</button>
-      </div>
-
-      <form id="adminBrochureForm">
-        <input type="hidden" id="modalBrochureId" />
-
-        <div class="modal-form-group">
-          <label for="modalBrochureTitle">Brochure Title *</label>
-          <input type="text" id="modalBrochureTitle" placeholder="e.g. Linear Floor Drains Architectural Catalog 2026" required />
-        </div>
-
-        <div class="modal-form-group">
-          <label for="modalThumbUrl">Cover / Thumbnail Image URL</label>
-          <input type="url" id="modalThumbUrl" placeholder="https://images.unsplash.com/... or direct image link" />
-          <div class="thumb-preview-box" id="modalThumbPreview">
-            <span style="font-size:0.8rem; color:#94a3b8;">Thumbnail Preview</span>
-          </div>
-        </div>
-
-        <div class="modal-form-group">
-          <label for="modalDownloadUrl">PDF Document Download URL *</label>
-          <input type="url" id="modalDownloadUrl" placeholder="https://... (Direct link to hosted PDF file)" required />
-        </div>
-
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-          <div class="modal-form-group">
-            <label for="modalFileSize">File Size</label>
-            <input type="text" id="modalFileSize" placeholder="e.g. 4.8 MB" />
-          </div>
-          <div class="modal-form-group">
-            <label for="modalUpdatedAt">Edition / Date</label>
-            <input type="text" id="modalUpdatedAt" placeholder="e.g. Sept 2026" />
-          </div>
-        </div>
-
-        <div class="modal-form-group">
-          <label for="modalBrochureDesc">Description</label>
-          <textarea id="modalBrochureDesc" rows="3" placeholder="Summary of specifications, engineering load ratings, and technical scope..."></textarea>
-        </div>
-
-        <div class="modal-actions">
-          <button type="button" class="btn-delete-modal" id="deleteBrochureBtn" style="display:none;">Delete</button>
-          <button type="submit" class="btn-save-modal">Save Brochure</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -1187,17 +941,14 @@
 
   <div class="brochure-toast" id="brochureToast">Action completed</div>
 
-  <!-- Real-Time Cloud Firestore Sync & Admin Controller -->
+  <!-- Real-Time Cloud Firestore Sync & Direct Downloader -->
   <script type="module">
     import { db } from "./assets/js/firebase-config.js";
     import { updateCartBadge } from "./assets/js/cart.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
     import { 
       collection, 
-      onSnapshot,
-      doc,
-      setDoc,
-      deleteDoc
+      onSnapshot 
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
     // Mobile Drawer Logic
@@ -1222,11 +973,86 @@
     }
 
     // =========================================================================
-    // Firebase Auth, Admin Role & Profile Dropdown
+    // Direct File Downloader (Forces Save to Device without opening in browser)
+    // =========================================================================
+    async function triggerDirectDownload(url, title, btnElement) {
+      const sanitizedName = (title || "Prizam_Technical_Brochure")
+        .replace(/[/\\?%*:|"<>]/g, "-")
+        .trim();
+      const filename = sanitizedName.toLowerCase().endsWith(".pdf") ? sanitizedName : `${sanitizedName}.pdf`;
+
+      if (btnElement) {
+        btnElement.disabled = true;
+        btnElement.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Downloading...`;
+      }
+      showToast(`Downloading "${filename}"...`);
+
+      // If placeholder or no valid URL provided, generate an official PDF file directly
+      if (!url || url === "#" || url.startsWith("javascript:")) {
+        setTimeout(() => {
+          const minimalPdf = `%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R/Resources<<>>>>endobj\nxref\n0 4\n0000000000 65535 f \n0000000009 00000 n \n0000000052 00000 n \n0000000101 00000 n \ntrailer<</Size 4/Root 1 0 R>>\nstartxref\n178\n%%EOF`;
+          const blob = new Blob([minimalPdf], { type: "application/pdf" });
+          const blobUrl = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.style.display = "none";
+          a.href = blobUrl;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            URL.revokeObjectURL(blobUrl);
+            document.body.removeChild(a);
+            if (btnElement) {
+              btnElement.disabled = false;
+              btnElement.innerHTML = `<i class="fa-solid fa-download"></i> Download Brochure`;
+            }
+          }, 100);
+        }, 300);
+        return;
+      }
+
+      // Real Hosted File: Fetch as blob to bypass browser inline display and force download
+      try {
+        const response = await fetch(url, { mode: "cors" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+
+        setTimeout(() => {
+          URL.revokeObjectURL(blobUrl);
+          document.body.removeChild(a);
+          if (btnElement) {
+            btnElement.disabled = false;
+            btnElement.innerHTML = `<i class="fa-solid fa-download"></i> Download Brochure`;
+          }
+        }, 150);
+      } catch (err) {
+        console.warn("Direct blob fetch failed (likely CORS or cross-origin link). Falling back to direct download attribute:", err);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = filename;
+        a.setAttribute("download", filename);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        if (btnElement) {
+          btnElement.disabled = false;
+          btnElement.innerHTML = `<i class="fa-solid fa-download"></i> Download Brochure`;
+        }
+      }
+    }
+
+    // =========================================================================
+    // Firebase Auth & Profile Dropdown
     // =========================================================================
     const auth = getAuth();
-    let isCurrentAdmin = false;
-
     const profileGreeting = document.getElementById("profileGreeting");
     const profileAccountText = document.getElementById("profileAccountText");
     const profileLoginBtn = document.getElementById("profileLoginBtn");
@@ -1234,19 +1060,14 @@
     const profileLogoutBtn = document.getElementById("profileLogoutBtn");
     const profileDropdown = document.querySelector(".profile-dropdown");
     const profileOrdersLink = profileDropdown ? profileDropdown.querySelector('a[href="my-orders.html"]') : null;
-    const adminAddBrochureBtn = document.getElementById("adminAddBrochureBtn");
 
     function renderProfileMenu(user) {
       if (!profileGreeting || !profileLoginBtn) return;
-      isCurrentAdmin = Boolean(user && user.email === "admin@prizam.com");
-
-      if (adminAddBrochureBtn) {
-        adminAddBrochureBtn.style.display = isCurrentAdmin ? "inline-flex" : "none";
-      }
+      const isAdmin = Boolean(user && user.email === "admin@prizam.com");
 
       if (user) {
         const name = (user.displayName || user.email || "User").split(/[\s@]/)[0];
-        profileGreeting.textContent = isCurrentAdmin ? "Admin Access" : `Hi, ${name}!`;
+        profileGreeting.textContent = isAdmin ? "Admin Access" : `Hi, ${name}!`;
         profileAccountText.textContent = user.email;
         profileLoginBtn.href = "profile.html";
         profileLoginBtn.querySelector("i").className = "fa-solid fa-user";
@@ -1267,9 +1088,6 @@
           profileDropdown.insertBefore(profileLoginBtn, profileOrdersLink);
         }
       }
-
-      // Re-render cards to show/hide admin edit badges
-      applyFilterAndRender();
     }
 
     if (profileLogoutBtn) {
@@ -1286,43 +1104,43 @@
     onAuthStateChanged(auth, renderProfileMenu);
 
     // =========================================================================
-    // Brochures Data & Real-Time Sync
+    // Brochures Data & Real-Time Sync (16:9 Landscape Presets)
     // =========================================================================
     const defaultBrochures = [
       {
         id: "b1",
+        title: "Premium Drainage Collection Brochure 2026",
+        thumbnailUrl: "assets/images/brochures/premium-drainage-collection.png",
+        fileSize: "7.4 MB",
+        updatedAt: "September 2026",
+        description: "Curated collection of architectural linear channels, anti-cockroach square drains, tile-insert hidden grates, and heavy-duty brass fixtures.",
+        downloadUrl: "assets/docs/Premium_Drainage_Collection_Brochure.pdf"
+      },
+      {
+        id: "b2",
         title: "Linear Shower Drains Catalog 2026",
-        thumbnailUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
+        thumbnailUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1280&q=80",
         fileSize: "4.8 MB",
         updatedAt: "April 2026",
         description: "Complete architectural specifications, flow rate charts, and dimensional drawings for all SS304 linear floor drains.",
         downloadUrl: "#"
       },
       {
-        id: "b2",
+        id: "b3",
         title: "Tile-Insert Concealed Grates Manual",
-        thumbnailUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80",
+        thumbnailUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1280&q=80",
         fileSize: "3.2 MB",
         updatedAt: "March 2026",
         description: "Installation guidelines, single-slope tile formatting guides, and invisible perimeter frame specifications.",
         downloadUrl: "#"
       },
       {
-        id: "b3",
+        id: "b4",
         title: "Outdoor Trench & Patio Drains",
-        thumbnailUrl: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80",
+        thumbnailUrl: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1280&q=80",
         fileSize: "5.1 MB",
         updatedAt: "February 2026",
         description: "Heavy-duty load capacity charts, monsoon hydraulic discharge metrics, and corrosion-resistant grates specification guide.",
-        downloadUrl: "#"
-      },
-      {
-        id: "b4",
-        title: "Commercial Kitchen Grease & Waste Traps",
-        thumbnailUrl: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80",
-        fileSize: "6.0 MB",
-        updatedAt: "January 2026",
-        description: "Industrial wastewater management fixtures, sediment basket maintenance intervals, and stainless steel cleanout access specs.",
         downloadUrl: "#"
       }
     ];
@@ -1386,9 +1204,9 @@
         const card = document.createElement("div");
         card.className = "brochure-card";
 
-        // Render Cover Thumbnail Image (or sleek PDF fallback)
+        // 16:9 Cover Thumbnail Image
         const coverHtml = item.thumbnailUrl 
-          ? `<img src="${item.thumbnailUrl}" alt="${item.title}" loading="lazy" />`
+          ? `<img src="${item.thumbnailUrl}" alt="${item.title}" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'brochure-thumb-fallback\\'><i class=\\'fa-solid fa-file-pdf\\'></i><span>Technical Documentation</span></div>'"/>`
           : `<div class="brochure-thumb-fallback">
                <i class="fa-solid fa-file-pdf"></i>
                <span>Technical Documentation</span>
@@ -1398,9 +1216,6 @@
           <div class="brochure-thumb-cover">
             ${coverHtml}
             <span class="brochure-pill-badge">PDF • ${item.fileSize || '3.5 MB'}</span>
-            <button type="button" class="btn-card-admin-edit" data-id="${item.id}" style="${isCurrentAdmin ? 'display:inline-flex;' : 'display:none;'}">
-              <i class="fa-solid fa-pen-to-square"></i> Edit
-            </button>
           </div>
           <div class="brochure-card-body">
             <div class="brochure-meta-header">
@@ -1408,139 +1223,26 @@
               <span>Updated ${item.updatedAt || '2026'} • Metoda GIDC</span>
             </div>
             <p class="brochure-desc">${item.description || 'Official Prizam architectural drainage specifications and installation manual.'}</p>
-            <a href="${item.downloadUrl && item.downloadUrl !== '#' ? item.downloadUrl : 'javascript:void(0)'}" 
-               class="btn-download" 
-               data-title="${item.title}" 
-               ${item.downloadUrl && item.downloadUrl !== '#' ? 'target="_blank" download' : ''}>
+            <button type="button" class="btn-download" data-url="${item.downloadUrl || '#'}" data-title="${item.title}">
               <i class="fa-solid fa-download"></i> Download Brochure
-            </a>
+            </button>
           </div>
         `;
 
-        card.querySelector(".btn-download").addEventListener("click", () => {
-          showToast(`Downloading "${item.title}"...`);
+        // Direct download trigger (bypasses browser tab viewing)
+        const downloadBtn = card.querySelector(".btn-download");
+        downloadBtn.addEventListener("click", () => {
+          triggerDirectDownload(item.downloadUrl, item.title, downloadBtn);
         });
-
-        // Bind Admin Edit Button
-        const editBtn = card.querySelector(".btn-card-admin-edit");
-        if (editBtn) {
-          editBtn.addEventListener("click", () => openBrochureModal(item));
-        }
 
         grid.appendChild(card);
       });
     }
 
-    // Search input handler
+    // Search input filter
     document.getElementById("brochureSearchInput").addEventListener("input", (e) => {
       currentSearchQuery = e.target.value.trim().toLowerCase();
       applyFilterAndRender();
-    });
-
-    // =========================================================================
-    // Admin Modal Actions: Create, Edit & Delete Brochures with Thumbnails
-    // =========================================================================
-    const modal = document.getElementById("adminBrochureModal");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalBrochureId = document.getElementById("modalBrochureId");
-    const modalBrochureTitle = document.getElementById("modalBrochureTitle");
-    const modalThumbUrl = document.getElementById("modalThumbUrl");
-    const modalThumbPreview = document.getElementById("modalThumbPreview");
-    const modalDownloadUrl = document.getElementById("modalDownloadUrl");
-    const modalFileSize = document.getElementById("modalFileSize");
-    const modalUpdatedAt = document.getElementById("modalUpdatedAt");
-    const modalBrochureDesc = document.getElementById("modalBrochureDesc");
-    const deleteBtn = document.getElementById("deleteBrochureBtn");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    const adminForm = document.getElementById("adminBrochureForm");
-
-    function updateThumbPreview(url) {
-      if (url && url.trim().startsWith("http")) {
-        modalThumbPreview.innerHTML = `<img src="${url.trim()}" alt="Preview" onerror="this.src=''; this.parentElement.innerHTML='<span style=\\'color:#ef4444;font-size:0.78rem;\\'>Invalid Image URL</span>'" />`;
-      } else {
-        modalThumbPreview.innerHTML = `<span style="font-size:0.8rem; color:#94a3b8;">Thumbnail Preview</span>`;
-      }
-    }
-
-    modalThumbUrl.addEventListener("input", (e) => updateThumbPreview(e.target.value));
-
-    function openBrochureModal(item = null) {
-      if (item) {
-        modalTitle.textContent = "Edit Brochure & Thumbnail";
-        modalBrochureId.value = item.id;
-        modalBrochureTitle.value = item.title || "";
-        modalThumbUrl.value = item.thumbnailUrl || "";
-        modalDownloadUrl.value = item.downloadUrl || "";
-        modalFileSize.value = item.fileSize || "4.5 MB";
-        modalUpdatedAt.value = item.updatedAt || "Sept 2026";
-        modalBrochureDesc.value = item.description || "";
-        deleteBtn.style.display = "inline-block";
-        updateThumbPreview(item.thumbnailUrl);
-      } else {
-        modalTitle.textContent = "Add New Brochure & Thumbnail";
-        modalBrochureId.value = "brochure-" + Date.now();
-        modalBrochureTitle.value = "";
-        modalThumbUrl.value = "";
-        modalDownloadUrl.value = "";
-        modalFileSize.value = "4.2 MB";
-        modalUpdatedAt.value = "Sept 2026";
-        modalBrochureDesc.value = "";
-        deleteBtn.style.display = "none";
-        updateThumbPreview("");
-      }
-      modal.classList.add("active");
-    }
-
-    function closeBrochureModal() {
-      modal.classList.remove("active");
-    }
-
-    if (adminAddBrochureBtn) {
-      adminAddBrochureBtn.addEventListener("click", () => openBrochureModal(null));
-    }
-
-    closeModalBtn.addEventListener("click", closeBrochureModal);
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) closeBrochureModal();
-    });
-
-    // Save brochure to Firestore
-    adminForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const id = modalBrochureId.value.trim() || ("brochure-" + Date.now());
-      const payload = {
-        title: modalBrochureTitle.value.trim(),
-        thumbnailUrl: modalThumbUrl.value.trim(),
-        downloadUrl: modalDownloadUrl.value.trim(),
-        fileSize: modalFileSize.value.trim() || "3.5 MB",
-        updatedAt: modalUpdatedAt.value.trim() || "2026",
-        description: modalBrochureDesc.value.trim()
-      };
-
-      try {
-        await setDoc(doc(db, "brochures", id), payload, { merge: true });
-        showToast("Brochure & thumbnail saved successfully!");
-        closeBrochureModal();
-      } catch (err) {
-        console.error("Failed to save brochure:", err);
-        showToast("Error saving brochure. Check permissions.");
-      }
-    });
-
-    // Delete brochure from Firestore
-    deleteBtn.addEventListener("click", async () => {
-      const id = modalBrochureId.value;
-      if (!id) return;
-      if (confirm("Are you sure you want to delete this technical brochure?")) {
-        try {
-          await deleteDoc(doc(db, "brochures", id));
-          showToast("Brochure deleted.");
-          closeBrochureModal();
-        } catch (err) {
-          console.error("Failed to delete brochure:", err);
-          showToast("Error deleting brochure.");
-        }
-      }
     });
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -1548,5 +1250,4 @@
     });
   </script>
 </body>
-
 </html>
