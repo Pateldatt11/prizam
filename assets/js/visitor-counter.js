@@ -11,9 +11,6 @@ const STATS_DOC_REF = doc(db, "analytics", "visitors");
 
 /**
  * Builds date/month/quarter keys using LOCAL time, not UTC.
- * (The old code used toISOString(), which is UTC — for IST users
- * that shifted "today" to "yesterday" for the first ~5.5 hours
- * of every day.)
  */
 function getLocalDateParts(d = new Date()) {
   const year = d.getFullYear();
@@ -28,14 +25,18 @@ function getLocalDateParts(d = new Date()) {
 
 /**
  * Tracks a new visit across total, today, month, and quarter tiers.
- * Uses sessionStorage to count unique browser sessions.
+ *
+ * FIX: uses localStorage (not sessionStorage) with a DATE-based key.
+ * sessionStorage only clears when the tab/browser closes — so if a
+ * tab stays open overnight, "today" never gets a fresh increment.
+ * A dated localStorage key guarantees one increment per browser per
+ * calendar day, and resets automatically the next day.
  */
 export async function trackVisitor() {
-  const sessionKey = "prizam_visited_session";
+  const { todayStr, monthStr, quarterStr } = getLocalDateParts();
+  const sessionKey = `prizam_visited_${todayStr}`; // date-scoped key
 
-  if (!sessionStorage.getItem(sessionKey)) {
-    const { todayStr, monthStr, quarterStr } = getLocalDateParts();
-
+  if (!localStorage.getItem(sessionKey)) {
     try {
       // 1. Atomic increment for total cumulative visits
       await setDoc(
@@ -77,7 +78,13 @@ export async function trackVisitor() {
         { merge: true },
       );
 
-      sessionStorage.setItem(sessionKey, "true");
+      // Mark this browser as "counted" for TODAY only.
+      // Tomorrow's date will produce a new key, so it counts again.
+      localStorage.setItem(sessionKey, "true");
+
+      // Optional cleanup: remove old dated keys so localStorage
+      // doesn't fill up with stale "prizam_visited_YYYY-MM-DD" entries.
+      cleanupOldVisitKeys(todayStr);
     } catch (err) {
       console.warn("Visitor counter increment skipped:", err);
     }
@@ -85,9 +92,21 @@ export async function trackVisitor() {
 }
 
 /**
+ * Removes old "prizam_visited_*" keys that aren't today's key,
+ * so localStorage doesn't grow forever.
+ */
+function cleanupOldVisitKeys(todayStr) {
+  const todayKey = `prizam_visited_${todayStr}`;
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith("prizam_visited_") && key !== todayKey) {
+      localStorage.removeItem(key);
+    }
+  }
+}
+
+/**
  * Listens for real-time cumulative (all-time) visitor count updates.
- * @param {Function} callback - Receives the live total visit count integer.
- * @returns {Function} unsubscribe function
  */
 export function subscribeVisitorCount(callback) {
   return onSnapshot(
@@ -108,8 +127,6 @@ export function subscribeVisitorCount(callback) {
 
 /**
  * Listens for real-time TODAY visitor count updates (local date).
- * @param {Function} callback - Receives today's visit count integer.
- * @returns {Function} unsubscribe function
  */
 export function subscribeTodayVisitorCount(callback) {
   const { todayStr } = getLocalDateParts();
@@ -128,8 +145,6 @@ export function subscribeTodayVisitorCount(callback) {
 
 /**
  * Listens for real-time THIS MONTH visitor count updates (local month).
- * @param {Function} callback - Receives this month's visit count integer.
- * @returns {Function} unsubscribe function
  */
 export function subscribeMonthVisitorCount(callback) {
   const { monthStr } = getLocalDateParts();
@@ -148,8 +163,6 @@ export function subscribeMonthVisitorCount(callback) {
 
 /**
  * Listens for real-time THIS QUARTER visitor count updates (local quarter).
- * @param {Function} callback - Receives this quarter's visit count integer.
- * @returns {Function} unsubscribe function
  */
 export function subscribeQuarterVisitorCount(callback) {
   const { quarterStr } = getLocalDateParts();
@@ -167,11 +180,7 @@ export function subscribeQuarterVisitorCount(callback) {
 }
 
 /**
- * Convenience: subscribe to ALL four tiers (total, today, month, quarter)
- * with a single callback. Useful for an analytics dashboard that needs
- * all numbers at once.
- * @param {Function} callback - Receives { total, today, month, quarter }
- * @returns {Function} single unsubscribe function that tears down all listeners
+ * Convenience: subscribe to ALL four tiers at once.
  */
 export function subscribeVisitorStats(callback) {
   const stats = { total: 0, today: 0, month: 0, quarter: 0 };
