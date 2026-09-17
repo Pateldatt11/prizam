@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -1343,12 +1343,10 @@
               localStorage.removeItem("admin_heartbeat");
             } catch (e) {}
             await signOut(auth);
-
-            // Go back to the main Prizam homepage.
-            // This admin page is inside /admin/, so ../index.html points to /prizam/index.html
-            window.location.replace("../index.html");
+            window.location.href = "login.html";
           }
         });
     </script>
   </body>
-</html>
+</html> 
+--!>

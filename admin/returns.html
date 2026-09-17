@@ -36,6 +36,17 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
 
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      crossorigin=""
+    ></script>
+
     <style>
       :root {
         --sidebar-bg: #070b13;
@@ -300,6 +311,299 @@
         transform: translateY(0);
         opacity: 1;
       }
+
+      /* ================= MAIN RETURN PAGE TABS ================= */
+      .admin-section-tabs {
+        display: inline-flex;
+        gap: 0.4rem;
+        padding: 0.35rem;
+        margin-bottom: 1.5rem;
+        background: #e9eef5;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+      .admin-section-tab {
+        border: 0;
+        background: transparent;
+        color: var(--text-muted);
+        padding: 0.7rem 1rem;
+        border-radius: 8px;
+        font-size: 0.84rem;
+        font-weight: 800;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+      }
+      .admin-section-tab:hover {
+        color: var(--text-main);
+        background: rgba(255,255,255,.7);
+      }
+      .admin-section-tab.active {
+        background: #fff;
+        color: var(--primary);
+        box-shadow: 0 2px 8px rgba(15,23,42,.08);
+      }
+      .admin-tab-panel { display: none; }
+      .admin-tab-panel.active { display: block; }
+
+      /* ================= ANALYSIS KPI CARDS ================= */
+      .return-metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(190px,1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .return-metric-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.15rem;
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+      }
+      .return-metric-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        background: #f1f5f9;
+        color: var(--primary);
+      }
+      .return-metric-card h3 {
+        font-size: 1.35rem;
+        font-weight: 800;
+      }
+      .return-metric-card p {
+        font-size: .72rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--text-muted);
+      }
+
+      /* ================= INDIA RETURN HEATMAP ================= */
+      .analysis-grid {
+        display: grid;
+        grid-template-columns: minmax(0,1.55fr) minmax(260px,.7fr);
+        gap: 1.25rem;
+      }
+      .analysis-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .analysis-card-header {
+        padding: 1.15rem 1.25rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      .analysis-card-header h2 {
+        font-size: 1rem;
+        font-weight: 800;
+        margin-bottom: .2rem;
+      }
+      .analysis-card-header p {
+        font-size: .78rem;
+        color: var(--text-muted);
+      }
+      .analysis-pill {
+        background: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #dbeafe;
+        border-radius: 999px;
+        padding: .45rem .7rem;
+        font-size: .74rem;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      #indiaReturnsHeatmap {
+        width: 100%;
+        height: 430px;
+      }
+      .state-rank-list,
+      .reason-rank-list {
+        display: flex;
+        flex-direction: column;
+        gap: .6rem;
+      }
+      .rank-row {
+        display: flex;
+        justify-content: space-between;
+        gap: .7rem;
+        align-items: center;
+        padding: .7rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fff;
+      }
+      .rank-row strong {
+        display: block;
+        font-size: .78rem;
+      }
+      .rank-row span {
+        display: block;
+        font-size: .68rem;
+        color: var(--text-muted);
+        margin-top: .1rem;
+      }
+      .rank-count {
+        min-width: 34px;
+        height: 28px;
+        padding: 0 .5rem;
+        border-radius: 999px;
+        background: #0f172a;
+        color: #fff !important;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        font-size: .72rem !important;
+        font-weight: 800;
+      }
+      .side-analysis-box {
+        padding: 1rem;
+      }
+      .side-analysis-box h3 {
+        font-size: .85rem;
+        font-weight: 800;
+        margin-bottom: .75rem;
+      }
+
+      /* ================= GUJARAT RETURN SVG HEATMAP ================= */
+      .gujarat-heatmap-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .gujarat-map-layout {
+        display: grid;
+        grid-template-columns: minmax(0,1.65fr) minmax(250px,.65fr);
+        min-height: 500px;
+      }
+      .gujarat-map-wrap {
+        position: relative;
+        min-width: 0;
+        min-height: 500px;
+        padding: .75rem;
+        background:
+          radial-gradient(circle at top left, rgba(59,130,246,.08), transparent 35%),
+          radial-gradient(circle at bottom right, rgba(16,185,129,.08), transparent 32%),
+          #fff;
+      }
+      #gujaratReturnsHeatmap {
+        width: 100%;
+        height: 480px;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: inset 0 0 0 1px rgba(148,163,184,.18);
+      }
+      .gujarat-map-sidebar {
+        border-left: 1px solid var(--border);
+        padding: 1.25rem;
+        background: #fbfdff;
+      }
+      .gujarat-map-sidebar h3 {
+        font-size: .88rem;
+        font-weight: 800;
+        margin-bottom: .8rem;
+      }
+      .gujarat-map-toolbar {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 700;
+      }
+      .gujarat-map-btn {
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,.94);
+        color: var(--text-main);
+        padding: .55rem .8rem;
+        border-radius: 999px;
+        font-size: .72rem;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(15,23,42,.08);
+      }
+      .heat-legend,
+      .district-insight-card {
+        margin-top: 1rem;
+        padding: .85rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+      }
+      .heat-legend h4,
+      .district-insight-card h4 {
+        font-size: .78rem;
+        font-weight: 800;
+        margin-bottom: .65rem;
+      }
+      .legend-scale {
+        height: 10px;
+        border-radius: 999px;
+        background: linear-gradient(90deg,#e0f2fe,#7dd3fc,#38bdf8,#0ea5e9,#1d4ed8);
+      }
+      .legend-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: .4rem;
+        font-size: .68rem;
+        color: var(--text-muted);
+      }
+      .district-insight-card p {
+        font-size: .75rem;
+        color: var(--text-muted);
+        line-height: 1.45;
+      }
+      .district-focus-name {
+        display: inline-block;
+        margin-top: .4rem;
+        font-size: .92rem;
+        font-weight: 800;
+      }
+      .district-focus-count {
+        display: inline-flex;
+        margin-top: .5rem;
+        background: #eff6ff;
+        color: #1d4ed8;
+        border-radius: 999px;
+        padding: .35rem .6rem;
+        font-size: .72rem;
+        font-weight: 800;
+      }
+
+      @media (max-width: 980px) {
+        .analysis-grid,
+        .gujarat-map-layout {
+          grid-template-columns: 1fr;
+        }
+        .gujarat-map-sidebar {
+          border-left: 0;
+          border-top: 1px solid var(--border);
+        }
+      }
+      @media (max-width: 640px) {
+        .admin-section-tabs { width: 100%; }
+        .admin-section-tab {
+          flex: 1;
+          justify-content: center;
+          font-size: .75rem;
+          padding: .65rem .5rem;
+        }
+        #indiaReturnsHeatmap,
+        #gujaratReturnsHeatmap {
+          height: 360px;
+        }
+      }
+
       .auth-gate-overlay {
         position: fixed;
         inset: 0;
@@ -409,6 +713,41 @@
           </div>
         </div>
 
+        <!-- RETURN PAGE TABS -->
+        <div class="admin-section-tabs" role="tablist" aria-label="Return management sections">
+          <button
+            class="admin-section-tab active"
+            id="returnDetailsTab"
+            type="button"
+            onclick="switchReturnPageTab('details')"
+          >
+            <i class="fa-solid fa-list-check"></i>
+            Return Details
+          </button>
+
+          <button
+            class="admin-section-tab"
+            id="returnAnalysisTab"
+            type="button"
+            onclick="switchReturnPageTab('analysis')"
+          >
+            <i class="fa-solid fa-chart-column"></i>
+            Return Analysis
+          </button>
+
+          <button
+            class="admin-section-tab"
+            id="returnGujaratTab"
+            type="button"
+            onclick="switchReturnPageTab('gujarat')"
+          >
+            <i class="fa-solid fa-map"></i>
+            Gujarat Heatmap
+          </button>
+        </div>
+
+        <!-- TAB 1: RETURN DETAILS -->
+        <section class="admin-tab-panel active" id="returnDetailsPanel">
         <div class="filter-tabs">
           <button class="tab-btn active" id="tabAll">All Requests</button>
           <button class="tab-btn" id="tabRequested">Requested</button>
@@ -442,6 +781,98 @@
             </tbody>
           </table>
         </div>
+        </section>
+
+        <!-- TAB 2: RETURN ANALYSIS -->
+        <section class="admin-tab-panel" id="returnAnalysisPanel">
+          <div class="return-metrics-grid">
+            <div class="return-metric-card">
+              <div class="return-metric-icon"><i class="fa-solid fa-rotate-left"></i></div>
+              <div><h3 id="metricTotalReturns">0</h3><p>Total Returns</p></div>
+            </div>
+            <div class="return-metric-card">
+              <div class="return-metric-icon" style="background:#fef3c7;color:#b45309;"><i class="fa-solid fa-clock"></i></div>
+              <div><h3 id="metricRequestedReturns">0</h3><p>Requested</p></div>
+            </div>
+            <div class="return-metric-card">
+              <div class="return-metric-icon" style="background:#eff6ff;color:#1d4ed8;"><i class="fa-solid fa-circle-check"></i></div>
+              <div><h3 id="metricApprovedReturns">0</h3><p>Approved</p></div>
+            </div>
+            <div class="return-metric-card">
+              <div class="return-metric-icon" style="background:#dcfce7;color:#15803d;"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+              <div><h3 id="metricRefundedReturns">0</h3><p>Refunded</p></div>
+            </div>
+          </div>
+
+          <div class="analysis-grid">
+            <div class="analysis-card">
+              <div class="analysis-card-header">
+                <div>
+                  <h2><i class="fa-solid fa-map-location-dot" style="color:var(--accent);margin-right:.4rem;"></i>India Return Distribution</h2>
+                  <p>States get darker as more return requests come from them.</p>
+                </div>
+                <div class="analysis-pill"><span id="indiaMappedReturns">0</span> mapped returns</div>
+              </div>
+              <div id="indiaReturnsHeatmap"></div>
+            </div>
+
+            <div class="analysis-card">
+              <div class="side-analysis-box">
+                <h3>Top Return States</h3>
+                <div class="state-rank-list" id="returnStateRankList"></div>
+              </div>
+              <div class="side-analysis-box" style="border-top:1px solid var(--border);">
+                <h3>Top Return Reasons</h3>
+                <div class="reason-rank-list" id="returnReasonRankList"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: GUJARAT RETURN HEATMAP -->
+        <section class="admin-tab-panel" id="returnGujaratPanel">
+          <div class="gujarat-heatmap-card">
+            <div class="analysis-card-header">
+              <div>
+                <h2><i class="fa-solid fa-location-dot" style="color:#047857;margin-right:.4rem;"></i>Gujarat Return District Heatmap</h2>
+                <p>Districts get darker as more return requests originate there.</p>
+              </div>
+              <div class="analysis-pill" style="background:#ecfdf5;color:#047857;border-color:#a7f3d0;">
+                <span id="gujaratMappedReturns">0</span> Gujarat returns
+              </div>
+            </div>
+
+            <div class="gujarat-map-layout">
+              <div class="gujarat-map-wrap">
+                <div class="gujarat-map-toolbar">
+                  <button class="gujarat-map-btn" type="button" onclick="resetReturnGujaratMapView()">
+                    <i class="fa-solid fa-arrows-rotate"></i> Reset View
+                  </button>
+                </div>
+                <div id="gujaratReturnsHeatmap"></div>
+              </div>
+
+              <aside class="gujarat-map-sidebar">
+                <h3>Top Return Districts</h3>
+                <div class="state-rank-list" id="returnDistrictRankList"></div>
+
+                <div class="heat-legend">
+                  <h4>Heat Scale</h4>
+                  <div class="legend-scale"></div>
+                  <div class="legend-labels">
+                    <span>Lower returns</span>
+                    <span>Higher returns</span>
+                  </div>
+                </div>
+
+                <div class="district-insight-card" id="returnDistrictInsight">
+                  <h4>District Focus</h4>
+                  <p>Hover or click a district to inspect return concentration.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
 
@@ -459,6 +890,7 @@
         doc,
         updateDoc,
         deleteDoc,
+        getDocs,
       } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
       // 🔒 AUTH GUARD & OVERLAY REMOVER
@@ -484,8 +916,542 @@
       let returnsList = [];
       let currentFilter = "all";
       let searchQuery = "";
+      // ================= RETURN ANALYTICS DATA =================
+      let orderLookup = new Map();
+      let indiaReturnChartReady = false;
+      let indiaReturnChart = null;
+      let returnGujaratMap = null;
+      let returnGujaratLayer = null;
+      let returnGujaratGeoJson = null;
+      let selectedReturnDistrict = null;
+      let currentReturnDistrictCounts = {};
+      let currentReturnDistrictMax = 1;
+
+      const INDIA_STATES = {
+        "andhra pradesh": { code:"IN-AP", name:"Andhra Pradesh" },
+        "arunachal pradesh": { code:"IN-AR", name:"Arunachal Pradesh" },
+        "assam": { code:"IN-AS", name:"Assam" },
+        "bihar": { code:"IN-BR", name:"Bihar" },
+        "chhattisgarh": { code:"IN-CT", name:"Chhattisgarh" },
+        "goa": { code:"IN-GA", name:"Goa" },
+        "gujarat": { code:"IN-GJ", name:"Gujarat" },
+        "haryana": { code:"IN-HR", name:"Haryana" },
+        "himachal pradesh": { code:"IN-HP", name:"Himachal Pradesh" },
+        "jharkhand": { code:"IN-JH", name:"Jharkhand" },
+        "karnataka": { code:"IN-KA", name:"Karnataka" },
+        "kerala": { code:"IN-KL", name:"Kerala" },
+        "madhya pradesh": { code:"IN-MP", name:"Madhya Pradesh" },
+        "maharashtra": { code:"IN-MH", name:"Maharashtra" },
+        "manipur": { code:"IN-MN", name:"Manipur" },
+        "meghalaya": { code:"IN-ML", name:"Meghalaya" },
+        "mizoram": { code:"IN-MZ", name:"Mizoram" },
+        "nagaland": { code:"IN-NL", name:"Nagaland" },
+        "odisha": { code:"IN-OR", name:"Odisha" },
+        "orissa": { code:"IN-OR", name:"Odisha" },
+        "punjab": { code:"IN-PB", name:"Punjab" },
+        "rajasthan": { code:"IN-RJ", name:"Rajasthan" },
+        "sikkim": { code:"IN-SK", name:"Sikkim" },
+        "tamil nadu": { code:"IN-TN", name:"Tamil Nadu" },
+        "telangana": { code:"IN-TG", name:"Telangana" },
+        "tripura": { code:"IN-TR", name:"Tripura" },
+        "uttar pradesh": { code:"IN-UP", name:"Uttar Pradesh" },
+        "uttarakhand": { code:"IN-UT", name:"Uttarakhand" },
+        "west bengal": { code:"IN-WB", name:"West Bengal" },
+        "delhi": { code:"IN-DL", name:"Delhi" },
+        "jammu and kashmir": { code:"IN-JK", name:"Jammu & Kashmir" },
+        "ladakh": { code:"IN-LA", name:"Ladakh" },
+        "puducherry": { code:"IN-PY", name:"Puducherry" }
+      };
+
+      const CITY_TO_STATE = {
+        "ahmedabad":"gujarat","surat":"gujarat","vadodara":"gujarat","baroda":"gujarat",
+        "rajkot":"gujarat","gandhinagar":"gujarat","bhavnagar":"gujarat","jamnagar":"gujarat",
+        "junagadh":"gujarat","morbi":"gujarat","anand":"gujarat","bharuch":"gujarat",
+        "navsari":"gujarat","valsad":"gujarat","vapi":"gujarat","mehsana":"gujarat",
+        "mumbai":"maharashtra","pune":"maharashtra","nagpur":"maharashtra",
+        "jaipur":"rajasthan","jodhpur":"rajasthan","udaipur":"rajasthan",
+        "delhi":"delhi","new delhi":"delhi","bengaluru":"karnataka","bangalore":"karnataka",
+        "chennai":"tamil nadu","hyderabad":"telangana","kochi":"kerala",
+        "indore":"madhya pradesh","bhopal":"madhya pradesh","lucknow":"uttar pradesh",
+        "noida":"uttar pradesh","agra":"uttar pradesh","kolkata":"west bengal",
+        "ludhiana":"punjab","amritsar":"punjab","gurugram":"haryana","gurgaon":"haryana",
+        "patna":"bihar","ranchi":"jharkhand","bhubaneswar":"odisha","raipur":"chhattisgarh"
+      };
+
+      const GUJARAT_CITY_TO_DISTRICT = {
+        "ahmedabad":"Ahmedabad","dholka":"Ahmedabad","sanand":"Ahmedabad",
+        "amreli":"Amreli","anand":"Anand","modasa":"Aravalli","palanpur":"Banaskantha",
+        "deesa":"Banaskantha","bharuch":"Bharuch","ankleshwar":"Bharuch",
+        "bhavnagar":"Bhavnagar","mahuva":"Bhavnagar","botad":"Botad",
+        "chhota udaipur":"Chhota Udaipur","dahod":"Dahod","ahwa":"Dang",
+        "dwarka":"Devbhumi Dwarka","gandhinagar":"Gandhinagar","kalol":"Gandhinagar",
+        "veraval":"Gir Somnath","somnath":"Gir Somnath","jamnagar":"Jamnagar",
+        "junagadh":"Junagadh","nadiad":"Kheda","bhuj":"Kutch","gandhidham":"Kutch",
+        "mehsana":"Mehsana","mahesana":"Mehsana","morbi":"Morbi","rajpipla":"Narmada",
+        "navsari":"Navsari","godhra":"Panchmahal","patan":"Patan","porbandar":"Porbandar",
+        "rajkot":"Rajkot","jetpur":"Rajkot","gondal":"Rajkot","himmatnagar":"Sabarkantha",
+        "surat":"Surat","bardoli":"Surat","surendranagar":"Surendranagar",
+        "vyara":"Tapi","vadodara":"Vadodara","baroda":"Vadodara","valsad":"Valsad","vapi":"Valsad"
+      };
+
+      const GUJARAT_GEOJSON_URLS = [
+        "https://raw.githubusercontent.com/udit-001/india-maps-data/main/geojson/states/gujarat.geojson",
+        "https://cdn.jsdelivr.net/gh/udit-001/india-maps-data@main/geojson/states/gujarat.geojson"
+      ];
+
+      function normalizePlace(v) {
+        return String(v || "")
+          .toLowerCase()
+          .replace(/&/g,"and")
+          .replace(/[.,]/g," ")
+          .replace(/\s+/g," ")
+          .trim();
+      }
+
+      function findOriginalOrder(returnItem) {
+        const raw = String(returnItem.orderId || "").trim();
+        if (!raw) return null;
+        return orderLookup.get(raw) || orderLookup.get(raw.toLowerCase()) || null;
+      }
+
+      function resolveReturnLocation(returnItem) {
+        const order = findOriginalOrder(returnItem) || {};
+        const customer = order.customer || returnItem.customer || {};
+        const shipping = order.shippingAddress || order.shipping || returnItem.shippingAddress || {};
+
+        return {
+          state: returnItem.state || returnItem.customerState || customer.state || shipping.state || order.state || "",
+          city: returnItem.city || returnItem.customerCity || customer.city || shipping.city || order.city || "",
+          district: returnItem.district || returnItem.customerDistrict || customer.district || shipping.district || order.district || ""
+        };
+      }
+
+      function resolveReturnState(returnItem) {
+        const loc = resolveReturnLocation(returnItem);
+        const stateKey = normalizePlace(loc.state);
+        if (INDIA_STATES[stateKey]) return INDIA_STATES[stateKey];
+
+        const cityKey = normalizePlace(loc.city);
+        const fallbackState = CITY_TO_STATE[cityKey];
+        return fallbackState ? INDIA_STATES[fallbackState] : null;
+      }
+
+      function resolveReturnDistrict(returnItem) {
+        const loc = resolveReturnLocation(returnItem);
+        const district = String(loc.district || "").trim();
+        if (district) return district;
+
+        const cityKey = normalizePlace(loc.city);
+        return GUJARAT_CITY_TO_DISTRICT[cityKey] || null;
+      }
+
+      async function loadOrderLookup() {
+        try {
+          const snap = await getDocs(collection(db,"orders"));
+          orderLookup = new Map();
+
+          snap.forEach((d) => {
+            const order = { id:d.id, ...d.data() };
+            const keys = [
+              d.id,
+              order.orderId,
+              String(d.id).toLowerCase(),
+              String(order.orderId || "").toLowerCase()
+            ].filter(Boolean);
+
+            keys.forEach((key) => orderLookup.set(String(key), order));
+          });
+        } catch (error) {
+          console.warn("Could not load orders for return location mapping:", error);
+        }
+      }
+
+      if (window.google && google.charts) {
+        google.charts.load("current",{packages:["geochart"]});
+        google.charts.setOnLoadCallback(() => {
+          indiaReturnChartReady = true;
+          renderReturnAnalytics();
+        });
+      }
+
+      window.switchReturnPageTab = function(tabName) {
+        const tabs = {
+          details: document.getElementById("returnDetailsTab"),
+          analysis: document.getElementById("returnAnalysisTab"),
+          gujarat: document.getElementById("returnGujaratTab")
+        };
+        const panels = {
+          details: document.getElementById("returnDetailsPanel"),
+          analysis: document.getElementById("returnAnalysisPanel"),
+          gujarat: document.getElementById("returnGujaratPanel")
+        };
+
+        Object.keys(tabs).forEach((key) => {
+          tabs[key].classList.toggle("active", key === tabName);
+          panels[key].classList.toggle("active", key === tabName);
+        });
+
+        if (tabName === "analysis") {
+          setTimeout(renderReturnAnalytics,80);
+        }
+
+        if (tabName === "gujarat") {
+          setTimeout(async () => {
+            await renderReturnGujaratHeatmap();
+            if (returnGujaratMap) returnGujaratMap.invalidateSize(true);
+          },150);
+        }
+      };
+
+      function updateReturnMetrics() {
+        const countStatus = (s) => returnsList.filter(r => (r.status || "Requested") === s).length;
+        document.getElementById("metricTotalReturns").textContent = returnsList.length;
+        document.getElementById("metricRequestedReturns").textContent = countStatus("Requested");
+        document.getElementById("metricApprovedReturns").textContent = countStatus("Approved");
+        document.getElementById("metricRefundedReturns").textContent = countStatus("Refunded");
+      }
+
+      function buildReturnStateCounts() {
+        const map = new Map();
+        let mapped = 0;
+
+        returnsList.forEach((item) => {
+          const state = resolveReturnState(item);
+          if (!state) return;
+          mapped += 1;
+          if (!map.has(state.code)) map.set(state.code,{...state,count:0});
+          map.get(state.code).count += 1;
+        });
+
+        return {
+          mapped,
+          states:[...map.values()].sort((a,b)=>b.count-a.count)
+        };
+      }
+
+      function renderReturnStateRanking(states) {
+        const list = document.getElementById("returnStateRankList");
+        if (!list) return;
+
+        list.innerHTML = states.length
+          ? states.slice(0,8).map((s,i)=>`
+              <div class="rank-row">
+                <div><strong>${i+1}. ${s.name}</strong><span>${s.count} return ${s.count===1?"request":"requests"}</span></div>
+                <span class="rank-count">${s.count}</span>
+              </div>
+            `).join("")
+          : '<div style="font-size:.78rem;color:var(--text-muted);">No mapped return states yet.</div>';
+      }
+
+      function renderReturnReasons() {
+        const counts = {};
+        returnsList.forEach((item)=>{
+          const reason = String(item.reason || "Warranty").trim() || "Warranty";
+          counts[reason] = (counts[reason] || 0) + 1;
+        });
+
+        const sorted = Object.entries(counts)
+          .map(([reason,count])=>({reason,count}))
+          .sort((a,b)=>b.count-a.count);
+
+        const list = document.getElementById("returnReasonRankList");
+        if (!list) return;
+
+        list.innerHTML = sorted.length
+          ? sorted.slice(0,6).map((r,i)=>`
+              <div class="rank-row">
+                <div><strong>${i+1}. ${r.reason}</strong><span>${r.count} ticket${r.count===1?"":"s"}</span></div>
+                <span class="rank-count">${r.count}</span>
+              </div>
+            `).join("")
+          : '<div style="font-size:.78rem;color:var(--text-muted);">No return reasons yet.</div>';
+      }
+
+      function renderReturnAnalytics() {
+        updateReturnMetrics();
+        renderReturnReasons();
+
+        const {mapped,states} = buildReturnStateCounts();
+        const mappedEl = document.getElementById("indiaMappedReturns");
+        if (mappedEl) mappedEl.textContent = mapped.toLocaleString("en-IN");
+        renderReturnStateRanking(states);
+
+        if (!indiaReturnChartReady || !states.length) return;
+
+        const el = document.getElementById("indiaReturnsHeatmap");
+        if (!el) return;
+
+        const data = new google.visualization.DataTable();
+        data.addColumn("string","State");
+        data.addColumn("number","Returns");
+        data.addColumn({type:"string",role:"tooltip"});
+
+        states.forEach((s)=>{
+          data.addRow([
+            {v:s.code,f:s.name},
+            s.count,
+            `${s.name}: ${s.count} return ${s.count===1?"request":"requests"}`
+          ]);
+        });
+
+        const max = Math.max(...states.map(s=>s.count),1);
+
+        const options = {
+          region:"IN",
+          resolution:"provinces",
+          displayMode:"regions",
+          backgroundColor:"#ffffff",
+          datalessRegionColor:"#eef2f7",
+          defaultColor:"#eef2f7",
+          colorAxis:{
+            minValue:1,
+            maxValue:max,
+            colors:["#dbeafe","#60a5fa","#2563eb","#0f3f99"]
+          },
+          legend:{textStyle:{color:"#64748b",fontSize:11}},
+          tooltip:{textStyle:{color:"#0f172a",fontSize:12}},
+          keepAspectRatio:true,
+          enableRegionInteractivity:true
+        };
+
+        indiaReturnChart = indiaReturnChart || new google.visualization.GeoChart(el);
+        indiaReturnChart.draw(data,options);
+      }
+
+      const DISTRICT_ALIASES = {
+        "ahmedabad":"Ahmedabad","ahmadabad":"Ahmedabad","amreli":"Amreli","anand":"Anand",
+        "aravalli":"Aravalli","banaskantha":"Banaskantha","banas kantha":"Banaskantha",
+        "bharuch":"Bharuch","bhavnagar":"Bhavnagar","botad":"Botad",
+        "chhota udaipur":"Chhota Udaipur","dahod":"Dahod","dang":"Dang","dangs":"Dang",
+        "devbhumi dwarka":"Devbhumi Dwarka","gandhinagar":"Gandhinagar",
+        "gir somnath":"Gir Somnath","jamnagar":"Jamnagar","junagadh":"Junagadh",
+        "kheda":"Kheda","kutch":"Kutch","kachchh":"Kutch","mahisagar":"Mahisagar",
+        "mehsana":"Mehsana","mahesana":"Mehsana","morbi":"Morbi","narmada":"Narmada",
+        "navsari":"Navsari","panchmahal":"Panchmahal","panch mahals":"Panchmahal",
+        "patan":"Patan","porbandar":"Porbandar","rajkot":"Rajkot","sabarkantha":"Sabarkantha",
+        "sabar kantha":"Sabarkantha","surat":"Surat","surendranagar":"Surendranagar",
+        "surendra nagar":"Surendranagar","tapi":"Tapi","vadodara":"Vadodara","valsad":"Valsad"
+      };
+
+      function canonicalDistrict(v) {
+        return DISTRICT_ALIASES[normalizePlace(v)] || String(v || "").trim() || null;
+      }
+
+      function buildReturnDistrictCounts() {
+        const counts = {};
+        let mapped = 0;
+
+        returnsList.forEach((item)=>{
+          const state = resolveReturnState(item);
+          if (!state || state.code !== "IN-GJ") return;
+
+          const district = canonicalDistrict(resolveReturnDistrict(item));
+          if (!district) return;
+
+          counts[district] = (counts[district] || 0) + 1;
+          mapped += 1;
+        });
+
+        return {
+          mapped,
+          counts,
+          ranked:Object.entries(counts)
+            .map(([district,count])=>({district,count}))
+            .sort((a,b)=>b.count-a.count)
+        };
+      }
+
+      function getGeoDistrictName(feature) {
+        const p = feature?.properties || {};
+        const candidates = [
+          p.district,p.DISTRICT,p.District,p.district_name,p.DISTRICT_N,
+          p.dtname,p.DTNAME,p.NAME_2,p.NAME2,p.name,p.NAME
+        ];
+        for (const v of candidates) {
+          const district = canonicalDistrict(v);
+          if (district) return district;
+        }
+        return "Unknown";
+      }
+
+      function getReturnDistrictStyle(count,max,active=false) {
+        let fill = "#eef2f7";
+        if (count > 0) {
+          const r = count/max;
+          if (r >= .8) fill = "#1d4ed8";
+          else if (r >= .6) fill = "#0ea5e9";
+          else if (r >= .4) fill = "#38bdf8";
+          else if (r >= .2) fill = "#7dd3fc";
+          else fill = "#bae6fd";
+        }
+        return {
+          color:active?"#0f172a":"#ffffff",
+          weight:active?2.2:1.25,
+          fillColor:fill,
+          fillOpacity:active?1:.97
+        };
+      }
+
+      async function loadReturnGujaratGeoJson() {
+        if (returnGujaratGeoJson) return returnGujaratGeoJson;
+
+        let lastError;
+        for (const url of GUJARAT_GEOJSON_URLS) {
+          try {
+            const res = await fetch(url,{mode:"cors",cache:"force-cache"});
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            if (!data?.features?.length) throw new Error("Invalid GeoJSON");
+            returnGujaratGeoJson = data;
+            return data;
+          } catch (e) {
+            lastError = e;
+          }
+        }
+        throw lastError || new Error("Gujarat district data unavailable");
+      }
+
+      function renderReturnDistrictRanking(ranked) {
+        const list = document.getElementById("returnDistrictRankList");
+        if (!list) return;
+
+        list.innerHTML = ranked.length
+          ? ranked.slice(0,10).map((r,i)=>`
+              <div class="rank-row">
+                <div><strong>${i+1}. ${r.district}</strong><span>${r.count} return ${r.count===1?"request":"requests"}</span></div>
+                <span class="rank-count">${r.count}</span>
+              </div>
+            `).join("")
+          : '<div style="font-size:.78rem;color:var(--text-muted);">No Gujarat return locations yet.</div>';
+      }
+
+      function updateReturnDistrictInsight(district,count,total,selected=false) {
+        const el = document.getElementById("returnDistrictInsight");
+        if (!el) return;
+
+        const share = total ? ((count/total)*100).toFixed(1) : "0.0";
+        el.innerHTML = `
+          <h4>${selected?"Selected District":"District Focus"}</h4>
+          <p>${selected?"You pinned this district.":"Current return concentration."}</p>
+          <span class="district-focus-name">${district}</span><br>
+          <span class="district-focus-count">${count} return ${count===1?"request":"requests"} • ${share}% share</span>
+        `;
+      }
+
+      function applyReturnDistrictStyles() {
+        if (!returnGujaratLayer) return;
+        returnGujaratLayer.eachLayer((layer)=>{
+          const district = getGeoDistrictName(layer.feature);
+          const count = currentReturnDistrictCounts[district] || 0;
+          layer.setStyle(getReturnDistrictStyle(
+            count,
+            currentReturnDistrictMax,
+            selectedReturnDistrict === district
+          ));
+        });
+      }
+
+      window.resetReturnGujaratMapView = function() {
+        selectedReturnDistrict = null;
+        applyReturnDistrictStyles();
+
+        const insight = document.getElementById("returnDistrictInsight");
+        if (insight) {
+          insight.innerHTML = `
+            <h4>District Focus</h4>
+            <p>Hover or click a district to inspect return concentration.</p>
+          `;
+        }
+
+        if (returnGujaratMap && returnGujaratLayer) {
+          const bounds = returnGujaratLayer.getBounds();
+          if (bounds.isValid()) returnGujaratMap.fitBounds(bounds,{padding:[15,15]});
+        }
+      };
+
+      async function renderReturnGujaratHeatmap() {
+        const mapEl = document.getElementById("gujaratReturnsHeatmap");
+        if (!mapEl || !window.L) return;
+
+        const {mapped,counts,ranked} = buildReturnDistrictCounts();
+        document.getElementById("gujaratMappedReturns").textContent = mapped.toLocaleString("en-IN");
+        renderReturnDistrictRanking(ranked);
+
+        currentReturnDistrictCounts = counts;
+        currentReturnDistrictMax = Math.max(1,...Object.values(counts).map(Number));
+
+        if (!returnGujaratMap) {
+          returnGujaratMap = L.map("gujaratReturnsHeatmap",{
+            zoomControl:true,
+            scrollWheelZoom:false,
+            attributionControl:false
+          }).setView([22.45,71.45],6.25);
+        }
+
+        try {
+          const geojson = await loadReturnGujaratGeoJson();
+
+          if (returnGujaratLayer) {
+            returnGujaratMap.removeLayer(returnGujaratLayer);
+          }
+
+          returnGujaratLayer = L.geoJSON(geojson,{
+            style(feature) {
+              const district = getGeoDistrictName(feature);
+              return getReturnDistrictStyle(
+                counts[district] || 0,
+                currentReturnDistrictMax,
+                selectedReturnDistrict === district
+              );
+            },
+            onEachFeature(feature,layer) {
+              const district = getGeoDistrictName(feature);
+              const count = counts[district] || 0;
+
+              layer.bindTooltip(
+                `<strong>${district}</strong><br>${count} return ${count===1?"request":"requests"}`,
+                {sticky:true,opacity:.96}
+              );
+
+              layer.on({
+                mouseover(e) {
+                  e.target.setStyle({color:"#0f172a",weight:2,fillOpacity:1});
+                  updateReturnDistrictInsight(district,count,mapped,selectedReturnDistrict===district);
+                },
+                mouseout() {
+                  applyReturnDistrictStyles();
+                  if (selectedReturnDistrict) {
+                    const c = currentReturnDistrictCounts[selectedReturnDistrict] || 0;
+                    updateReturnDistrictInsight(selectedReturnDistrict,c,mapped,true);
+                  }
+                },
+                click() {
+                  selectedReturnDistrict =
+                    selectedReturnDistrict === district ? null : district;
+                  applyReturnDistrictStyles();
+                  if (selectedReturnDistrict) {
+                    updateReturnDistrictInsight(district,count,mapped,true);
+                  }
+                }
+              });
+            }
+          }).addTo(returnGujaratMap);
+
+          const bounds = returnGujaratLayer.getBounds();
+          if (bounds.isValid()) returnGujaratMap.fitBounds(bounds,{padding:[15,15]});
+          setTimeout(()=>returnGujaratMap.invalidateSize(true),100);
+        } catch (error) {
+          console.error("Return Gujarat heatmap error:",error);
+        }
+      }
+
       const tableBody = document.getElementById("returnsTableBody"),
         toast = document.getElementById("adminToast");
+
+      loadOrderLookup().then(() => {
+        renderReturnAnalytics();
+        renderReturnGujaratHeatmap();
+      });
 
       function showToast(msg) {
         toast.textContent = msg;
@@ -502,6 +1468,8 @@
           (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
         );
         renderTable();
+        renderReturnAnalytics();
+        renderReturnGujaratHeatmap();
       });
 
       function setFilter(f) {

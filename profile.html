@@ -1006,7 +1006,9 @@
       signInWithEmailAndPassword, 
       signInWithPopup, 
       signOut, 
-      updateProfile 
+      updateProfile,
+      setPersistence,
+      browserLocalPersistence
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
     // Mobile Hamburger Drawer Toggle
@@ -1056,7 +1058,9 @@
 
     window.addEventListener("hashchange", handleInitialHash);
 
-    // Auth State Elements
+    // ============================================================
+    // Firebase Authentication (no hardcoded user ID / email / password)
+    // ============================================================
     const authState = document.getElementById("authState");
     const userState = document.getElementById("userState");
     const authForm = document.getElementById("authForm");
@@ -1064,12 +1068,28 @@
     const signInTab = document.getElementById("signInTab");
     const signUpTab = document.getElementById("signUpTab");
     const authSubmit = document.getElementById("authSubmit");
+    const googleButton = document.getElementById("googleButton");
+    const authEmail = document.getElementById("authEmail");
+    const authPassword = document.getElementById("authPassword");
+
     let isSignUp = false;
+    const ADMIN_DASHBOARD_URL = "admin/index.html";
+    let adminRedirectInProgress = false;
+
+    // Keep the Firebase session after reload/browser restart.
+    // This is Firebase persistence, not a custom/hardcoded login session.
+    setPersistence(auth, browserLocalPersistence).catch((error) => {
+      console.error("Firebase persistence error:", error);
+    });
 
     function showFeedback(el, msg, isError = false) {
+      if (!el) return;
       el.textContent = msg;
       el.style.color = isError ? "var(--danger)" : "var(--success)";
-      setTimeout(() => { el.textContent = ""; }, 4000);
+      window.clearTimeout(el._feedbackTimer);
+      el._feedbackTimer = window.setTimeout(() => {
+        if (el.textContent === msg) el.textContent = "";
+      }, 4000);
     }
 
     function toggleAuthMode(signUp) {
@@ -1077,27 +1097,88 @@
       signInTab.classList.toggle("active", !signUp);
       signUpTab.classList.toggle("active", signUp);
       authSubmit.textContent = signUp ? "Create Account" : "Sign In";
-      document.getElementById("authPassword").autocomplete = signUp ? "new-password" : "current-password";
+      authPassword.autocomplete = signUp ? "new-password" : "current-password";
+      authMessage.textContent = "";
     }
 
     signInTab.addEventListener("click", () => toggleAuthMode(false));
     signUpTab.addEventListener("click", () => toggleAuthMode(true));
 
+    // ------------------------------------------------------------
+    // Admin verification
+    // No admin email, UID, or password is hardcoded here.
+    // An account is considered an admin only when Firestore contains:
+    //   admins/{firebaseUid} => { role: "admin", active: true }
+    // The UID comes directly from Firebase Authentication.
+    // ------------------------------------------------------------
+    async function isAdminAccount(user) {
+      if (!user) return false;
+
+      try {
+        const adminSnap = await getDoc(doc(db, "admins", user.uid));
+        if (!adminSnap.exists()) return false;
+
+        const adminData = adminSnap.data() || {};
+        return adminData.role === "admin" && adminData.active === true;
+      } catch (error) {
+        console.error("Admin verification failed:", error);
+        return false;
+      }
+    }
+
+    async function redirectAdminToDashboard(user) {
+      if (!user || adminRedirectInProgress) return false;
+
+      const isAdmin = await isAdminAccount(user);
+      if (!isAdmin) return false;
+
+      // Keep the Firebase Auth session active.
+      // IMPORTANT: no customer profile data is written or loaded for admins.
+      // The admin dashboard should also load admin-guard.js so it
+      // re-verifies admins/{uid} before allowing panel access.
+      adminRedirectInProgress = true;
+      window.location.replace(ADMIN_DASHBOARD_URL);
+      return true;
+    }
+
+    // Save only profile data in Firestore.
+    // Authentication itself is handled exclusively by Firebase Auth.
     async function syncFirestoreUser(user, extra = {}) {
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        name: user.displayName || user.email.split("@")[0],
-        email: user.email,
-        provider: user.providerData[0]?.providerId || "password",
-        ...extra,
-        updatedAt: new Date().toISOString()
-      }, { merge: true });
+      if (!user) return false;
+
+      // SECURITY: Never store admin accounts in the customer users collection.
+      // Admin identity/permissions live only in admins/{uid}.
+      if (await isAdminAccount(user)) {
+        console.warn("Admin account detected: skipped customer profile write.");
+        return false;
+      }
+
+      const fallbackName =
+        user.displayName ||
+        (user.email ? user.email.split("@")[0] : "Customer");
+
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          uid: user.uid,
+          name: extra.name || fallbackName,
+          email: user.email || "",
+          provider: user.providerData?.[0]?.providerId || "password",
+          ...extra,
+          updatedAt: new Date().toISOString()
+        },
+        { merge: true }
+      );
+
+      return true;
     }
 
     function renderAddressCardPreview(name, address, city, pincode) {
       const card = document.getElementById("addressCardPreview");
       const recipient = document.getElementById("previewRecipient");
       const fullAddress = document.getElementById("previewFullAddress");
+      if (!card || !recipient || !fullAddress) return;
+
       if (address || city || pincode) {
         recipient.textContent = name || "Customer";
         fullAddress.textContent = `${address ? address + ", " : ""}${city ? city + " " : ""}${pincode ? "- " + pincode : ""}`;
@@ -1108,63 +1189,190 @@
     }
 
     async function handleAuth(user) {
-      if (!user) {
-        authState.classList.add("active");
-        userState.classList.remove("active");
-        localStorage.removeItem("prizam_user");
+      const isLoggedIn = Boolean(user);
+      authState.classList.toggle("active", !isLoggedIn);
+      userState.classList.toggle("active", isLoggedIn);
+
+      if (!user) return;
+
+      // SECURITY: An admin must never be rendered as a customer profile.
+      if (await isAdminAccount(user)) {
+        await redirectAdminToDashboard(user);
         return;
       }
 
-      authState.classList.remove("active");
-      userState.classList.add("active");
+      const displayName =
+        user.displayName ||
+        (user.email ? user.email.split("@")[0] : "Customer");
 
-      const displayName = user.displayName || user.email.split("@")[0];
-      document.getElementById("profileAvatar").textContent = displayName.charAt(0).toUpperCase();
-      document.getElementById("profileGreetingName").textContent = displayName;
-      document.getElementById("profileEmailDisplay").value = user.email || "";
+      const avatar = document.getElementById("profileAvatar");
+      const greeting = document.getElementById("profileGreetingName");
+      const emailDisplay = document.getElementById("profileEmailDisplay");
 
+      if (avatar) avatar.textContent = displayName.charAt(0).toUpperCase();
+      if (greeting) greeting.textContent = displayName;
+      if (emailDisplay) emailDisplay.value = user.email || "";
+
+      // Firestore profile loading is separate from authentication.
+      // If Firestore rules/network fail, the Firebase login still remains valid.
       try {
         const snap = await getDoc(doc(db, "users", user.uid));
         const data = snap.exists() ? snap.data() : {};
-        document.getElementById("profileNameInput").value = data.name || user.displayName || "";
-        document.getElementById("profilePhone").value = data.phone || "";
-        document.getElementById("profileAddress").value = data.address || "";
-        document.getElementById("profileCity").value = data.city || "";
-        document.getElementById("profilePincode").value = data.pincode || "";
-        document.getElementById("emailUpdates").checked = data.emailUpdates !== false;
-        renderAddressCardPreview(data.name || user.displayName, data.address, data.city, data.pincode);
-      } catch (e) {
-        console.error("Firestore user profile read error:", e);
+
+        const nameInput = document.getElementById("profileNameInput");
+        const phoneInput = document.getElementById("profilePhone");
+        const addressInput = document.getElementById("profileAddress");
+        const cityInput = document.getElementById("profileCity");
+        const pincodeInput = document.getElementById("profilePincode");
+        const emailUpdates = document.getElementById("emailUpdates");
+
+        if (nameInput) nameInput.value = data.name || user.displayName || "";
+        if (phoneInput) phoneInput.value = data.phone || "";
+        if (addressInput) addressInput.value = data.address || "";
+        if (cityInput) cityInput.value = data.city || "";
+        if (pincodeInput) pincodeInput.value = data.pincode || "";
+        if (emailUpdates) emailUpdates.checked = data.emailUpdates !== false;
+
+        renderAddressCardPreview(
+          data.name || displayName,
+          data.address || "",
+          data.city || "",
+          data.pincode || ""
+        );
+      } catch (error) {
+        console.error("Firestore profile read error:", error);
       }
+
       handleInitialHash();
     }
 
-    onAuthStateChanged(auth, handleAuth);
-
-    // Google Sign-In
-    document.getElementById("googleButton").addEventListener("click", async () => {
-      showFeedback(authMessage, "Connecting to Google...");
+    // Firebase is the single source of truth for login state.
+    // If admins/{uid} says role="admin" and active=true,
+    // redirect the authenticated account directly to the admin dashboard.
+    onAuthStateChanged(auth, async (user) => {
       try {
-        const result = await signInWithPopup(auth, googleProvider);
-        await syncFirestoreUser(result.user);
+        if (user && await redirectAdminToDashboard(user)) return;
+        await handleAuth(user);
       } catch (error) {
-        showFeedback(authMessage, error.code === "auth/popup-closed-by-user" ? "Sign-in was cancelled." : "Could not sign in with Google.", true);
+        console.error("Auth state render error:", error);
       }
     });
 
-    // Email/Password Authentication
-    authForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("authEmail").value.trim();
-      const password = document.getElementById("authPassword").value;
+    function getAuthErrorMessage(error, mode = "email") {
+      switch (error?.code) {
+        case "auth/invalid-email":
+          return "Please enter a valid email address.";
+        case "auth/invalid-credential":
+        case "auth/wrong-password":
+        case "auth/user-not-found":
+          return "Incorrect email or password.";
+        case "auth/email-already-in-use":
+          return "This email already has an account. Please sign in instead.";
+        case "auth/weak-password":
+          return "Password must be at least 6 characters.";
+        case "auth/too-many-requests":
+          return "Too many attempts. Please try again later.";
+        case "auth/network-request-failed":
+          return "Network error. Check your internet connection and try again.";
+        case "auth/user-disabled":
+          return "This account has been disabled.";
+        case "auth/popup-closed-by-user":
+          return "Google sign-in was cancelled.";
+        case "auth/popup-blocked":
+          return "Google sign-in popup was blocked. Allow popups and try again.";
+        case "auth/cancelled-popup-request":
+          return "Another Google sign-in popup is already open.";
+        default:
+          return mode === "google"
+            ? "Google sign-in could not be completed."
+            : "Authentication failed. Please try again.";
+      }
+    }
+
+    // ----------------------------
+    // Google Sign-In
+    // ----------------------------
+    googleButton.addEventListener("click", async () => {
+      googleButton.disabled = true;
+      showFeedback(authMessage, "Connecting to Google...");
 
       try {
-        const res = isSignUp 
+        const result = await signInWithPopup(auth, googleProvider);
+
+        // Admin accounts go directly to the admin dashboard.
+        if (await redirectAdminToDashboard(result.user)) return;
+
+        // Firebase sign-in has already succeeded at this point.
+        // Firestore profile creation must not turn a successful login into an error.
+        try {
+          await syncFirestoreUser(result.user);
+        } catch (firestoreError) {
+          console.warn(
+            "Google login succeeded, but Firestore profile sync failed:",
+            firestoreError
+          );
+        }
+
+        showFeedback(authMessage, "Signed in successfully.");
+        await handleAuth(result.user);
+      } catch (error) {
+        console.error("Google authentication error:", error);
+        showFeedback(authMessage, getAuthErrorMessage(error, "google"), true);
+      } finally {
+        googleButton.disabled = false;
+      }
+    });
+
+    // ----------------------------
+    // Email / Password Auth
+    // ----------------------------
+    authForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const email = authEmail.value.trim();
+      const password = authPassword.value;
+
+      if (!email || !password) {
+        showFeedback(authMessage, "Enter your email and password.", true);
+        return;
+      }
+
+      authSubmit.disabled = true;
+      authSubmit.textContent = isSignUp ? "Creating Account..." : "Signing In...";
+      showFeedback(authMessage, isSignUp ? "Creating your account..." : "Signing in...");
+
+      try {
+        const result = isSignUp
           ? await createUserWithEmailAndPassword(auth, email, password)
           : await signInWithEmailAndPassword(auth, email, password);
-        await syncFirestoreUser(res.user);
+
+        // Existing admin accounts go directly to the admin dashboard.
+        // New customer sign-ups normally will not have an admins/{uid} document.
+        if (!isSignUp && await redirectAdminToDashboard(result.user)) return;
+
+        // Auth succeeded. Firestore is only profile storage and must not control login success.
+        try {
+          await syncFirestoreUser(result.user);
+        } catch (firestoreError) {
+          console.warn(
+            "Firebase Auth succeeded, but Firestore profile sync failed:",
+            firestoreError
+          );
+        }
+
+        showFeedback(
+          authMessage,
+          isSignUp ? "Account created successfully!" : "Signed in successfully."
+        );
+
+        await handleAuth(result.user);
+        authForm.reset();
       } catch (error) {
-        showFeedback(authMessage, error.code === "auth/email-already-in-use" ? "This email already has an account." : "Invalid email or password.", true);
+        console.error("Firebase authentication error:", error);
+        showFeedback(authMessage, getAuthErrorMessage(error), true);
+      } finally {
+        authSubmit.disabled = false;
+        authSubmit.textContent = isSignUp ? "Create Account" : "Sign In";
       }
     });
 
