@@ -334,6 +334,7 @@
         margin-bottom: 1.5rem;
         border-bottom: 1px solid var(--border);
         padding-bottom: 0.75rem;
+        flex-wrap: wrap;
       }
       .tab-btn {
         background: none;
@@ -344,7 +345,8 @@
         color: var(--text-muted);
         cursor: pointer;
         border-radius: 6px;
-        display: flex;
+        display: inline-flex;
+        align-items: center;
         gap: 0.5rem;
       }
       .tab-btn.active {
@@ -764,6 +766,7 @@
           </div>
         </section>
 
+        <!-- QUOTATION REQUESTS PANEL WITH NUMBERS ON ALL TABS -->
         <section class="request-panel" id="quoteRequestsPanel">
           <div class="filter-tabs">
             <button
@@ -785,21 +788,21 @@
               id="quoteTabReviewed"
               type="button"
             >
-              Reviewed
+              Reviewed <span class="tab-badge" id="quoteBadgeReviewed">0</span>
             </button>
             <button
               class="tab-btn quote-filter-btn"
               id="quoteTabQuoted"
               type="button"
             >
-              Quoted
+              Quoted <span class="tab-badge" id="quoteBadgeQuoted">0</span>
             </button>
             <button
               class="tab-btn quote-filter-btn"
               id="quoteTabClosed"
               type="button"
             >
-              Closed
+              Closed <span class="tab-badge" id="quoteBadgeClosed">0</span>
             </button>
           </div>
 
@@ -1231,39 +1234,59 @@
       );
 
       function updateBadges() {
-        const total = inquiries.length,
-          newCount = inquiries.filter(
-            (i) => (i.status || "New") === "New"
-          ).length,
-          repliedCount = inquiries.filter((i) => i.status === "Replied").length;
+        const total = inquiries.length;
+        const newCount = inquiries.filter(
+          (i) => (i.status || "New") === "New"
+        ).length;
+        const repliedCount = inquiries.filter((i) => i.status === "Replied").length;
+
         document.getElementById("badgeAll").textContent = total;
         document.getElementById("badgeNew").textContent = newCount;
         document.getElementById("badgeReplied").textContent = repliedCount;
 
+        // Main top tab shows ALL contact inquiries
+        const mainContactBadge = document.getElementById("mainContactBadge");
+        if (mainContactBadge) mainContactBadge.textContent = total;
+
         const sideInqBadge = document.getElementById("sideBadgeInquiries");
-        const newQuotes = quoteRequests.filter(
-          (q) => (q.status || "New") === "New"
-        ).length;
         const totalInquiriesAndQuotes = inquiries.length + quoteRequests.length;
-        
         if (sideInqBadge) {
           sideInqBadge.textContent = totalInquiriesAndQuotes;
         }
         localStorage.setItem("badge_inquiries", totalInquiriesAndQuotes.toString());
-
-        const mainContactBadge = document.getElementById("mainContactBadge");
-        if (mainContactBadge) mainContactBadge.textContent = newCount;
       }
 
+      // ✨ UPDATE ALL QUOTE BADGES DYNAMICALLY (FOR ALL, NEW, REVIEWED, QUOTED, CLOSED)
       function updateQuoteBadges() {
         const total = quoteRequests.length;
         const newCount = quoteRequests.filter(
           (q) => (q.status || "New") === "New"
         ).length;
+        const reviewedCount = quoteRequests.filter(
+          (q) => q.status === "Reviewed"
+        ).length;
+        const quotedCount = quoteRequests.filter(
+          (q) => q.status === "Quoted"
+        ).length;
+        const closedCount = quoteRequests.filter(
+          (q) => q.status === "Closed"
+        ).length;
 
-        document.getElementById("quoteBadgeAll").textContent = total;
-        document.getElementById("quoteBadgeNew").textContent = newCount;
-        document.getElementById("mainQuoteBadge").textContent = newCount;
+        const elAll = document.getElementById("quoteBadgeAll");
+        const elNew = document.getElementById("quoteBadgeNew");
+        const elReviewed = document.getElementById("quoteBadgeReviewed");
+        const elQuoted = document.getElementById("quoteBadgeQuoted");
+        const elClosed = document.getElementById("quoteBadgeClosed");
+
+        if (elAll) elAll.textContent = total;
+        if (elNew) elNew.textContent = newCount;
+        if (elReviewed) elReviewed.textContent = reviewedCount;
+        if (elQuoted) elQuoted.textContent = quotedCount;
+        if (elClosed) elClosed.textContent = closedCount;
+
+        // Main top tab shows ALL quote requests
+        const mainQuoteBadge = document.getElementById("mainQuoteBadge");
+        if (mainQuoteBadge) mainQuoteBadge.textContent = total;
 
         const sideInqBadge = document.getElementById("sideBadgeInquiries");
         const totalInquiriesAndQuotes = inquiries.length + quoteRequests.length;
